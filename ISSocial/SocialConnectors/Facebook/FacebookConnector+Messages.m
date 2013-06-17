@@ -22,7 +22,6 @@
 #import "XMPPStream.h"
 
 
-static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 static const NSTimeInterval kTimeout  = 30;
 
 @implementation FacebookConnector (Messages)
