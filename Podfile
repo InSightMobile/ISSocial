@@ -7,7 +7,6 @@ pod 'AFNetworking'
 pod 'SDWebImage'
 pod 'RegexKitLite'
 pod 'google-plus-ios-sdk'
-pod 'KissXML'
 pod 'CocoaAsyncSocket'
 pod 'CocoaLumberjack'
 
