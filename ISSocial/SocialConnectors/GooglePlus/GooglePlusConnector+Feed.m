@@ -2,20 +2,16 @@
 // 
 
 #import "SCommentData.h"
-#import "GTLPlusComment.h"
-#import "GTLPlusCommentFeed.h"
+#import <GoogleOpenSource/GoogleOpenSource.h>
+#import <GooglePlus/GooglePlus.h>
+
 #import "SPhotoData.h"
-#import "GTLPlusActivity.h"
-#import "GTLPlusActivityFeed.h"
 #import "NSString+TypeSafety.h"
 #import "MultiImage.h"
 #import "SUserData.h"
-#import "GTLPlusConstants.h"
-#import "GTMLogger.h"
-#import "GTLService.h"
-#import "GTLQueryPlus.h"
 #import "GooglePlusConnector.h"
 #import "GooglePlusConnector+Feed.h"
+
 
 
 @implementation GooglePlusConnector (Feed)
@@ -49,7 +45,7 @@
 
                 [result addSubObject:commentData];
             }
-
+            
             [operation complete:result];
         }];
     }];

@@ -2,12 +2,11 @@
 // 
 
 #import <BlocksKit/NSObject+BlocksKit.h>
+#import <GoogleOpenSource/GoogleOpenSource.h>
+#import <GooglePlus/GooglePlus.h>
+
 #import "GPSession.h"
-#import "GPPSignIn.h"
-#import "GTMOAuth2Authentication.h"
-#import "GTLServicePlus.h"
-#import "GTLPlusConstants.h"
-#import "GPPURLHandler.h"
+
 
 @interface GPSession () <GPPSignInDelegate>
 @property(nonatomic, strong) GPPSignIn *signIn;

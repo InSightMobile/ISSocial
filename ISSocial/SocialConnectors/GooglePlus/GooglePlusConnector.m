@@ -7,16 +7,10 @@
 //
 
 #import "GooglePlusConnector.h"
-#import "GPPSignIn.h"
+#import <GooglePlus/GooglePlus.h>
+#import <GoogleOpenSource/GoogleOpenSource.h>
 #import "GPSession.h"
-#import "GTLQueryPlus.h"
-#import "GTLService.h"
-#import "GTLServicePlus.h"
-#import "GTLPlusPeopleFeed.h"
-#import "GTMLogger.h"
-#import "GTLPlusConstants.h"
 #import "SUserData.h"
-#import "GTLPlusPerson.h"
 #import "MultiImage.h"
 #import "NSString+TypeSafety.h"
 
