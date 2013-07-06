@@ -78,4 +78,15 @@
     return @"SocNetsBox";
 }
 
+- (void)setupSettings:(NSDictionary *)settings
+{
+
+}
+
+- (BOOL)handleOpenURL:(NSURL *)url
+{
+    return NO;
+}
+
+
 @end

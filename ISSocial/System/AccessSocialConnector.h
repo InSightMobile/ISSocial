@@ -15,4 +15,10 @@
 - (SObject *)addPagingData:(SObject *)result to:(SObject *)data;
 
 - (NSString *)defaultAlbumName;
+
+- (void)setupSettings:(NSDictionary *)settings;
+
+
+- (BOOL)handleOpenURL:(NSURL *)url;
+
 @end

@@ -97,5 +97,9 @@
     return data;
 }
 
+- (BOOL)handleOpenURL:(NSURL *)url
+{
+    return [[IGSession activeSession] handleURL:url];
+}
 
 @end

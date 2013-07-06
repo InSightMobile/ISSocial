@@ -14,6 +14,7 @@
 
 @interface FacebookConnector ()
 @property(nonatomic) BOOL loggedIn;
+@property(nonatomic, strong) id defaultReadPermissions;
 @end
 
 @implementation FacebookConnector
@@ -226,10 +227,22 @@
     }
 }
 
+- (void)setupSettings:(NSDictionary *)settings
+{
+    [super setupSettings:settings];
+
+    if(settings[@"AppID"]) {
+        [FBSettings setDefaultAppID:settings[@"AppID"]];
+    }
+    if(settings[@"ReadPermissions"]) {
+        self.defaultReadPermissions = settings[@"ReadPermissions"];
+    }
+
+}
+
 
 - (SObject *)openSession:(SObject *)params completion:(CompletionBlock)completion
 {
-
     // See if we have a valid token for the current state.
     if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
         // To-do, show logged in view
@@ -237,10 +250,17 @@
         // No, display the login page.
     }
 
-    [FBSession openActiveSessionWithReadPermissions:@[
+    NSArray * permissions = self.defaultReadPermissions;
+
+    if(!permissions) {
+        permissions = @[
             @"user_about_me", @"read_stream", @"user_photos",
             @"read_mailbox", @"xmpp_login", @"friends_about_me",
-            @"friends_online_presence", @"user_videos"]
+            @"friends_online_presence", @"user_videos"];
+    }
+
+
+    [FBSession openActiveSessionWithReadPermissions:permissions
 
                                        allowLoginUI:YES completionHandler:
             ^(FBSession *session,
@@ -280,5 +300,11 @@
 {
     return _loggedIn;
 }
+
+- (BOOL)handleOpenURL:(NSURL *)url
+{
+    return [[FBSession activeSession] handleOpenURL:url];
+}
+
 
 @end

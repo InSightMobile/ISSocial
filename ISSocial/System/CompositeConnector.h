@@ -50,6 +50,7 @@ typedef void (^CompositeConnectorProcessorBlock)(SocialConnector *connector, SOb
 - (id)initWithSuperConnector:(CompositeConnector *)superConnector;
 
 - (void)setConnectors:(NSArray *)connectors asActive:(BOOL)active;
+- (void)addConnector:(SocialConnector *)connector asActive:(BOOL)active;
 
 - (void)activateConnector:(SocialConnector *)connector;
 
@@ -60,6 +61,8 @@ typedef void (^CompositeConnectorProcessorBlock)(SocialConnector *connector, SOb
 - (void)activateConnectors:(id <NSFastEnumeration>)connectors;
 
 - (void)activateConnectors:(NSSet *)connectors exclusive:(BOOL)exclusive;
+
+- (void)addAndActivateConnectors:(NSSet *)connectors exclusive:(BOOL)exclusive;
 
 - (void)activateAllConnectors;
 

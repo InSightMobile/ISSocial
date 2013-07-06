@@ -54,7 +54,7 @@
 
 - (NSString *)connectorName
 {
-    return NSLocalizedString(@"VKontakte", @"VKontakte");
+    return NSLocalizedString(@"Vkontakte", @"VKontakte");
 }
 
 - (void)simpleMethod:(NSString *)method operation:(SocialConnectorOperation *)operation processor:(void (^)(id response))processor

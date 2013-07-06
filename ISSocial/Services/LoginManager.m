@@ -41,14 +41,14 @@ typedef void (^BlockCompletionBlock)();
         self.queue.maxConcurrentOperationCount = 1;
 
         self.completions = [NSMutableArray array];
-        CompositeConnector *globalConnector = [CompositeConnector globalConnectors];
+        CompositeConnector *globalConnector = self.destinationConnectors;
 
         [_queue addObserverForKeyPath:@"operationCount" task:^(id sender) {
 
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([sender operationCount] == 0) {
 
-                    [globalConnector activateConnectors:self.resultConnector.activeConnectors exclusive:YES];
+                    [globalConnector addAndActivateConnectors:self.resultConnector.activeConnectors exclusive:YES];
 
                     if (!self.canceled) {
                         for (BlockCompletionBlock block in _completions) {
@@ -64,6 +64,14 @@ typedef void (^BlockCompletionBlock)();
     return self;
 }
 
+- (CompositeConnector *)destinationConnectors
+{
+    if(_destinationConnectors) {
+        return _destinationConnectors;
+    }
+    return [CompositeConnector globalConnectors];
+}
+
 - (void)loginWithCompletion:(void (^)())completion
 {
     [[NetworkCheck instance] checkConnectionWithCompletion:^(BOOL connected) {
@@ -76,7 +84,7 @@ typedef void (^BlockCompletionBlock)();
         }
 
     self.canceled = NO;
-    CompositeConnector *globalConnector = [CompositeConnector globalConnectors];
+    CompositeConnector *globalConnector = self.sourceConnectors;
 
     [self.resultConnector setConnectors:globalConnector.sortedAvailableConnectors asActive:NO];
     [self.resultConnector deactivateAllConnectors];
@@ -117,6 +125,14 @@ typedef void (^BlockCompletionBlock)();
     }
 
     }];
+}
+
+- (CompositeConnector *)sourceConnectors
+{
+    if(_sourceConnectors) {
+        return _sourceConnectors;
+    }
+    return [CompositeConnector globalConnectors];
 }
 
 

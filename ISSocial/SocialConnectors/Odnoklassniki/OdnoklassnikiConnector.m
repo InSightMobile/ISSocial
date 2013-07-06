@@ -120,5 +120,10 @@
     [operation addConnection:requst];
 }
 
+- (BOOL)handleOpenURL:(NSURL *)url
+{
+    return [[OKSession activeSession] handleOpenURL:url];
+}
+
 
 @end

@@ -11,7 +11,13 @@
 @interface LoginManager : NSObject
 + (LoginManager *)instance;
 
+@property(nonatomic, strong) CompositeConnector *destinationConnectors;
+@property(nonatomic, strong) CompositeConnector *sourceConnectors;
+
+
 - (void)loginWithCompletion:(void (^)())completion;
+
+
 
 - (void)cancelLogins;
 

@@ -109,6 +109,23 @@
 
 }
 
+- (void)addConnector:(SocialConnector *)connector asActive:(BOOL)active
+{
+    if(!_availableConnectors) {
+        self.availableConnectors = [NSSet setWithObject:connector];
+    }
+    else if(![self.availableConnectors containsObject:connector]) {
+        self.availableConnectors = [_availableConnectors setByAddingObject:connector];
+    }
+    if(active) {
+        [self activateConnector:connector];
+    }
+    else {
+        [self deactivateConnector:connector];
+    }
+}
+
+
 - (void)setAvailableConnectors:(NSSet *)aviableConnectors activeConnectors:(NSSet *)activeConnectors
 {
     self.availableConnectors = aviableConnectors;
@@ -233,6 +250,20 @@
     }
     [self activateConnectors:connectors];
 }
+
+- (void)addAndActivateConnectors:(NSSet *)connectors exclusive:(BOOL)exclusive
+{
+    NSSet* connectorsToAdd = [connectors setByMinusingSet:self.availableConnectors];
+    if(connectorsToAdd.count) {
+        self.availableConnectors = [self.availableConnectors setByAddingObjectsFromSet:connectorsToAdd];
+    }
+
+    if (exclusive) {
+        [self deactivateConnectors:[self.availableConnectors setByMinusingSet:connectors]];
+    }
+    [self activateConnectors:connectors];
+}
+
 
 - (void)activateAllConnectors
 {
