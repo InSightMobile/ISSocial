@@ -31,4 +31,6 @@
 - (void)addImageURL:(NSURL *)url forSize:(int)size;
 
 - (void)addImage:(UIImage *)image;
+
+- (void)setImageWightHeightURLFormat:(NSString *)format;
 @end

@@ -11,6 +11,7 @@
     float _aspect;
     int _baseWidth;
     int _baseHeight;
+    NSString *_imageWightHeightParamURLFormat;
 }
 
 - (BOOL)isAspectKnown
@@ -98,6 +99,14 @@
 
 - (ImageCollectionData *)bestImageForWidth:(CGFloat)width height:(CGFloat)height
 {
+    if(_imageWightHeightParamURLFormat) {
+        ImageCollectionData *data = [ImageCollectionData new];
+        data.width = (NSUInteger) width;
+        data.height = (NSUInteger) height;
+        data.url = [NSURL URLWithString:[NSString stringWithFormat:_imageWightHeightParamURLFormat,(NSUInteger)width,(NSUInteger)height]];
+        return data;
+    }
+
     CGFloat d = sqrtf(width * width + height * height);
     CGFloat minDiff = CGFLOAT_MAX;
     ImageCollectionData *data = nil;
@@ -136,5 +145,9 @@
     data.quality = 1;
     data.image = image;
     [_images addObject:data];
+}
+
+- (void)setImageWightHeightURLFormat:(NSString *)format {
+    _imageWightHeightParamURLFormat = format;
 }
 @end

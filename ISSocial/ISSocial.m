@@ -7,6 +7,7 @@
 #import "CompositeConnector.h"
 #import "LoginManager.h"
 #import "AccessSocialConnector.h"
+#import "SocialConnector.h"
 
 
 @interface ISSocial ()
@@ -24,7 +25,7 @@
     self = [super init];
     if (self) {
 
-        self.rootConnectors = [CompositeConnector new];
+        self.rootConnectors = [[CompositeConnector alloc] initWithRestorationId:@"root"];
 
         self.loginManager = [LoginManager new];
         self.loginManager.sourceConnectors = self.rootConnectors;

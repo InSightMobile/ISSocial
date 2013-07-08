@@ -49,6 +49,11 @@ typedef void (^CompositeConnectorProcessorBlock)(SocialConnector *connector, SOb
 
 - (id)initWithSuperConnector:(CompositeConnector *)superConnector;
 
+- (id)initWithRestorationId:(NSString *)restorationId;
+
++ (id)connectorWithRestorationId:(NSString *)restorationId;
+
+
 - (void)setConnectors:(NSArray *)connectors asActive:(BOOL)active;
 - (void)addConnector:(SocialConnector *)connector asActive:(BOOL)active;
 

@@ -35,6 +35,28 @@
     return _instance;
 }
 
+- (id)init {
+    self = [super init];
+    if (self) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (id)initWithRestorationId:(NSString *)restorationId {
+    self = [super init];
+    if (self) {
+        self.restorationId = restorationId;
+        [self commonInit];
+    }
+    return self;
+}
+
++ (id)connectorWithRestorationId:(NSString *)restorationId {
+    return [[self alloc] initWithRestorationId:restorationId];
+}
+
+
 - (id)initWithConnectorSpecifications:(NSArray *)specifications superConnector:(CompositeConnector *)superConnector restorationId:(NSString *)restorationId
 {
     self = [super init];
@@ -42,7 +64,6 @@
         self.superConnector = superConnector;
         self.specifications = specifications;
         self.restorationId = restorationId;
-        [self updateConnectors];
         [self commonInit];
     }
     return self;
@@ -72,6 +93,7 @@
 - (void)commonInit
 {
     self.handleCache = NO;
+    [self updateConnectors];
 }
 
 - (void)dealloc
@@ -182,8 +204,11 @@
         candidateConnectors =
                 [CompositeConnector connectorsSupportingSpecification:_specifications fromSet:_superConnector.activeConnectors];
     }
-    else {
+    else if(_superConnector){
         candidateConnectors = [[NSMutableSet setWithSet:_superConnector.activeConnectors] mutableCopy];
+    }
+    else {
+        candidateConnectors = [[self restoreActiveStates:nil aviableConnectors:nil] mutableCopy];
     }
 
     NSSet *connectors = [candidateConnectors setByMinusingSet:_deactivatedConnectors];
@@ -440,8 +465,14 @@
                 return [activeCodes containsObject:obj.connectorCode];
             }];
         }
+        NSSet *connectors;
         self.deactivatedConnectors = deactivatedConnectors;
-        NSSet *connectors = [baseConnectors setByUnioningSet:activatedConnectors];
+        if(baseConnectors) {
+            connectors = [baseConnectors setByUnioningSet:activatedConnectors];
+        }
+        else {
+            connectors = activatedConnectors;
+        }
         return [connectors setByMinusingSet:deactivatedConnectors];
     }
     return baseConnectors;

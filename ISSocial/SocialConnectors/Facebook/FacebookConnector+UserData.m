@@ -87,13 +87,6 @@ static NSMutableDictionary *_usersById;
 
 - (SUserData *)dataForUserId:(NSString *)userId name:(NSString *)name
 {
-    SUserData *data = [self dataForUserId:userId];
-    data.userName = name;
-    return data;
-}
-
-- (SUserData *)dataForUserId:(NSString *)userId
-{
     if (!userId) {
         return nil;
     }
@@ -103,9 +96,19 @@ static NSMutableDictionary *_usersById;
     if (!data.userPicture) {
         MultiImage *image = [MultiImage new];
         [image addImageURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/picture", FBGraphBasePath, userId]] quality:1];
+        [image setImageWightHeightURLFormat:[NSString stringWithFormat:@"%@/%@/picture?width=%%d&height=%%d", FBGraphBasePath, userId]];
         data.userPicture = image;
     }
+
+    if(name) {
+        data.userName = name;
+    }
     return data;
+}
+
+- (SUserData *)dataForUserId:(NSString *)userId
+{
+    return [self dataForUserId:userId name:nil];
 }
 
 - (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(CompletionBlock)completion
