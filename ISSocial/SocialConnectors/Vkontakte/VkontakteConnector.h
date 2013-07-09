@@ -22,6 +22,8 @@
 
 @property(nonatomic, strong) SObject *pullOperation;
 
+@property(nonatomic, strong) id permissions;
+
 - (SObject *)operationWithObject:(SObject *)object;
 
 - (void)startPull;

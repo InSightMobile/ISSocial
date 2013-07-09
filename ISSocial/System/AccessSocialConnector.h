@@ -8,8 +8,14 @@
 #import <Foundation/Foundation.h>
 #import "SocialConnector.h"
 
+@class AccessSocialConnector;
 
-@interface AccessSocialConnector : SocialConnector
+@protocol AccessSocialConnector<SocialConnector>
+@optional
++ (id)instance;
+@end
+
+@interface AccessSocialConnector : SocialConnector <AccessSocialConnector>
 - (id <SMediaObject>)mediaObjectForId:(NSString *)objectId type:(NSString *)mediaType;
 
 - (SObject *)addPagingData:(SObject *)result to:(SObject *)data;
@@ -20,5 +26,7 @@
 
 
 - (BOOL)handleOpenURL:(NSURL *)url;
+
+
 
 @end

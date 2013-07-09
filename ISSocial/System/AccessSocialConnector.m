@@ -16,6 +16,7 @@
     NSCache *_cache;
 }
 
+
 - (id)init
 {
     self = [super init];

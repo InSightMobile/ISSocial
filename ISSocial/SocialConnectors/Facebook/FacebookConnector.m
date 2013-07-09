@@ -273,7 +273,9 @@
                         [self readUserData:[SUserData new] completion:^(SObject *result) {
                             [SObject successful:completion];
                             self.loggedIn = YES;
-                            [self xmppConnect];
+                            if([session.permissions indexOfObject:@"xmpp_login"] != NSNotFound) {
+                                [self xmppConnect];
+                            }
                         }];
                     }
                         break;

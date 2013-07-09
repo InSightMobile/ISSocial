@@ -151,7 +151,7 @@ static NSMutableDictionary *_usersById;
 
     SUserData *data = [self dataForUserId:objectId name:userData[@"name"]];
 
-    if (userData[@"online_presence"]) {
+    if ([userData[@"online_presence"] isKindOfClass:[NSString class]]) {
         data.isOnline = @(![userData[@"online_presence"] isEqualToString:@"offline"]);
     }
 

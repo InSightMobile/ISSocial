@@ -10,6 +10,7 @@
 #import "NSSet+ModificationAdditions.h"
 #import "AsyncBlockOperation.h"
 #import "BlockOperationQueue.h"
+#import "AccessSocialConnector.h"
 
 @interface CompositeConnector ()
 
@@ -211,13 +212,38 @@
         candidateConnectors = [[self restoreActiveStates:nil aviableConnectors:nil] mutableCopy];
     }
 
-    NSSet *connectors = [candidateConnectors setByMinusingSet:_deactivatedConnectors];
+    if (!candidateConnectors) {
+        candidateConnectors = [self restoreAvailableConnectors];
+    }
 
-    [self setAvailableConnectors:candidateConnectors
-                activeConnectors:[self restoreActiveStates:connectors aviableConnectors:candidateConnectors]];
+    NSSet *connectors = [candidateConnectors setByMinusingSet:_deactivatedConnectors];
+    self.activeConnectors = [self restoreActiveStates:connectors aviableConnectors:candidateConnectors];
+    self.availableConnectors = candidateConnectors;
 
     self.defaultConnector = _superConnector.defaultConnector;
     return;
+}
+
+- (NSMutableSet *)restoreAvailableConnectors {
+    if (self.restorationId) {
+
+        NSArray *mod =
+                [[NSUserDefaults standardUserDefaults] arrayForKey:[self.restorationId stringByAppendingString:@"v2"]];
+        if (mod.count > 2) {
+
+            NSArray *available = mod[2];
+
+            NSMutableSet *availableConnectors = [NSMutableSet setWithCapacity:available.count];
+
+            for (NSString *code in available) {
+
+                Class <AccessSocialConnector> class = NSClassFromString(code);
+                [availableConnectors addObject:[class instance]];
+            }
+            return availableConnectors;
+        }
+    }
+    return nil;
 }
 
 - (void)activateConnector:(SocialConnector *)connector
@@ -280,7 +306,12 @@
 {
     NSSet* connectorsToAdd = [connectors setByMinusingSet:self.availableConnectors];
     if(connectorsToAdd.count) {
-        self.availableConnectors = [self.availableConnectors setByAddingObjectsFromSet:connectorsToAdd];
+        if (_availableConnectors) {
+            self.availableConnectors = [_availableConnectors setByAddingObjectsFromSet:connectorsToAdd];
+        }
+        else {
+            self.availableConnectors = connectorsToAdd;
+        }
     }
 
     if (exclusive) {
@@ -427,9 +458,15 @@
 {
     if (self.restorationId) {
 
+        NSMutableArray *availableConnectorsClasses = [NSMutableArray arrayWithCapacity:_availableConnectors.count];
+        for (SocialConnector *connector in _availableConnectors) {
+            [availableConnectorsClasses addObject:NSStringFromClass(connector.class)];
+        }
+
         NSArray *mod = @[
                 [[_activeConnectors valueForKey:@"connectorCode"] allObjects] ? : @[],
                 [[_deactivatedConnectors valueForKey:@"connectorCode"] allObjects] ? : @[],
+                availableConnectorsClasses,
         ];
 
         [[NSUserDefaults standardUserDefaults] setObject:mod forKey:[self.restorationId stringByAppendingString:@"v2"]];

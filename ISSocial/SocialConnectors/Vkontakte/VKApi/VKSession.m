@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Ярослав. All rights reserved.
 //
 
+#import <BlocksKit/NSObject+BlocksKit.h>
 #import "VKSession.h"
 #import "AFJSONRequestOperation.h"
 #import "AFHTTPClient.h"
@@ -77,8 +78,10 @@
 - (void)openWithPermissions:(NSArray *)permissions completionHandler:(VKSessionStateHandler)handler
 {
     self.currentPermissions = permissions;
-    NSString *appID = [[NSBundle mainBundle].infoDictionary objectForKey:@"VkontakteAppID"];
-    self.clientId = appID;
+    if(!self.clientId) {
+        NSString *appID = [[NSBundle mainBundle].infoDictionary objectForKey:@"VkontakteAppID"];
+        self.clientId = appID;
+    }
 
     NSString *accessToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"VKAccessToken"];
     NSString *userId = [[NSUserDefaults standardUserDefaults] objectForKey:@"VKUserId"];
@@ -97,7 +100,7 @@
             permissionsStr = [permissions componentsJoinedByString:@","];
 
         NSString *authLink =
-                [NSString stringWithFormat:@"https://oauth.vk.com/authorize?client_id=%@&scope=%@&redirect_uri=%@&display=touch&response_type=token", appID, permissionsStr, self.redirectURI];
+                [NSString stringWithFormat:@"https://oauth.vk.com/authorize?client_id=%@&scope=%@&redirect_uri=%@&display=touch&response_type=token", self.clientId, permissionsStr, self.redirectURI];
 
         NSURL *url = [NSURL URLWithString:authLink];
 
@@ -107,11 +110,11 @@
         else {
             WebLoginController *controller = [WebLoginController loginController];
 
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 10 * NSEC_PER_MSEC), dispatch_get_current_queue(), ^{
+            [self performBlock:^(id sender) {
                 self.statusHandler = handler;
                 controller.delegate = self;
                 [controller presentWithRequest:[NSURLRequest requestWithURL:url]];
-            });
+            } afterDelay:0.1];
         }
     }
 }

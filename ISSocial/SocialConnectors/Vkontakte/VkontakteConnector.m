@@ -81,7 +81,12 @@
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        [VKSession openActiveSessionWithPermissions:@[@"wall", @"messages", @"photos", @"friends", @"video", @"audio"] completionHandler:^(VKSession *session, VKSessionState status, NSError *error) {
+        NSArray *permissions = self.permissions;
+        if(!permissions) {
+            permissions = @[@"wall", @"messages", @"photos", @"friends", @"video", @"audio"];
+        }
+
+        [VKSession openActiveSessionWithPermissions:permissions completionHandler:^(VKSession *session, VKSessionState status, NSError *error) {
             switch (status) {
                 case VKSessionStateOpen: {
                     self.userId = session.userId;
@@ -111,6 +116,18 @@
 - (BOOL)isLoggedIn
 {
     return _loggedIn;
+}
+
+- (void)setupSettings:(NSDictionary *)settings {
+
+    [super setupSettings:settings];
+
+    if(settings[@"AppID"]) {
+        [VKSession activeSession].clientId = settings[@"AppID"];
+    }
+    if(settings[@"Permissions"]) {
+        self.permissions = settings[@"Permissions"];
+    }
 }
 
 

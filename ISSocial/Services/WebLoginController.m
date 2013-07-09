@@ -7,6 +7,7 @@
 //
 
 
+#import <BlocksKit/NSObject+BlocksKit.h>
 #import "WebLoginController.h"
 #import "WebLoginManager.h"
 #import "AsyncBlockOperation.h"
@@ -94,11 +95,10 @@
     _disappeared = YES;
     [super viewDidDisappear:animated];
 
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 100 * NSEC_PER_MSEC), dispatch_get_current_queue(), ^{
-
+    [self performBlock:^(id sender){
         self.completionBlock(self.error);
         self.completionBlock = nil;
-    });
+    } afterDelay:0.1];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -112,10 +112,10 @@
 {
     _disappeared = NO;
     if (_dissmissing) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 100 * NSEC_PER_MSEC), dispatch_get_current_queue(), ^{
+        [self performBlock:^(id sender){
             _appeared = YES;
             [self dismiss];
-        });
+        } afterDelay:0.1];
     }
     else {
         _appeared = YES;
@@ -179,6 +179,8 @@
 {
     if (self.view.superview) {
         [self.view removeFromSuperview];
+        self.completionBlock(self.error);
+        self.completionBlock = nil;
     }
 }
 
