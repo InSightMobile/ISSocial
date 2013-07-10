@@ -7,6 +7,7 @@
 
 #import "SocialConnector.h"
 #import "AccessSocialConnector.h"
+#import "ISSocial.h"
 
 
 @implementation AccessSocialConnector
@@ -89,5 +90,23 @@
     return NO;
 }
 
++ (id)instance {
+
+    AccessSocialConnector* connector = [[ISSocial defaultInstance] connectorNamed:[self connectorCode]];
+
+    if(connector) {
+        return connector;
+    }
+
+}
+
+- (NSString *)connectorCode
+{
+    Class x = self.class;
+    if ([x respondsToSelector:@selector(connectorCode)]) {
+        return [x connectorCode];
+    }
+    return nil;
+}
 
 @end

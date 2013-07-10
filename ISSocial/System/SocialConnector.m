@@ -109,7 +109,7 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
 
 - (NSString *)connectorName
 {
-    return nil;
+   return NSLocalizedString(self.connectorCode, nil);
 }
 
 - (NSInteger)connectorPriority

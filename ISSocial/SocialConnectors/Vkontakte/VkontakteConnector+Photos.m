@@ -21,8 +21,7 @@
 
 @implementation VkontakteConnector (Photos)
 
-- (SObject *)readPhotos:(SObject *)params completion:(CompletionBlock)completion
-{
+- (SObject *)readPhotos:(SObject *)params completion:(CompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"photos.getAll" parameters:@{@"photo_sizes" : @1, @"extended" : @1} operation:operation processor:^(id response) {
@@ -31,8 +30,7 @@
     }];
 }
 
-- (SObject *)parsePhotoCommentEntries:(NSArray *)response object:(SObject *)object paging:(SObject *)paging
-{
+- (SObject *)parsePhotoCommentEntries:(NSArray *)response object:(SObject *)object paging:(SObject *)paging {
     SObject *result = [self parsePagingResponce:response paging:paging processor:^(id data) {
         SCommentData *comment = [self parseCommentEntry:data];
         comment.commentedObject = object;
@@ -43,39 +41,37 @@
     return result;
 }
 
-- (SObject *)pagePhotoComments:(SPhotoData *)params completion:(CompletionBlock)completion
-{
-    SPhotoData *commentObject = (id)[(id) params commentedObject];
+- (SObject *)pagePhotoComments:(SPhotoData *)params completion:(CompletionBlock)completion {
+    SPhotoData *commentObject = (id) [(id) params commentedObject];
 
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
-        
+
         [self simpleMethod:@"photos.getComments" parameters:@{
-         @"pid" : commentObject.photoId,
-         @"owner_id" : commentObject.author.objectId,
-         @"offset" : params.pagingData,
-         @"count" : @(self.pageSize),
-         @"sort" : @"desc"}
+                @"pid" : commentObject.photoId,
+                @"owner_id" : commentObject.author.objectId,
+                @"offset" : params.pagingData,
+                @"count" : @(self.pageSize),
+                @"sort" : @"desc"}
                  operation:operation processor:^(NSArray *response) {
-             
-             NSLog(@"response = %@", response);
-             
-             SObject *result = [self parsePhotoCommentEntries:response object:params paging:nil];
-             [self updateUserData:[result.subObjects valueForKey:@"author"] operation:operation completion:^(SObject *updateResult) {
-                    [operation complete:[self addPagingData:result to:params]];                 
-             }];
-         }];
+
+            NSLog(@"response = %@", response);
+
+            SObject *result = [self parsePhotoCommentEntries:response object:params paging:nil];
+            [self updateUserData:[result.subObjects valueForKey:@"author"] operation:operation completion:^(SObject *updateResult) {
+                [operation complete:[self addPagingData:result to:params]];
+            }];
+        }];
     }];
 }
 
 
-- (SObject *)readPhotoComments:(SPhotoData *)params completion:(CompletionBlock)completion
-{
+- (SObject *)readPhotoComments:(SPhotoData *)params completion:(CompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"photos.getComments" parameters:@{
                 @"pid" : params.photoId,
                 @"owner_id" : params.author.objectId,
-          @"sort" : @"desc",
+                @"sort" : @"desc",
         }        operation:operation processor:^(NSArray *response) {
 
             NSLog(@"response = %@", response);
@@ -93,8 +89,7 @@
     }];
 }
 
-- (SObject *)parsePhotos:(NSArray *)response
-{
+- (SObject *)parsePhotos:(NSArray *)response {
     SObject *result = [SObject objectCollectionWithHandler:self];
     for (NSDictionary *photoInfo in response) {
 
@@ -107,8 +102,7 @@
 }
 
 
-- (SObject *)addPhotoComment:(SCommentData *)params completion:(CompletionBlock)completion
-{
+- (SObject *)addPhotoComment:(SCommentData *)params completion:(CompletionBlock)completion {
     NSLog(@"params = %@", params);
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"photos.createComment" parameters:@{
@@ -132,23 +126,20 @@
     }];
 }
 
-- (SObject *)addPhotoLike:(SPhotoData *)params completion:(CompletionBlock)completion
-{
+- (SObject *)addPhotoLike:(SPhotoData *)params completion:(CompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self addLike:params operation:operation type:@"photo" itemId:params.photoId owner:params.author];
     }];
 }
 
-- (SObject *)removePhotoLike:(SPhotoData *)params completion:(CompletionBlock)completion
-{
+- (SObject *)removePhotoLike:(SPhotoData *)params completion:(CompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self removeLike:params operation:operation type:@"photo" itemId:params.photoId owner:params.author];
     }];
 }
 
 
-- (SObject *)createPhotoAlbum:(SPhotoAlbumData *)params completion:(CompletionBlock)completion
-{
+- (SObject *)createPhotoAlbum:(SPhotoAlbumData *)params completion:(CompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"photos.createAlbum" parameters:@{@"title" : params.title} operation:operation processor:^(NSArray *response) {
 
@@ -163,8 +154,7 @@
     }];
 }
 
-- (SObject *)readPhotoAlbums:(SPhotoAlbumData *)params completion:(CompletionBlock)completion
-{
+- (SObject *)readPhotoAlbums:(SPhotoAlbumData *)params completion:(CompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"photos.getAlbums" parameters:nil operation:operation processor:^(NSArray *response) {
@@ -196,8 +186,7 @@
     }];
 }
 
-- (SObject *)readPhotosFromAlbum:(SPhotoAlbumData *)params completion:(CompletionBlock)completion
-{
+- (SObject *)readPhotosFromAlbum:(SPhotoAlbumData *)params completion:(CompletionBlock)completion {
     if (!params.objectId) {
         return [self readPhotos:params completion:completion];
     }
@@ -217,8 +206,7 @@
 }
 
 
-- (SObject *)getDefaultPhotoAlbum:(SObject *)params completion:(CompletionBlock)completion
-{
+- (SObject *)getDefaultPhotoAlbum:(SObject *)params completion:(CompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"photos.getAlbums" operation:operation processor:^(NSArray *response) {
 
@@ -241,8 +229,7 @@
     }];
 }
 
-- (SPhotoData *)parsePhotoResponse:(NSDictionary *)response
-{
+- (SPhotoData *)parsePhotoResponse:(NSDictionary *)response {
     NSString *objectId;
     NSString *photoId;
 
@@ -326,8 +313,7 @@
     return data;
 }
 
-- (SObject *)removePhoto:(SPhotoData *)params completion:(CompletionBlock)completion
-{
+- (SObject *)removePhoto:(SPhotoData *)params completion:(CompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"photos.delete" parameters:@{
@@ -350,8 +336,7 @@
     }];
 }
 
-- (SObject *)readPhotoLikes:(SPhotoData *)params completion:(CompletionBlock)completion
-{
+- (SObject *)readPhotoLikes:(SPhotoData *)params completion:(CompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self readLikes:params operation:operation type:@"photo" itemId:params.photoId owner:params.author];
@@ -361,8 +346,7 @@
 - (void)uploadPhoto:(SPhotoData *)params
               album:(NSString *)album
           operation:(SocialConnectorOperation *)operation
-         completion:(CompletionBlock)completionn
-{
+         completion:(CompletionBlock)completionn {
     NSString *uploadServer, *saveMethod;
     NSDictionary *parameters;
 
@@ -387,29 +371,22 @@
         saveMethod = @"photos.saveWallPhoto";
         parameters = nil;
     }
-    [self uploadPhoto:params uploadServer:uploadServer saveMethod:saveMethod parameters:parameters operation:operation completion:completionn];
+    [self uploadPhoto:params uploadServer:uploadServer saveMethod:saveMethod operation:operation completion:completionn];
 }
 
 - (void)uploadMessagePhoto:(SPhotoData *)params
                  operation:(SocialConnectorOperation *)operation
-                completion:(CompletionBlock)completionn
-{
+                completion:(CompletionBlock)completionn {
     NSString *uploadServer, *saveMethod;
-    NSDictionary *parameters;
 
     uploadServer = @"photos.getMessagesUploadServer";
     saveMethod = @"photos.saveMessagesPhoto";
-    [self uploadPhoto:params uploadServer:uploadServer saveMethod:saveMethod parameters:parameters operation:operation completion:completionn];
+    [self uploadPhoto:params uploadServer:uploadServer saveMethod:saveMethod operation:operation completion:completionn];
 }
 
-- (void)uploadPhoto:(SPhotoData *)params
-       uploadServer:(NSString *)uploadServer
-         saveMethod:(NSString *)saveMethod
-         parameters:(NSDictionary *)parameters
-          operation:(SocialConnectorOperation *)operation
-         completion:(CompletionBlock)completionn
-{
-    [[VKRequest requestMethod:uploadServer parameters:parameters] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
+- (void)uploadPhoto:(SPhotoData *)params uploadServer:(NSString *)uploadServer saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation completion:(CompletionBlock)completionn {
+
+    [[VKRequest requestMethod:uploadServer parameters:nil] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
         NSLog(@"response = %@", response);
         if (error) {
             completionn([SObject error:error]);
@@ -422,47 +399,49 @@
             }
         }
 
-        [VKSession sendPOSTRequest:response[@"upload_url"] withImageData:params.sourceData handler:^(VKRequestOperation *connection, id result, NSError *error) {
-
-            NSLog(@" result = %@", result);
-            if (error) {
-                [operation completeWithError:error];
-                return;
-            }
-
-            [[VKRequest requestMethod:saveMethod parameters:result] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
-
-                NSLog(@" result = %@", result);
-                if (error) {
-                    completionn([SObject error:error]);
-                }
-                else {
-                    NSDictionary *photoData = response[0];
-                    SPhotoData *photo = [self parsePhotoResponse:photoData];
-
-                    completionn(photo);
-                }
-            }];
-        }];
+        [self uploadPhoto:params toURL:response[@"upload_url"] saveMethod:saveMethod operation:operation completionn:completionn];
     }];
 
 }
 
-- (SObject *)addPhotoToAlbum:(SPhotoData *)params completion:(CompletionBlock)completionn
-{
+- (void)uploadPhoto:(SPhotoData *)params toURL:(NSString *)URL saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation completionn:(CompletionBlock)completionn {
+
+    [VKSession sendPOSTRequest:URL withImageData:params.sourceData handler:^(VKRequestOperation *connection, id result, NSError *error) {
+
+        NSLog(@" result = %@", result);
+        if (error) {
+            [operation completeWithError:error];
+            return;
+        }
+
+        [[VKRequest requestMethod:saveMethod parameters:result] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
+
+            NSLog(@" result = %@", result);
+            if (error) {
+                completionn([SObject error:error]);
+            }
+            else {
+                NSDictionary *photoData = response[0];
+                SPhotoData *photo = [self parsePhotoResponse:photoData];
+
+                completionn(photo);
+            }
+        }];
+    }];
+}
+
+- (SObject *)addPhotoToAlbum:(SPhotoData *)params completion:(CompletionBlock)completionn {
     return [self addPhotoWithParams:params completion:completionn];
 }
 
-- (SObject *)addPhoto:(SPhotoData *)srcParams completion:(CompletionBlock)completionn
-{
+- (SObject *)addPhoto:(SPhotoData *)srcParams completion:(CompletionBlock)completionn {
     SPhotoData *params = [srcParams copy];
     params.album = nil;
 
     return [self addPhotoWithParams:params completion:completionn];
 }
 
-- (SObject *)addPhotoWithParams:(SPhotoData *)params completion:(CompletionBlock)completionn
-{
+- (SObject *)addPhotoWithParams:(SPhotoData *)params completion:(CompletionBlock)completionn {
     return [self operationWithObject:params completion:completionn processor:^(SocialConnectorOperation *operation) {
 
         SObject *photoAlbum = params.album;

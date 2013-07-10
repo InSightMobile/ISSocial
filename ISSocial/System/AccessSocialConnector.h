@@ -13,6 +13,7 @@
 @protocol AccessSocialConnector<SocialConnector>
 @optional
 + (id)instance;
++ (NSString *)connectorCode;
 @end
 
 @interface AccessSocialConnector : SocialConnector <AccessSocialConnector>
@@ -27,6 +28,7 @@
 
 - (BOOL)handleOpenURL:(NSURL *)url;
 
++ (id)instance;
 
 
 @end

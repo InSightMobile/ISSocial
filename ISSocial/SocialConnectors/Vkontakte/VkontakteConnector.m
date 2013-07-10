@@ -10,6 +10,7 @@
 #import "VKSession.h"
 #import "VkontakteConnector+UserData.h"
 #import "SUserData.h"
+#import "ISSocial.h"
 
 @interface VkontakteConnector ()
 @property(nonatomic) BOOL loggedIn;
@@ -36,26 +37,12 @@
     return self;
 }
 
-+ (VkontakteConnector *)instance
+
++ (NSString *)connectorCode
 {
-    static VkontakteConnector *_instance = nil;
-    @synchronized (self) {
-        if (_instance == nil) {
-            _instance = [[self alloc] init];
-        }
-    }
-    return _instance;
+    return @"Vkontakte";
 }
 
-- (NSString *)connectorCode
-{
-    return @"Vk";
-}
-
-- (NSString *)connectorName
-{
-    return NSLocalizedString(@"Vkontakte", @"VKontakte");
-}
 
 - (void)simpleMethod:(NSString *)method operation:(SocialConnectorOperation *)operation processor:(void (^)(id response))processor
 {

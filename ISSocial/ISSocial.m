@@ -63,11 +63,45 @@
     }];
 }
 
-- (SocialConnector *)connectorNamed:(NSString *)connectorName
+- (void)useConnectorForCode:(NSString *)connectorCode connector:(AccessSocialConnector *)connector
+{
+    if(!self.connectorsByCode) {
+        self.connectorsByCode = [NSMutableDictionary new];
+    }
+
+    _connectorsByCode[connectorCode] = connector;
+}
+
+- (void)useConnector:(AccessSocialConnector *)connector
+{
+    [self useConnectorForCode:connector.connectorCode connector:connector];
+}
+
+
+- (AccessSocialConnector *)connectorNamed:(NSString *)connectorName
 {
     Class connectorClass = NSClassFromString([NSString stringWithFormat:@"%@Connector", connectorName]);
-    SocialConnector *connector = [connectorClass instance];
-    return connector;
+  
+    if(!self.connectorsByCode) {
+        self.connectorsByCode = [NSMutableDictionary new]; 
+    }
+    
+    if(!_connectorsByCode[connectorName]) {
+        _connectorsByCode[connectorName] = [[connectorClass alloc] init];
+    }
+    return _connectorsByCode[connectorName];
+}
+
+- (NSSet *)loggedInConnectors
+{
+    NSMutableSet* set = [NSMutableSet set];
+    for (AccessSocialConnector *connector in     self.rootConnectors.availableConnectors) {
+
+        if(connector.isLoggedIn) {
+            [set addObject:connector];
+        }
+    }
+    return set;
 }
 
 

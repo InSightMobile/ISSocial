@@ -11,6 +11,7 @@
 #import "AsyncBlockOperation.h"
 #import "BlockOperationQueue.h"
 #import "AccessSocialConnector.h"
+#import "ISSocial.h"
 
 @interface CompositeConnector ()
 
@@ -234,11 +235,8 @@
             NSArray *available = mod[2];
 
             NSMutableSet *availableConnectors = [NSMutableSet setWithCapacity:available.count];
-
             for (NSString *code in available) {
-
-                Class <AccessSocialConnector> class = NSClassFromString(code);
-                [availableConnectors addObject:[class instance]];
+                [availableConnectors addObject:[[ISSocial defaultInstance] connectorNamed:code]];
             }
             return availableConnectors;
         }
@@ -458,15 +456,10 @@
 {
     if (self.restorationId) {
 
-        NSMutableArray *availableConnectorsClasses = [NSMutableArray arrayWithCapacity:_availableConnectors.count];
-        for (SocialConnector *connector in _availableConnectors) {
-            [availableConnectorsClasses addObject:NSStringFromClass(connector.class)];
-        }
-
         NSArray *mod = @[
                 [[_activeConnectors valueForKey:@"connectorCode"] allObjects] ? : @[],
                 [[_deactivatedConnectors valueForKey:@"connectorCode"] allObjects] ? : @[],
-                availableConnectorsClasses,
+                [[_availableConnectors valueForKey:@"connectorCode"] allObjects] ? : @[]
         ];
 
         [[NSUserDefaults standardUserDefaults] setObject:mod forKey:[self.restorationId stringByAppendingString:@"v2"]];

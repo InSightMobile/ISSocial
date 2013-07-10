@@ -53,15 +53,11 @@
 }
 
 
-- (NSString *)connectorCode
-{
-    return @"Fb";
-}
-
-- (NSString *)connectorName
++ (NSString *)connectorCode
 {
     return @"Facebook";
 }
+
 
 - (NSInteger)connectorPriority
 {
