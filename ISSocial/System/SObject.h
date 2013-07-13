@@ -79,6 +79,8 @@ typedef void (^CompletionBlock)(SObject *result);
 
 - (BOOL)isFailed;
 
+- (BOOL)isSuccessful;
+
 - (BOOL)isProcessing;
 
 + (SObject *)successful:(CompletionBlock)completion;

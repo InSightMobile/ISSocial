@@ -75,7 +75,7 @@
     if (feedInfo[@"from"]) {
         entry.author = [self parseUserData:feedInfo[@"from"]];
     }
-    else if(!entry.author) {
+    else if (!entry.author) {
         entry.author = self.currentUserData;
     }
 
@@ -201,7 +201,7 @@
 
             [self updateUserData:[feed.subObjects valueForKey:@"author"] operation:operation completion:^(SObject *result) {
 
-                if(feed.isPagable && feed.subObjects.count < self.pageSize ) {
+                if (feed.isPagable && feed.subObjects.count < self.pageSize) {
                     [self pageFeed:feed completion:completion];
                 }
                 else {
@@ -252,17 +252,23 @@
 
                     if ([[object mediaType] isEqualToString:@"photo"]) {
 
-                        [self readWallAlbumWithOperation:operation completion:^(SObject *result) {
+                        SPhotoData *photoData = object;
+                        if (photoData.sourceImage) {
+                            [self readWallAlbumWithOperation:operation completion:^(SObject *result) {
 
-                            NSString *destination = result.objectId && !result.isFailed ? result.objectId : @"me";
+                                NSString *destination = result.objectId && !result.isFailed ? result.objectId : @"me";
 
-                            NSString *path = [NSString stringWithFormat:@"%@/photos", destination];
+                                NSString *path = [NSString stringWithFormat:@"%@/photos", destination];
 
-                            [self uploadPhoto:feed.attachments[0] toPath:path operation:operation completion:^(SObject *result) {
-                                [photos addObject:result];
-                                next(nil);
+                                [self uploadPhoto:feed.attachments[0] toPath:path operation:operation completion:^(SObject *result) {
+                                    [photos addObject:result];
+                                    next(nil);
+                                }];
                             }];
-                        }];
+                        }
+                        else {
+                            next(nil);
+                        }
                     }
                     else {
                         next(nil);

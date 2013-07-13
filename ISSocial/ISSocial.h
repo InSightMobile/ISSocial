@@ -2,16 +2,15 @@
 // 
 
 #import <Foundation/Foundation.h>
+#import "AccessSocialConnector.h"
+#import "CompositeConnector.h"
 
-@class CompositeConnector;
 @class LoginManager;
-@class SocialConnector;
-@class AccessSocialConnector;
 
 @interface ISSocial : NSObject
 + (ISSocial *)defaultInstance;
 
-@property (nonatomic, strong, readonly) CompositeConnector *rootConnectors;
+@property(nonatomic, strong, readonly) CompositeConnector *rootConnectors;
 
 @property(nonatomic, strong) NSMutableDictionary *connectorsByCode;
 

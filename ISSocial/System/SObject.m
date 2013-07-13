@@ -88,6 +88,10 @@
     return _state == SObjectStateFailed || _state == SObjectStateUnsupported;
 }
 
+- (BOOL)isSuccessful
+{
+    return !self.isFailed;
+}
 
 - (BOOL)isProcessing
 {
