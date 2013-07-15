@@ -10,6 +10,7 @@
 #import "FBRequest.h"
 #import "NSString+TypeSafety.h"
 #import "MultiImage.h"
+#import "NSDate+Facebook.h"
 
 static NSMutableDictionary *_usersById;
 
@@ -71,7 +72,7 @@ static NSMutableDictionary *_usersById;
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSString *fql =
-                @"SELECT uid,name, online_presence FROM user WHERE uid IN (SELECT uid2 FROM friend where uid1 = me())";
+                @"SELECT uid,name, online_presence,birthday_date FROM user WHERE uid IN (SELECT uid2 FROM friend where uid1 = me())";
 
         [self simpleQuery:fql operation:operation processor:^(id response) {
 
@@ -153,6 +154,12 @@ static NSMutableDictionary *_usersById;
 
     if ([userData[@"online_presence"] isKindOfClass:[NSString class]]) {
         data.isOnline = @(![userData[@"online_presence"] isEqualToString:@"offline"]);
+    }
+
+    if([userData[@"birthday_date"] isKindOfClass:[NSString class]]) {
+
+        data.birthday = [NSDate dateWithFacebookBirthdayString:userData[@"birthday_date"]];
+
     }
 
     return data;

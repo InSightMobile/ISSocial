@@ -12,6 +12,8 @@
 
 + (NSDate *)dateWithFacebookString:(id)data;
 
++ (NSDate *)dateWithFacebookBirthdayString:(id)data;
+
 - (NSString *)facebookString;
 
 @end

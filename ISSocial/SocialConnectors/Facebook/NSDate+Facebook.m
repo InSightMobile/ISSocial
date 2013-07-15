@@ -22,6 +22,18 @@
     return date;
 }
 
++ (NSDate *)dateWithFacebookBirthdayString:(id)data
+{
+    if ([data isKindOfClass:[NSNumber class]]) {
+        return [NSDate dateWithTimeIntervalSince1970:[data doubleValue]];
+    }
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    //2010-12-01T21:35:43+0000
+    [df setDateFormat:@"MM/dd/yyyy"];
+    NSDate *date = [df dateFromString:data];
+    return date;
+}
+
 - (NSString *)facebookString
 {
     NSDateFormatter *df = [[NSDateFormatter alloc] init];

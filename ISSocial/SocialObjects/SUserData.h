@@ -16,6 +16,8 @@
 @property(copy, nonatomic) NSString *userName;
 @property(copy, nonatomic) MultiImage *userPicture;
 @property(nonatomic, strong) NSNumber *isOnline;
+@property(nonatomic, strong) NSDate *birthday;
+
 @end
 
 @interface SUserData : SObject <SUserData>
