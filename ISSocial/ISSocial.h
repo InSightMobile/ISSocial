@@ -16,6 +16,10 @@
 
 - (void)tryLoginWithCompletion:(void (^)())completion;
 
+- (void)logoutWithCompletion:(void (^)())completion;
+- (void)logoutConnector:(SocialConnector*)connector completion:(void (^)())completion;
+
+
 - (void)loginWithConnectorName:(NSString *)connectorName completion:(void (^)(NSError *error))completion;
 
 - (void)useConnectorForCode:(NSString *)connectorCode connector:(AccessSocialConnector *)connector;

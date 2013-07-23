@@ -248,6 +248,14 @@
     self.accessToken = nil;
     self.userId = nil;
     self.state = VKSessionStateClosed;
+    [self clearCookies];
+
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"VKUserId"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"VKAccessToken"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"VKAccessTokenDate"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"VKAccessExpires"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
 }
 
 + (void)sendPOSTRequest:(NSString *)reqURl withImageData:(NSData *)imageData handler:(VKRequestHandler)handler
@@ -274,6 +282,37 @@
 
             }];
     [op start];
+}
+
+- (void)clearCookies
+{
+
+    NSHTTPCookieStorage* cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    NSArray* vkCookies1 = [cookies cookiesForURL:
+            [NSURL URLWithString:@"http://api.vk.com"]];
+    NSArray* vkCookies2 = [cookies cookiesForURL:
+            [NSURL URLWithString:@"http://vk.com"]];
+    NSArray* vkCookies3 = [cookies cookiesForURL:
+            [NSURL URLWithString:@"http://login.vk.com"]];
+    NSArray* vkCookies4 = [cookies cookiesForURL:
+            [NSURL URLWithString:@"http://oauth.vk.com"]];
+
+    for (NSHTTPCookie* cookie in vkCookies1)
+    {
+        [cookies deleteCookie:cookie];
+    }
+    for (NSHTTPCookie* cookie in vkCookies2)
+    {
+        [cookies deleteCookie:cookie];
+    }
+    for (NSHTTPCookie* cookie in vkCookies3)
+    {
+        [cookies deleteCookie:cookie];
+    }
+    for (NSHTTPCookie* cookie in vkCookies4)
+    {
+        [cookies deleteCookie:cookie];
+    }
 }
 
 @end
