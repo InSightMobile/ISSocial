@@ -54,7 +54,11 @@
 - (void)tryLoginWithCompletion:(void (^)())completion
 {
     [self loadConnectors];
-    [self.loginManager loginWithCompletion:completion];
+    [self.loginManager loginWithCompletion:^{
+
+
+        completion();
+    }];
 }
 
 - (void)loginWithConnectorName:(NSString *)connectorName completion:(void (^)(NSError *error))completion

@@ -33,6 +33,8 @@ typedef void (^VKSessionStateHandler)(VKSession *session,
 
 @property(nonatomic, copy) NSString *clientId;
 
+@property(nonatomic) VKSessionState state;
+
 + (VKSession *)activeSession;
 
 + (void)openActiveSessionWithPermissions:(NSArray *)permissions completionHandler:(VKSessionStateHandler)handler;
@@ -40,6 +42,8 @@ typedef void (^VKSessionStateHandler)(VKSession *session,
 - (void)reopenSessionWithCompletionHandler:(VKSessionStateHandler)handler;
 
 + (VKRequestOperation *)uploadDataTo:(NSString *)uploadURL fromURL:(NSURL *)fileUrl name:(NSString *)name fileName:(NSString *)filename mime:(NSString *)mime handler:(VKRequestHandler)handler;
+
+- (void)closeAndClearTokenInformation;
 
 + (void)sendPOSTRequest:(NSString *)reqURl withImageData:(NSData *)imageData handler:(VKRequestHandler)handler;
 

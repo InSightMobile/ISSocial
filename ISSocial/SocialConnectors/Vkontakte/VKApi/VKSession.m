@@ -179,6 +179,7 @@
             self.userId = userId;
 
             if (_statusHandler) {
+                self.state = VKSessionStateOpen;
                 self.statusHandler(self, VKSessionStateOpen, nil);
                 self.statusHandler = nil;
             }
@@ -188,6 +189,7 @@
 
             NSLog(@"Error: %@", url.absoluteString);
 
+            self.state = VKSessionStateClosed;
             if (_statusHandler) {
                 self.statusHandler(self, VKSessionStateClosed, nil);
                 self.statusHandler = nil;
@@ -240,6 +242,12 @@
             }];
     [op start];
     return op;
+}
+
+- (void)closeAndClearTokenInformation {
+    self.accessToken = nil;
+    self.userId = nil;
+    self.state = VKSessionStateClosed;
 }
 
 + (void)sendPOSTRequest:(NSString *)reqURl withImageData:(NSData *)imageData handler:(VKRequestHandler)handler

@@ -63,6 +63,13 @@
 #pragma mark Session management
 
 
+- (SObject *)closeSession:(SObject *)params completion:(CompletionBlock)completion
+{
+    [VKSession.activeSession closeAndClearTokenInformation];
+    _loggedIn = NO;
+    completion([SObject successful]);
+}
+
 
 - (SObject *)openSession:(SObject *)params completion:(CompletionBlock)completion
 {

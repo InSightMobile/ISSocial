@@ -154,6 +154,7 @@
 {
     self.availableConnectors = aviableConnectors;
     self.activeConnectors = activeConnectors;
+    self.availableConnectors = aviableConnectors;
 }
 
 - (void)setSuperConnector:(CompositeConnector *)superConnector
@@ -218,8 +219,7 @@
     }
 
     NSSet *connectors = [candidateConnectors setByMinusingSet:_deactivatedConnectors];
-    self.activeConnectors = [self restoreActiveStates:connectors aviableConnectors:candidateConnectors];
-    self.availableConnectors = candidateConnectors;
+    [self setAvailableConnectors:candidateConnectors activeConnectors:[self restoreActiveStates:connectors aviableConnectors:candidateConnectors]];
 
     self.defaultConnector = _superConnector.defaultConnector;
     return;
