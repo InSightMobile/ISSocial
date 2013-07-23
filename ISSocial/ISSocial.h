@@ -8,6 +8,8 @@
 @class LoginManager;
 
 @interface ISSocial : NSObject
+- (void)loadConnectors;
+
 + (ISSocial *)defaultInstance;
 
 @property(nonatomic, strong, readonly) CompositeConnector *rootConnectors;

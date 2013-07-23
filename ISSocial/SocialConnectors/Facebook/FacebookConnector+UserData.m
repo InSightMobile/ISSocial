@@ -157,12 +157,15 @@ static NSMutableDictionary *_usersById;
     }
 
     if([userData[@"birthday_date"] isKindOfClass:[NSString class]]) {
-
         data.birthday = [NSDate dateWithFacebookBirthdayString:userData[@"birthday_date"]];
-        if(!data.birthday) {
+    }
 
-        }
+    if([userData[@"email"] isKindOfClass:[NSString class]]) {
+        data.userEmail = userData[@"email"];
+    }
 
+    if([userData[@"gender"] isKindOfClass:[NSString class]]) {
+        data.userGender = userData[@"gender"];
     }
 
     return data;

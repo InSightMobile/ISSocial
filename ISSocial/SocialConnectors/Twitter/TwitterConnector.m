@@ -73,7 +73,9 @@
 
 - (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
-    //  First, we need to obtain the account instance for the user's Twitter account
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+
+        //  First, we need to obtain the account instance for the user's Twitter account
     ACAccountStore *store = [[ACAccountStore alloc] init];
     ACAccountType *twitterAccountType =
             [store accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
@@ -84,7 +86,7 @@
                          if (!granted) {
                              // The user rejected your request
                              NSLog(@"User rejected access to the account.");
-                             completion([SObject failed]);
+                             [operation completeWithFailure];
                          }
                          else {
                              // Grab the available accounts
@@ -120,7 +122,7 @@
                                              if (!responseData) {
                                                  // inspect the contents of error
                                                  NSLog(@"%@", error);
-                                                 completion([SObject error:error]);
+                                                 [operation completeWithError:error];
                                              }
                                              else {
                                                  NSError *jsonError;
@@ -140,11 +142,12 @@
 
                                                      self.currentUserData = userData;
                                                      completion([SObject successful]);
+                                                     [operation complete:nil];
                                                  }
                                                  else {
                                                      // inspect the contents of jsonError
                                                      NSLog(@"%@", jsonError);
-                                                     completion([SObject error:jsonError]);
+                                                     [operation completeWithError:jsonError];
                                                  }
                                              }
                                          }];
@@ -154,6 +157,7 @@
                      }];
 
     completion([SObject successful]);
+    }];
     
 }
 
