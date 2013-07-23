@@ -82,13 +82,13 @@
     }];
 }
 
-- (void)loginWithConnectorName:(NSString *)connectorName completion:(void (^)(NSError *error))completion
+- (void)loginWithConnectorName:(NSString *)connectorName completion:(void (^)(SocialConnector *connector, NSError *error))completion
 {
     SocialConnector *connector = [self connectorNamed:connectorName];
 
     [self.rootConnectors addConnector:connector asActive:YES];
     [self.loginManager loginWithCompletion:^{
-        completion(nil);
+        completion(connector,nil);
     }];
 }
 

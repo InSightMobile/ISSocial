@@ -11,7 +11,7 @@
 
 @implementation VkontakteConnector (News)
 
-- (SObject *)addNewsLike:(SNewsEntry *)feed completion:(CompletionBlock)completion
+- (SObject *)addNewsLike:(SNewsEntry *)feed completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:feed completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"wall.addLike"
@@ -28,7 +28,7 @@
     }];
 }
 
-- (SObject *)removeNewsLike:(SNewsEntry *)feed completion:(CompletionBlock)completion
+- (SObject *)removeNewsLike:(SNewsEntry *)feed completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:feed completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"wall.deleteLike"
@@ -45,7 +45,7 @@
     }];
 }
 
-- (SObject *)pageNews:(SUserData *)params completion:(CompletionBlock)completion
+- (SObject *)pageNews:(SUserData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -65,7 +65,7 @@
     }];
 }
 
-- (SObject *)readNews:(SUserData *)params completion:(CompletionBlock)completion
+- (SObject *)readNews:(SUserData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -79,7 +79,7 @@
     }];
 }
 
-- (SObject *)searchNews:(SUserData *)params completion:(CompletionBlock)completion
+- (SObject *)searchNews:(SUserData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -97,7 +97,7 @@
 }
 
 
-- (void)parseNewsEntries:(id)response paging:(SObject *)paging operation:(SocialConnectorOperation *)operation completion:(CompletionBlock)completion
+- (void)parseNewsEntries:(id)response paging:(SObject *)paging operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
 {
     //NSLog(@"news response = %@", response);
 
@@ -223,7 +223,7 @@
     return entry;
 }
 
-- (SObject *)readNewsComments:(SNewsEntry *)params completion:(CompletionBlock)completion
+- (SObject *)readNewsComments:(SNewsEntry *)params completion:(SObjectCompletionBlock)completion
 {
     if ([params.newsType isEqualToString:@"post"]) {
         SFeedEntry *feedEntry = [SFeedEntry new];
@@ -238,7 +238,7 @@
     }
 }
 
-- (SObject *)addNewsComment:(SCommentData *)comment completion:(CompletionBlock)completion
+- (SObject *)addNewsComment:(SCommentData *)comment completion:(SObjectCompletionBlock)completion
 {
     return [self addFeedComment:comment completion:completion];
 }

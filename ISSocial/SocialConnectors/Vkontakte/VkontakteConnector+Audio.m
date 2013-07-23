@@ -34,7 +34,7 @@
     return audio;
 }
 
-- (SObject *)readAudio:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readAudio:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -47,7 +47,7 @@
     }];
 }
 
-- (SObject *)searchAudio:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)searchAudio:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -80,7 +80,7 @@
     return result;
 }
 
-- (SObject *)addAudio:(SAudioData *)params completion:(CompletionBlock)completion
+- (SObject *)addAudio:(SAudioData *)params completion:(SObjectCompletionBlock)completion
 {
     NSLog(@"add audio = %@", params);
 

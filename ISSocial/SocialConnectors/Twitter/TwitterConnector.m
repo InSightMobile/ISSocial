@@ -63,7 +63,7 @@
 
 }
 
-- (SObject *)closeSession:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     //[FBSession.activeSession closeAndClearTokenInformation];
     self.account = nil;
@@ -71,7 +71,7 @@
     completion([SObject successful]);
 }
 
-- (SObject *)openSession:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     //  First, we need to obtain the account instance for the user's Twitter account
     ACAccountStore *store = [[ACAccountStore alloc] init];
@@ -159,7 +159,7 @@
 
 
 
-- (SObject *)readUserData:(SUserData *)params completion:(CompletionBlock)completion
+- (SObject *)readUserData:(SUserData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 

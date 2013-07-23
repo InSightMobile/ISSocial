@@ -25,7 +25,7 @@
 @implementation VkontakteConnector (Feed)
 
 
-- (SObject *)addFeedComment:(SCommentData *)comment completion:(CompletionBlock)completion
+- (SObject *)addFeedComment:(SCommentData *)comment completion:(SObjectCompletionBlock)completion
 {
     NSParameterAssert(comment.author.objectId);
     NSParameterAssert(comment.message);
@@ -49,7 +49,7 @@
     }];
 }
 
-- (SObject *)removeFeedLike:(SFeedEntry *)feed completion:(CompletionBlock)completion
+- (SObject *)removeFeedLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:feed completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"wall.deleteLike"
@@ -65,7 +65,7 @@
     }];
 }
 
-- (SObject *)addFeedLike:(SFeedEntry *)feed completion:(CompletionBlock)completion
+- (SObject *)addFeedLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:feed completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"wall.addLike"
@@ -82,7 +82,7 @@
 }
 
 
-- (SObject *)pageFeedComments:(SObject *)comments completion:(CompletionBlock)completion
+- (SObject *)pageFeedComments:(SObject *)comments completion:(SObjectCompletionBlock)completion
 {
     id commentObject = [(id) comments commentedObject];
 
@@ -108,7 +108,7 @@
 }
 
 
-- (SObject *)readFeedComments:(SFeedEntry *)feed completion:(CompletionBlock)completion
+- (SObject *)readFeedComments:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion
 {
     SFeedEntry *feedObject = [feed copyWithHandler:self];
 
@@ -166,7 +166,7 @@
     return result;
 }
 
-- (SObject *)parseFeedEntries:(id)response paging:(SObject *)paging operation:(SocialConnectorOperation *)operation completion:(CompletionBlock)completion
+- (SObject *)parseFeedEntries:(id)response paging:(SObject *)paging operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
 {
     NSMutableArray *attachments = [NSMutableArray array];
     SObject *result = [self parsePagingResponce:response paging:paging processor:^(id responce) {
@@ -186,7 +186,7 @@
     return nil;
 }
 
-- (SObject *)readFeed:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readFeed:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"wall.get" parameters:@{@"photo_sizes" : @1, @"count" : @(self.pageSize)} operation:operation processor:^(id response) {
@@ -198,7 +198,7 @@
     }];
 }
 
-- (SObject *)pageFeed:(SObject *)feed completion:(CompletionBlock)completion
+- (SObject *)pageFeed:(SObject *)feed completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:feed completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -247,7 +247,7 @@
         return nil;
 }
 
-- (void)updateAttachments:(NSArray *)attachments operation:(SocialConnectorOperation *)operation completion:(CompletionBlock)completion
+- (void)updateAttachments:(NSArray *)attachments operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
 {
     NSMutableArray *audio = [NSMutableArray array];
     NSMutableArray *video = [NSMutableArray array];
@@ -344,7 +344,7 @@
     return entry;
 }
 
-- (SObject *)removeFeedEntry:(SFeedEntry *)params completion:(CompletionBlock)completion
+- (SObject *)removeFeedEntry:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -468,7 +468,7 @@
 }
 
 
-- (SObject *)postToFeed:(SFeedEntry *)params completion:(CompletionBlock)completion
+- (SObject *)postToFeed:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 

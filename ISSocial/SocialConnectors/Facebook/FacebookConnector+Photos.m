@@ -77,7 +77,7 @@
     return result;
 }
 
-- (SObject *)readPhotos:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"me/photos/uploaded" operation:operation processor:^(id response) {
@@ -93,7 +93,7 @@
     }];
 }
 
-- (SObject *)readPhotosFromAlbum:(SPhotoAlbumData *)params completion:(CompletionBlock)completion
+- (SObject *)readPhotosFromAlbum:(SPhotoAlbumData *)params completion:(SObjectCompletionBlock)completion
 {
     if (!params.objectId) {
         return [self readPhotos:params completion:completion];
@@ -172,7 +172,7 @@
 }
 */
 
-- (SObject *)createPhotoAlbum:(SPhotoAlbumData *)params completion:(CompletionBlock)completion
+- (SObject *)createPhotoAlbum:(SPhotoAlbumData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self checkAuthorizationFor:@[@"publish_stream"] operation:operation processor:^(id obj) {
@@ -196,7 +196,7 @@
     }];
 }
 
-- (void)readWallAlbumWithOperation:(SocialConnectorOperation *)operation completion:(CompletionBlock)completion
+- (void)readWallAlbumWithOperation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
 {
     if (self.wallAlbum) {
         completion(self.wallAlbum);
@@ -240,7 +240,7 @@
     return album;
 }
 
-- (SObject *)readPhotoAlbums:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readPhotoAlbums:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"me/albums" operation:operation processor:^(NSDictionary *response) {
@@ -269,7 +269,7 @@
     }];
 }
 
-- (SObject *)getDefaultPhotoAlbum:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)getDefaultPhotoAlbum:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"me/albums" operation:operation processor:^(NSDictionary *response) {
@@ -293,12 +293,12 @@
     }];
 }
 
-- (SObject *)addPhotoToAlbum:(SPhotoData *)params completion:(CompletionBlock)completionn
+- (SObject *)addPhotoToAlbum:(SPhotoData *)params completion:(SObjectCompletionBlock)completionn
 {
     return [self addPhotoWithParams:params completion:completionn];
 }
 
-- (SObject *)addPhoto:(SPhotoData *)srcParams completion:(CompletionBlock)completion
+- (SObject *)addPhoto:(SPhotoData *)srcParams completion:(SObjectCompletionBlock)completion
 {
     SPhotoData *params = [srcParams copy];
     params.album = nil;
@@ -306,7 +306,7 @@
     return [self addPhotoWithParams:params completion:completion];
 }
 
-- (SObject *)addPhotoWithParams:(SPhotoData *)params completion:(CompletionBlock)completion
+- (SObject *)addPhotoWithParams:(SPhotoData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -342,7 +342,7 @@
     }];
 }
 
-- (void)uploadPhoto:(SPhotoData *)photo toPath:(NSString *)path operation:(SocialConnectorOperation *)operation completion:(CompletionBlock)completion
+- (void)uploadPhoto:(SPhotoData *)photo toPath:(NSString *)path operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
 {
     [self checkAuthorizationFor:@[@"publish_stream", @"photo_upload"] operation:operation processor:^(id obj) {
 
@@ -374,22 +374,22 @@
     }];
 }
 
-- (SObject *)addPhotoLike:(SPhotoData *)feed completion:(CompletionBlock)completion
+- (SObject *)addPhotoLike:(SPhotoData *)feed completion:(SObjectCompletionBlock)completion
 {
     [self addFeedLike:(id) feed completion:completion];
 }
 
-- (SObject *)removePhotoLike:(SPhotoData *)feed completion:(CompletionBlock)completion
+- (SObject *)removePhotoLike:(SPhotoData *)feed completion:(SObjectCompletionBlock)completion
 {
     [self removeFeedLike:(id) feed completion:completion];
 }
 
-- (SObject *)addPhotoComment:(SPhotoData *)comments completion:(CompletionBlock)completion
+- (SObject *)addPhotoComment:(SPhotoData *)comments completion:(SObjectCompletionBlock)completion
 {
     return [self addFeedComment:(id) comments completion:completion];
 }
 
-- (SObject *)readPhotoComments:(SPhotoData *)feed completion:(CompletionBlock)completion
+- (SObject *)readPhotoComments:(SPhotoData *)feed completion:(SObjectCompletionBlock)completion
 {
     return [self readFeedComments:(id) feed completion:completion];
 }

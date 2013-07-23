@@ -48,14 +48,14 @@
     return messageData;
 }
 
-- (SObject *)readMessageUpdates:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readMessageUpdates:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     SObject *operation = [self operationWithObject:params completion:completion];
     [self addPullReceiver:operation.copy forArea:@"messages"];
     return operation;
 }
 
-- (SObject *)postMessage:(SMessageData *)params completion:(CompletionBlock)completion
+- (SObject *)postMessage:(SMessageData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -102,12 +102,12 @@
     }];
 }
 
-- (SObject *)readMessagesForTread:(SMessageThread *)params completion:(CompletionBlock)completion
+- (SObject *)readMessagesForTread:(SMessageThread *)params completion:(SObjectCompletionBlock)completion
 {
     return [self readMessageHistory:params.messageCompanion completion:completion];
 }
 
-- (SObject *)markMessagesAsRead:(SMessageThread *)params completion:(CompletionBlock)completion
+- (SObject *)markMessagesAsRead:(SMessageThread *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -128,7 +128,7 @@
     }];
 }
 
-- (SObject *)pageMessageHistory:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)pageMessageHistory:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -145,7 +145,7 @@
     }];
 }
 
-- (SObject *)readMessageHistory:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readMessageHistory:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -194,7 +194,7 @@
     return result;
 }
 
-- (SObject *)readDialogs:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readDialogs:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"messages.getDialogs" parameters:nil operation:operation processor:^(id response) {
@@ -218,7 +218,7 @@
     }];
 }
 
-- (SObject *)readMessages:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readMessages:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -242,7 +242,7 @@
     }];
 }
 
-- (SObject *)readUnreadMessages:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readUnreadMessages:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 

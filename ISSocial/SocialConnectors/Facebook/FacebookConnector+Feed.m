@@ -114,7 +114,7 @@
     return objectResult;
 }
 
-- (SObject *)pageNews:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)pageNews:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -136,7 +136,7 @@
     }];
 }
 
-- (SObject *)readNews:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readNews:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -159,7 +159,7 @@
     }];
 }
 
-- (SObject *)pageFeed:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)pageFeed:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -181,7 +181,7 @@
     }];
 }
 
-- (SObject *)readFeed:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readFeed:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -213,7 +213,7 @@
     }];
 }
 
-- (SObject *)removeFeedEntry:(SFeedEntry *)params completion:(CompletionBlock)completion
+- (SObject *)removeFeedEntry:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -237,7 +237,7 @@
     }];
 }
 
-- (SObject *)postToFeed:(SFeedEntry *)params completion:(CompletionBlock)completion
+- (SObject *)postToFeed:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion
 {
     SFeedEntry *feed = [params copy];
 
@@ -333,7 +333,7 @@
 }
 
 
-- (SObject *)addFeedComment:(SCommentData *)comment completion:(CompletionBlock)completion
+- (SObject *)addFeedComment:(SCommentData *)comment completion:(SObjectCompletionBlock)completion
 {
     //NSParameterAssert(comment.author.objectId);
     NSParameterAssert(comment.message);
@@ -362,27 +362,27 @@
     }];
 }
 
-- (SObject *)addNewsLike:(SFeedEntry *)feed completion:(CompletionBlock)completion
+- (SObject *)addNewsLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion
 {
     [self addFeedLike:feed completion:completion];
 }
 
-- (SObject *)removeNewsLike:(SFeedEntry *)feed completion:(CompletionBlock)completion
+- (SObject *)removeNewsLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion
 {
     [self removeFeedLike:feed completion:completion];
 }
 
-- (SObject *)addNewsComment:(SCommentData *)comments completion:(CompletionBlock)completion
+- (SObject *)addNewsComment:(SCommentData *)comments completion:(SObjectCompletionBlock)completion
 {
     return [self addFeedComment:(id) comments completion:completion];
 }
 
-- (SObject *)readNewsComments:(SNewsEntry *)feed completion:(CompletionBlock)completion
+- (SObject *)readNewsComments:(SNewsEntry *)feed completion:(SObjectCompletionBlock)completion
 {
     return [self readFeedComments:(id) feed completion:completion];
 }
 
-- (SObject *)addFeedLike:(SFeedEntry *)feed completion:(CompletionBlock)completion
+- (SObject *)addFeedLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:feed completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -411,7 +411,7 @@
     }];
 }
 
-- (SObject *)removeFeedLike:(SFeedEntry *)feed completion:(CompletionBlock)completion
+- (SObject *)removeFeedLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion
 {
 
     return [self operationWithObject:feed completion:completion processor:^(SocialConnectorOperation *operation) {
@@ -441,7 +441,7 @@
     }];
 }
 
-- (SObject *)readFeedComments:(SFeedEntry *)feed completion:(CompletionBlock)completion
+- (SObject *)readFeedComments:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion
 {
     SFeedEntry *feedObject = feed;
 
@@ -465,7 +465,7 @@
     }];
 }
 
-- (SObject *)readCommentsPage:(SFeedEntry *)params completion:(CompletionBlock)completion
+- (SObject *)readCommentsPage:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -516,7 +516,7 @@
     return result;
 }
 
-- (SObject *)publishPhoto:(SPhotoData *)params completion:(CompletionBlock)completion {
+- (SObject *)publishPhoto:(SPhotoData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
 

@@ -33,150 +33,150 @@ FOUNDATION_EXPORT NSString *const kNewMessagesUnreadStatusChanged;
 @optional
 
 // messages
-- (SObject *)readDialogs:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)readDialogs:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)readMessagesForTread:(SMessageThread *)params completion:(CompletionBlock)completion;
+- (SObject *)readMessagesForTread:(SMessageThread *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)markMessagesAsRead:(SMessageThread *)params completion:(CompletionBlock)completion;
+- (SObject *)markMessagesAsRead:(SMessageThread *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)readMessageHistory:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)readMessageHistory:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)readMessages:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)readMessages:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)readUnreadMessages:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)readUnreadMessages:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadDialogs:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)cachedReadDialogs:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadMessagesForTread:(SMessageThread *)params completion:(CompletionBlock)completion;
+- (SObject *)cachedReadMessagesForTread:(SMessageThread *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadMessageHistory:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)cachedReadMessageHistory:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadMessages:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)cachedReadMessages:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)postMessage:(SMessageData *)params completion:(CompletionBlock)completion;
+- (SObject *)postMessage:(SMessageData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)readMessageUpdates:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)readMessageUpdates:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
 // audio
-- (SObject *)readAudio:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)readAudio:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)searchAudio:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)searchAudio:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadAudio:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)cachedReadAudio:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)addAudio:(SAudioData *)params completion:(CompletionBlock)completion;
+- (SObject *)addAudio:(SAudioData *)params completion:(SObjectCompletionBlock)completion;
 
 // video
-- (SObject *)addVideo:(SVideoData *)params completion:(CompletionBlock)completion;
+- (SObject *)addVideo:(SVideoData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)readVideo:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)readVideo:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadVideo:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)cachedReadVideo:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)readVideoComments:(SPhotoData *)params completion:(CompletionBlock)completion;
+- (SObject *)readVideoComments:(SPhotoData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadVideoComments:(SPhotoData *)params completion:(CompletionBlock)completion;
+- (SObject *)cachedReadVideoComments:(SPhotoData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)addVideoComment:(SCommentData *)params completion:(CompletionBlock)completion;
+- (SObject *)addVideoComment:(SCommentData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)addVideoLike:(SCommentData *)params completion:(CompletionBlock)completion;
+- (SObject *)addVideoLike:(SCommentData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)removeVideoLike:(SCommentData *)params completion:(CompletionBlock)completion;
+- (SObject *)removeVideoLike:(SCommentData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)readVideoLikes:(SVideoData *)params completion:(CompletionBlock)completion;
+- (SObject *)readVideoLikes:(SVideoData *)params completion:(SObjectCompletionBlock)completion;
 
 // News
-- (SObject *)readNews:(SUserData *)params completion:(CompletionBlock)completion;
+- (SObject *)readNews:(SUserData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)searchNews:(SUserData *)params completion:(CompletionBlock)completion;
+- (SObject *)searchNews:(SUserData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadNews:(SUserData *)params completion:(CompletionBlock)completion;
+- (SObject *)cachedReadNews:(SUserData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)readNewsComments:(SNewsEntry *)params completion:(CompletionBlock)completion;
+- (SObject *)readNewsComments:(SNewsEntry *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadNewsComments:(SFeedEntry *)feed completion:(CompletionBlock)completion;
+- (SObject *)cachedReadNewsComments:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)addNewsComment:(SCommentData *)feed completion:(CompletionBlock)completion;
+- (SObject *)addNewsComment:(SCommentData *)feed completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)addNewsLike:(SNewsEntry *)feed completion:(CompletionBlock)completion;
+- (SObject *)addNewsLike:(SNewsEntry *)feed completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)removeNewsLike:(SNewsEntry *)feed completion:(CompletionBlock)completion;
+- (SObject *)removeNewsLike:(SNewsEntry *)feed completion:(SObjectCompletionBlock)completion;
 
 // Users & friends
-- (SObject *)readUserData:(SUserData *)params completion:(CompletionBlock)completion;
+- (SObject *)readUserData:(SUserData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)readUserFriends:(SUserData *)params completion:(CompletionBlock)completion;
+- (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)readUserFriendsOnline:(SUserData *)params completion:(CompletionBlock)completion;
+- (SObject *)readUserFriendsOnline:(SUserData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)readUserFriendRequests:(SUserData *)params completion:(CompletionBlock)completion;
+- (SObject *)readUserFriendRequests:(SUserData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadUserData:(SUserData *)params completion:(CompletionBlock)completion;
+- (SObject *)cachedReadUserData:(SUserData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadUserFriends:(SUserData *)params completion:(CompletionBlock)completion;
+- (SObject *)cachedReadUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadUserFriendRequests:(SUserData *)params completion:(CompletionBlock)completion;
+- (SObject *)cachedReadUserFriendRequests:(SUserData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)acceptUserFriendRequest:(SUserData *)params completion:(CompletionBlock)completion;
+- (SObject *)acceptUserFriendRequest:(SUserData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)rejectUserFriendRequest:(SUserData *)params completion:(CompletionBlock)completion;
+- (SObject *)rejectUserFriendRequest:(SUserData *)params completion:(SObjectCompletionBlock)completion;
 
 
 //Feed
-- (SObject *)readFeed:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)readFeed:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadFeed:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)cachedReadFeed:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)postToFeed:(SFeedEntry *)params completion:(CompletionBlock)completion;
+- (SObject *)postToFeed:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)removeFeedEntry:(SFeedEntry *)params completion:(CompletionBlock)completion;
+- (SObject *)removeFeedEntry:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion;
 
 
-- (SObject *)readFeedComments:(SFeedEntry *)feed completion:(CompletionBlock)completion;
+- (SObject *)readFeedComments:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadFeedComments:(SFeedEntry *)feed completion:(CompletionBlock)completion;
+- (SObject *)cachedReadFeedComments:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)addFeedComment:(SCommentData *)feed completion:(CompletionBlock)completion;
+- (SObject *)addFeedComment:(SCommentData *)feed completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)addFeedLike:(SFeedEntry *)feed completion:(CompletionBlock)completion;
+- (SObject *)addFeedLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)removeFeedLike:(SFeedEntry *)feed completion:(CompletionBlock)completion;
+- (SObject *)removeFeedLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion;
 
 // Photos
-- (SObject *)readPhotos:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)readPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadPhotos:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)cachedReadPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)addPhoto:(SPhotoData *)params completion:(CompletionBlock)completion;
+- (SObject *)addPhoto:(SPhotoData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)publishPhoto:(SPhotoData *)params completion:(CompletionBlock)completion;
+- (SObject *)publishPhoto:(SPhotoData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)addPhotoToAlbum:(SPhotoData *)params completion:(CompletionBlock)completion;
+- (SObject *)addPhotoToAlbum:(SPhotoData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)readPhotoAlbums:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)readPhotoAlbums:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadPhotoAlbums:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)cachedReadPhotoAlbums:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)readPhotosFromAlbum:(SPhotoAlbumData *)params completion:(CompletionBlock)completion;
+- (SObject *)readPhotosFromAlbum:(SPhotoAlbumData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadPhotosFromAlbum:(SPhotoAlbumData *)params completion:(CompletionBlock)completion;
+- (SObject *)cachedReadPhotosFromAlbum:(SPhotoAlbumData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)readPhotoComments:(SPhotoData *)params completion:(CompletionBlock)completion;
+- (SObject *)readPhotoComments:(SPhotoData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)cachedReadPhotoComments:(SPhotoData *)params completion:(CompletionBlock)completion;
+- (SObject *)cachedReadPhotoComments:(SPhotoData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)addPhotoComment:(SCommentData *)params completion:(CompletionBlock)completion;
+- (SObject *)addPhotoComment:(SCommentData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)addPhotoLike:(SCommentData *)params completion:(CompletionBlock)completion;
+- (SObject *)addPhotoLike:(SCommentData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)removePhotoLike:(SCommentData *)params completion:(CompletionBlock)completion;
+- (SObject *)removePhotoLike:(SCommentData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)readPhotoLikes:(SPhotoData *)params completion:(CompletionBlock)completion;
+- (SObject *)readPhotoLikes:(SPhotoData *)params completion:(SObjectCompletionBlock)completion;
 
 // Session
-- (SObject *)openSession:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)closeSession:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
 @end
 
@@ -188,13 +188,13 @@ FOUNDATION_EXPORT NSString *const kNewMessagesUnreadStatusChanged;
 
 @property(nonatomic) NSSet *supportedSpecifications;
 
-- (SObject *)readCached:(SEL)selector params:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)readCached:(SEL)selector params:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)implementSocialConnectorCallProtocol:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)implementSocialConnectorCallProtocol:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)operationWithObject:(SObject *)params completion:(CompletionBlock)completion processor:(void (^)(SocialConnectorOperation *))processor;
+- (SObject *)operationWithObject:(SObject *)params completion:(SObjectCompletionBlock)completion processor:(void (^)(SocialConnectorOperation *))processor;
 
-- (SObject *)processSocialConnectorProtocol:(SObject *)params completion:(CompletionBlock)completion operation:(SEL)selector;
+- (SObject *)processSocialConnectorProtocol:(SObject *)params completion:(SObjectCompletionBlock)completion operation:(SEL)selector;
 
 - (NSString *)connectorCode;
 
@@ -210,7 +210,7 @@ FOUNDATION_EXPORT NSString *const kNewMessagesUnreadStatusChanged;
 
 - (SObject *)operationWithObject:(SObject *)object;
 
-- (SObject *)operationWithObject:(SObject *)params completion:(CompletionBlock)completion;
+- (SObject *)operationWithObject:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
 @property(strong, nonatomic) SObject *connectorState;
 

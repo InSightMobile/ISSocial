@@ -22,7 +22,7 @@ typedef enum
     SObjectStateProcessing
 } SObjectState;
 
-typedef void (^CompletionBlock)(SObject *result);
+typedef void (^SObjectCompletionBlock)(SObject *result);
 
 
 @protocol SObject <NSCopying, NSCoding, NSObject>
@@ -83,12 +83,12 @@ typedef void (^CompletionBlock)(SObject *result);
 
 - (BOOL)isProcessing;
 
-+ (SObject *)successful:(CompletionBlock)completion;
++ (SObject *)successful:(SObjectCompletionBlock)completion;
 
-+ (SObject *)failed:(CompletionBlock)completion;
++ (SObject *)failed:(SObjectCompletionBlock)completion;
 
 
-+ (SObject *)error:(NSError *)error completion:(CompletionBlock)completion;
++ (SObject *)error:(NSError *)error completion:(SObjectCompletionBlock)completion;
 
 + (SObject *)objectCollectionWithHandler:(id)handler;
 
@@ -113,7 +113,7 @@ typedef void (^CompletionBlock)(SObject *result);
 
 + (id)objectWithState:(SObjectState)state;
 
-- (void)complete:(CompletionBlock)completion;
+- (void)complete:(SObjectCompletionBlock)completion;
 
 - (id)objectForKeyedSubscript:(id)key;
 
@@ -130,11 +130,11 @@ typedef void (^CompletionBlock)(SObject *result);
 
 - (id)copyWithHandler:(id)handler;
 
-- (SObject *)loadNextPageWithCompletion:(CompletionBlock)completion;
+- (SObject *)loadNextPageWithCompletion:(SObjectCompletionBlock)completion;
 
 - (BOOL)isDeletable;
 
-- (SObject *)deleteObject:(CompletionBlock)completion;
+- (SObject *)deleteObject:(SObjectCompletionBlock)completion;
 
 
 - (NSMutableArray *)combinedSubobjectsSortedBy:(NSString *)key ascending:(BOOL)ascending;

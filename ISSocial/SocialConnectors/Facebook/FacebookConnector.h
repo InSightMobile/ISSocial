@@ -38,7 +38,7 @@
 
 - (void)checkAuthorizationFor:(NSArray *)permissions operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor;
 
-- (void)authorizeWithPublishPermissions:(NSArray *)permissions completion:(CompletionBlock)completion;
+- (void)authorizeWithPublishPermissions:(NSArray *)permissions completion:(SObjectCompletionBlock)completion;
 
 
 - (SObject *)operationWithObject:(SObject *)object;

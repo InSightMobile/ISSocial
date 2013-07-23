@@ -18,5 +18,5 @@
 
 - (SUserData *)parseUserData:(id)userInfo;
 
-- (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(CompletionBlock)completion;
+- (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion;
 @end

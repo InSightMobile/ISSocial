@@ -49,7 +49,7 @@
                            operation:(SEL)operation
                               params:(SObject *)params
                                  ttl:(float)ttl
-                          completion:(CompletionBlock)completion
+                          completion:(SObjectCompletionBlock)completion
 {
     // create key
     NSString *key =

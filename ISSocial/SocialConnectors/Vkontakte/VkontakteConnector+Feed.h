@@ -13,7 +13,7 @@
 
 - (NSArray *)parseAttachments:(NSArray *)attachmentsResponse;
 
-- (void)updateAttachments:(NSArray *)attachments operation:(SocialConnectorOperation *)operation completion:(CompletionBlock)completion;
+- (void)updateAttachments:(NSArray *)attachments operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion;
 
 - (NSString *)processToText:(NSString *)source;
 

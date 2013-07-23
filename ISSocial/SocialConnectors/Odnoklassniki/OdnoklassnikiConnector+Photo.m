@@ -86,7 +86,7 @@
     return album;
 }
 
-- (SObject *)readPhotos:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"photos.getPhotos" parameters:@{@"detectTotalCount" : @1} operation:operation processor:^(id response) {
@@ -96,7 +96,7 @@
     }];
 }
 
-- (SObject *)readPhotosFromAlbum:(SPhotoAlbumData *)params completion:(CompletionBlock)completion
+- (SObject *)readPhotosFromAlbum:(SPhotoAlbumData *)params completion:(SObjectCompletionBlock)completion
 {
     if (!params.objectId) {
         return [self readPhotos:params completion:completion];
@@ -111,7 +111,7 @@
     }];
 }
 
-- (SObject *)readPhotoAlbums:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readPhotoAlbums:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -124,7 +124,7 @@
     }];
 }
 
-- (SObject *)getDefaultPhotoAlbum:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)getDefaultPhotoAlbum:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     if (self.defaultAlbum) {
         completion(self.defaultAlbum);
@@ -170,7 +170,7 @@
 - (void)uploadPhoto:(SPhotoData *)params
               album:(NSString *)album
           operation:(SocialConnectorOperation *)operation
-         completion:(CompletionBlock)completionn
+         completion:(SObjectCompletionBlock)completionn
 {
     NSDictionary *parameters;
     if (album) {
@@ -250,7 +250,7 @@
     return self.defaultAlbumName;
 }
 
-- (SObject *)createPhotoAlbum:(SPhotoAlbumData *)params completion:(CompletionBlock)completion
+- (SObject *)createPhotoAlbum:(SPhotoAlbumData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"photos.createAlbum" parameters:@{@"title" : params.title, @"type" : @"public"} operation:operation processor:^(id response) {
@@ -263,7 +263,7 @@
     }];
 }
 
-- (SObject *)addPhotoToAlbum:(SPhotoData *)params completion:(CompletionBlock)completion
+- (SObject *)addPhotoToAlbum:(SPhotoData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -274,7 +274,7 @@
     }];
 }
 
-- (SObject *)addPhoto:(SPhotoData *)srcParams completion:(CompletionBlock)completion
+- (SObject *)addPhoto:(SPhotoData *)srcParams completion:(SObjectCompletionBlock)completion
 {
     SPhotoData *params = [srcParams copy];
     params.album = nil;

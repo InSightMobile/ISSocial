@@ -67,7 +67,7 @@
     return [[ODKSession activeSession] isLoggedIn];
 }
 
-- (SObject *)openSession:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 

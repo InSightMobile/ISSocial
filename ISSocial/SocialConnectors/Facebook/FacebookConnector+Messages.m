@@ -205,7 +205,7 @@ static const NSTimeInterval kTimeout  = 30;
     return message;
 }
 
-- (SObject *)readMessagesForTread:(SMessageThread *)params completion:(CompletionBlock)completion
+- (SObject *)readMessagesForTread:(SMessageThread *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -248,7 +248,7 @@ static const NSTimeInterval kTimeout  = 30;
 }
 
 
-- (SObject *)readMessagesPage:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readMessagesPage:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -263,7 +263,7 @@ static const NSTimeInterval kTimeout  = 30;
     }];
 }
 
-- (SObject *)readDialogs:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readDialogs:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -332,7 +332,7 @@ static const NSTimeInterval kTimeout  = 30;
     }];
 }
 
-- (SObject *)readMessageUpdates:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readMessageUpdates:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
 
     SObject *operation = [self operationWithObject:params completion:completion];
@@ -341,7 +341,7 @@ static const NSTimeInterval kTimeout  = 30;
 }
 
 
-- (SObject *)postMessage:(SMessageData *)params completion:(CompletionBlock)completion
+- (SObject *)postMessage:(SMessageData *)params completion:(SObjectCompletionBlock)completion
 {
 
     NSString *messageStr = [params.message copy];

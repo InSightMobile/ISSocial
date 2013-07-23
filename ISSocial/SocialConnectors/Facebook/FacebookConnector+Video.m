@@ -34,7 +34,7 @@
     return video;
 }
 
-- (SObject *)readVideo:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readVideo:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
 
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
@@ -57,7 +57,7 @@
     }];
 }
 
-- (SObject *)addVideo:(SVideoData *)video completion:(CompletionBlock)completion
+- (SObject *)addVideo:(SVideoData *)video completion:(SObjectCompletionBlock)completion
 {
 
     return [self operationWithObject:video completion:completion processor:^(SocialConnectorOperation *operation) {
@@ -103,22 +103,22 @@
     }];
 }
 
-- (SObject *)addVideoLike:(SVideoData *)feed completion:(CompletionBlock)completion
+- (SObject *)addVideoLike:(SVideoData *)feed completion:(SObjectCompletionBlock)completion
 {
     [self addFeedLike:(id) feed completion:completion];
 }
 
-- (SObject *)removeVideoLike:(SVideoData *)feed completion:(CompletionBlock)completion
+- (SObject *)removeVideoLike:(SVideoData *)feed completion:(SObjectCompletionBlock)completion
 {
     [self removeFeedLike:(id) feed completion:completion];
 }
 
-- (SObject *)addVideoComment:(SVideoData *)comments completion:(CompletionBlock)completion
+- (SObject *)addVideoComment:(SVideoData *)comments completion:(SObjectCompletionBlock)completion
 {
     return [self addFeedComment:(id) comments completion:completion];
 }
 
-- (SObject *)readVideoComments:(SVideoData *)feed completion:(CompletionBlock)completion
+- (SObject *)readVideoComments:(SVideoData *)feed completion:(SObjectCompletionBlock)completion
 {
     return [self readFeedComments:(id) feed completion:completion];
 }

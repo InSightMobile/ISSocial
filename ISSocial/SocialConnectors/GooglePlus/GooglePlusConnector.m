@@ -16,7 +16,7 @@
 
 @interface GooglePlusConnector ()
 @property(nonatomic, strong) GPPSignIn *signIn;
-@property(nonatomic, copy) CompletionBlock openSession;
+@property(nonatomic, copy) SObjectCompletionBlock openSession;
 @property(nonatomic) BOOL loggedIn;
 @end
 
@@ -53,7 +53,7 @@
 }
 
 
-- (SObject *)openSession:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     [GPSession openActiveSessionWithPermissions:nil completionHandler:^(GPSession *session, GPSessionState status, NSError *error) {
 
@@ -100,7 +100,7 @@
 
 }
 
-- (SObject *)readUserFriends:(SUserData *)params completion:(CompletionBlock)completion
+- (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         GTLQueryPlus *query =

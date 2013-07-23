@@ -199,7 +199,7 @@
     }];
 }
 
-- (void)authorizeWithPublishPermissions:(NSArray *)permissions completion:(CompletionBlock)completion
+- (void)authorizeWithPublishPermissions:(NSArray *)permissions completion:(SObjectCompletionBlock)completion
 {
     bool ok = YES;
     for (NSString *permission in permissions) {
@@ -236,14 +236,14 @@
 
 }
 
-- (SObject *)closeSession:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     [FBSession.activeSession closeAndClearTokenInformation];
     _loggedIn = NO;
     completion([SObject successful]);
 }
 
-- (SObject *)openSession:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     // See if we have a valid token for the current state.
     if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {

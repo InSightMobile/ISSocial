@@ -9,7 +9,7 @@
 
 @implementation OdnoklassnikiConnector (Messages)
 
-- (SObject *)markMessagesAsRead:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)markMessagesAsRead:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -33,7 +33,7 @@
     }];
 }
 
-- (SObject *)readDialogs:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readDialogs:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -70,7 +70,7 @@
     }];
 }
 
-- (SObject *)postMessage:(SMessageData *)params completion:(CompletionBlock)completion
+- (SObject *)postMessage:(SMessageData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -86,12 +86,12 @@
 }
 
 
-- (SObject *)readMessageHistory:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readMessageHistory:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self readMessagesForTread:(SMessageThread *) params completion:completion];
 }
 
-- (SObject *)readMessageUpdates:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readMessageUpdates:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -117,7 +117,7 @@
     }];
 }
 
-- (SObject *)readMessagesForTread:(SMessageThread *)params completion:(CompletionBlock)completion
+- (SObject *)readMessagesForTread:(SMessageThread *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 

@@ -11,7 +11,7 @@
 @class SUserData;
 
 @interface VkontakteConnector (UserData)
-- (void)updateUserData:(NSArray *)userData operation:(SocialConnectorOperation *)operation completion:(CompletionBlock)completion;
+- (void)updateUserData:(NSArray *)userData operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion;
 
 
 - (SObject *)parseUsersData:(id)response;

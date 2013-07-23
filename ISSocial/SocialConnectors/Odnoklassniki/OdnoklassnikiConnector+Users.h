@@ -9,5 +9,5 @@
 @interface OdnoklassnikiConnector (Users)
 - (SUserData *)dataForUserId:(NSString *)userId;
 
-- (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(CompletionBlock)completion;
+- (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion;
 @end

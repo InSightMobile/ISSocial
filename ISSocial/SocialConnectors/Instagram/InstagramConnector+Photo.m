@@ -12,7 +12,7 @@
 
 @implementation InstagramConnector (Photo)
 
-- (SObject *)readFrom:(NSString *)from params:(SObject *)params paging:(SObject *)paging pageSelector:(SEL)selector completion:(CompletionBlock)completion
+- (SObject *)readFrom:(NSString *)from params:(SObject *)params paging:(SObject *)paging pageSelector:(SEL)selector completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         NSDictionary *options = nil;
@@ -54,27 +54,27 @@
     return result;
 }
 
-- (SObject *)readNews:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readNews:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self readFrom:@"users/self/feed" params:params paging:nil pageSelector:@selector(pageNews:completion:) completion:completion];
 }
 
-- (SObject *)pageNews:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)pageNews:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self readFrom:@"users/self/feed" params:params paging:params pageSelector:@selector(pageNews:completion:) completion:completion];
 }
 
-- (SObject *)readFeed:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readFeed:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self readFrom:@"users/self/media/recent" params:params paging:nil pageSelector:@selector(pageFeed:completion:) completion:completion];
 }
 
-- (SObject *)pageFeed:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)pageFeed:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self readFrom:@"users/self/media/recent" params:params paging:params pageSelector:@selector(pageFeed:completion:) completion:completion];
 }
 
-- (SObject *)readPhotos:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -124,7 +124,7 @@
     return comment;
 }
 
-- (SObject *)addPhotoComment:(SCommentData *)params completion:(CompletionBlock)completion
+- (SObject *)addPhotoComment:(SCommentData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -151,7 +151,7 @@
     }];
 }
 
-- (SObject *)addPhotoLike:(SPhotoData *)params completion:(CompletionBlock)completion
+- (SObject *)addPhotoLike:(SPhotoData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -170,7 +170,7 @@
     }];
 }
 
-- (SObject *)removePhotoLike:(SPhotoData *)params completion:(CompletionBlock)completion
+- (SObject *)removePhotoLike:(SPhotoData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -189,27 +189,27 @@
     }];
 }
 
-- (SObject *)addFeedLike:(SFeedEntry *)feed completion:(CompletionBlock)completion
+- (SObject *)addFeedLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion
 {
     return [self addPhotoLike:(id) feed completion:completion];
 }
 
-- (SObject *)removeFeedLike:(SFeedEntry *)feed completion:(CompletionBlock)completion
+- (SObject *)removeFeedLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion
 {
     return [self removePhotoLike:(id) feed completion:completion];
 }
 
-- (SObject *)addNewsLike:(SNewsEntry *)feed completion:(CompletionBlock)completion
+- (SObject *)addNewsLike:(SNewsEntry *)feed completion:(SObjectCompletionBlock)completion
 {
     return [self addPhotoLike:(id) feed completion:completion];
 }
 
-- (SObject *)removeNewsLike:(SNewsEntry *)feed completion:(CompletionBlock)completion
+- (SObject *)removeNewsLike:(SNewsEntry *)feed completion:(SObjectCompletionBlock)completion
 {
     return [self removePhotoLike:(id) feed completion:completion];
 }
 
-- (SObject *)readPhotoComments:(SPhotoData *)params completion:(CompletionBlock)completion
+- (SObject *)readPhotoComments:(SPhotoData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -227,7 +227,7 @@
     }];
 }
 
-- (SObject *)pagePhotoComments:(SPhotoData *)params completion:(CompletionBlock)completion
+- (SObject *)pagePhotoComments:(SPhotoData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -264,17 +264,17 @@
     return result;
 }
 
-- (SObject *)readFeedComments:(SFeedEntry *)params completion:(CompletionBlock)completion
+- (SObject *)readFeedComments:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion
 {
     return [self readPhotoComments:(id) params completion:completion];
 }
 
-- (SObject *)readNewsComments:(SNewsEntry *)params completion:(CompletionBlock)completion
+- (SObject *)readNewsComments:(SNewsEntry *)params completion:(SObjectCompletionBlock)completion
 {
     return [self readPhotoComments:(id) params completion:completion];
 }
 
-- (SObject *)addFeedComment:(SFeedEntry *)params completion:(CompletionBlock)completion
+- (SObject *)addFeedComment:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion
 {
     return [self addPhotoComment:(id) params completion:completion];
 }

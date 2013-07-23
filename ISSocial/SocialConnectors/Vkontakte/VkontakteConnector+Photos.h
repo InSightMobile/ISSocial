@@ -15,11 +15,11 @@
 
 - (SPhotoData *)parsePhotoResponse:(NSDictionary *)response;
 
-- (void)uploadPhoto:(SPhotoData *)params album:(NSString *)album operation:(SocialConnectorOperation *)operation completion:(CompletionBlock)completionn;
+- (void)uploadPhoto:(SPhotoData *)params album:(NSString *)album operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completionn;
 
-- (void)uploadMessagePhoto:(SPhotoData *)params operation:(SocialConnectorOperation *)operation completion:(CompletionBlock)completionn;
+- (void)uploadMessagePhoto:(SPhotoData *)params operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completionn;
 
-- (void)uploadPhoto:(SPhotoData *)params uploadServer:(NSString *)uploadServer saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation completion:(CompletionBlock)completionn;
+- (void)uploadPhoto:(SPhotoData *)params uploadServer:(NSString *)uploadServer saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completionn;
 
-- (void)uploadPhoto:(SPhotoData *)params toURL:(NSString *)URL saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation completionn:(CompletionBlock)completionn;
+- (void)uploadPhoto:(SPhotoData *)params toURL:(NSString *)URL saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation completionn:(SObjectCompletionBlock)completionn;
 @end

@@ -17,10 +17,10 @@
 
 @property(nonatomic) BOOL ascending;
 
-- (SObject *)loadDataWithConnector:(SocialConnector *)connector params:(SObject *)params operation:(SEL)operation sortingKey:(NSString *)key ascending:(BOOL)ascending completion:(CompletionBlock)completion;
+- (SObject *)loadDataWithConnector:(SocialConnector *)connector params:(SObject *)params operation:(SEL)operation sortingKey:(NSString *)key ascending:(BOOL)ascending completion:(SObjectCompletionBlock)completion;
 
 
-- (SObject *)loadDataMoreContentWithCompletion:(CompletionBlock)completion;
+- (SObject *)loadDataMoreContentWithCompletion:(SObjectCompletionBlock)completion;
 
 - (NSArray *)consolidatedContent;
 

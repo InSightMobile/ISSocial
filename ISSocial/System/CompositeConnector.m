@@ -334,7 +334,7 @@
 - (SObject *)processOperation:(SEL)selector
                        params:(SObject *)params
                 withProcessor:(CompositeConnectorProcessorBlock)processor
-                   completion:(CompletionBlock)completion
+                   completion:(SObjectCompletionBlock)completion
 {
     if (!_activeConnectors.count) {
         return [SObject failed:completion];
@@ -345,7 +345,7 @@
 - (SObject *)processConnector:(SocialConnector *)connector
                     operation:(SEL)operation
                        object:(SObject *)params
-                   completion:(CompletionBlock)completion
+                   completion:(SObjectCompletionBlock)completion
 {
 
     return [connector performSelector:operation withObject:params withObject:completion];
@@ -355,7 +355,7 @@
                      operation:(SEL)selector
                         params:(SObject *)params
                  withProcessor:(CompositeConnectorProcessorBlock)processor
-                    completion:(CompletionBlock)completion
+                    completion:(SObjectCompletionBlock)completion
 {
     BlockOperationQueue *queue = [[BlockOperationQueue alloc] init];
     queue.maxConcurrentOperationCount = 1;
@@ -388,7 +388,7 @@
     return [SObject objectWithState:SObjectStateProcessing];
 }
 
-- (SObject *)processSocialConnectorProtocol:(SObject *)params completion:(CompletionBlock)completion operation:(SEL)selector
+- (SObject *)processSocialConnectorProtocol:(SObject *)params completion:(SObjectCompletionBlock)completion operation:(SEL)selector
 {
     __block SObject *componoundResult = [SObject objectCollectionWithHandler:self];
 

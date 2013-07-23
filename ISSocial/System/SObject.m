@@ -99,7 +99,7 @@
 }
 
 
-+ (SObject *)successful:(CompletionBlock)completion
++ (SObject *)successful:(SObjectCompletionBlock)completion
 {
     if (completion) {
         completion([self successful]);
@@ -110,7 +110,7 @@
     }
 }
 
-+ (SObject *)failed:(CompletionBlock)completion
++ (SObject *)failed:(SObjectCompletionBlock)completion
 {
     if (completion) {
         completion([self failed]);
@@ -121,7 +121,7 @@
     }
 }
 
-+ (SObject *)error:(NSError *)error completion:(CompletionBlock)completion
++ (SObject *)error:(NSError *)error completion:(SObjectCompletionBlock)completion
 {
     if (completion) {
         completion([self error:error]);
@@ -142,7 +142,7 @@
     [_subObjects addObject:subObject];
 }
 
-- (void)complete:(CompletionBlock)completion
+- (void)complete:(SObjectCompletionBlock)completion
 {
     if (completion)completion(self);
 }
@@ -329,7 +329,7 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object) {
     return res;
 }
 
-- (SObject *)loadNextPageWithCompletion:(CompletionBlock)completion
+- (SObject *)loadNextPageWithCompletion:(SObjectCompletionBlock)completion
 {
     if (!self.handler || !self.pagingSelector) {
         completion([SObject failed]);
@@ -343,7 +343,7 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object) {
     return self.canDelete.boolValue && self.handler && self.deletionSelector;
 }
 
-- (SObject *)deleteObject:(CompletionBlock)completion
+- (SObject *)deleteObject:(SObjectCompletionBlock)completion
 {
     if (!self.isDeletable) {
         completion([SObject failed]);
@@ -353,7 +353,7 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object) {
 }
 
 
-- (void)combinedLoadNextPageWithCompletion:(CompletionBlock)completion
+- (void)combinedLoadNextPageWithCompletion:(SObjectCompletionBlock)completion
 {
     SObject *result = [self copy];
     [result.subObjects removeAllObjects];

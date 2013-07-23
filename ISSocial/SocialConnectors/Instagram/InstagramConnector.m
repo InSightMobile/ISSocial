@@ -48,7 +48,7 @@
 }
 
 
-- (SObject *)openSession:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     [IGSession openActiveSessionWithPermissions:@[@"comments", @"likes"] completionHandler:^(IGSession *session, IGSessionState status, NSError *error) {
         switch (status) {

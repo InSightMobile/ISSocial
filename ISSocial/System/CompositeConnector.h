@@ -73,9 +73,9 @@ typedef void (^CompositeConnectorProcessorBlock)(SocialConnector *connector, SOb
 
 - (void)deactivateConnectors:(id <NSFastEnumeration>)connectors;
 
-- (SObject *)processOperation:(SEL)selector params:(SObject *)params withProcessor:(CompositeConnectorProcessorBlock)processor completion:(CompletionBlock)completion;
+- (SObject *)processOperation:(SEL)selector params:(SObject *)params withProcessor:(CompositeConnectorProcessorBlock)processor completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)processConnectors:(id <NSFastEnumeration>)connectors operation:(SEL)selector params:(SObject *)params withProcessor:(CompositeConnectorProcessorBlock)processor completion:(CompletionBlock)completion;
+- (SObject *)processConnectors:(id <NSFastEnumeration>)connectors operation:(SEL)selector params:(SObject *)params withProcessor:(CompositeConnectorProcessorBlock)processor completion:(SObjectCompletionBlock)completion;
 
 - (void)selectDefaultConnector;
 

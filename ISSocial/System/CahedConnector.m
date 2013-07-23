@@ -24,7 +24,7 @@
 }
 
 
-- (SObject *)processSocialConnectorProtocol:(SObject *)params completion:(CompletionBlock)completion operation:(SEL)selector
+- (SObject *)processSocialConnectorProtocol:(SObject *)params completion:(SObjectCompletionBlock)completion operation:(SEL)selector
 {
     return [_connector readCached:selector params:params completion:completion];
 }

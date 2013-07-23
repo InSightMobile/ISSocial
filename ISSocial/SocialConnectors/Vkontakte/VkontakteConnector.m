@@ -63,7 +63,7 @@
 #pragma mark Session management
 
 
-- (SObject *)closeSession:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     [VKSession.activeSession closeAndClearTokenInformation];
     _loggedIn = NO;
@@ -71,7 +71,7 @@
 }
 
 
-- (SObject *)openSession:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 

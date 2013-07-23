@@ -12,7 +12,7 @@
     NSMutableArray *_consolidatedContent;
 }
 
-- (SObject *)loadDataWithConnector:(SocialConnector *)connector params:(SObject *)params operation:(SEL)operation sortingKey:(NSString *)key ascending:(BOOL)ascending completion:(CompletionBlock)completion
+- (SObject *)loadDataWithConnector:(SocialConnector *)connector params:(SObject *)params operation:(SEL)operation sortingKey:(NSString *)key ascending:(BOOL)ascending completion:(SObjectCompletionBlock)completion
 {
     self.sorkKey = key;
     self.ascending = ascending;
@@ -114,7 +114,7 @@
     _consolidatedContent = resultData;
 }
 
-- (SObject *)loadDataMoreContentWithCompletion:(CompletionBlock)completion
+- (SObject *)loadDataMoreContentWithCompletion:(SObjectCompletionBlock)completion
 {
     [_dataSource combinedLoadNextPageWithCompletion:^(SObject *result) {
         self.dataSource = result;

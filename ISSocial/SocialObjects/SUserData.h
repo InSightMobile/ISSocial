@@ -14,6 +14,8 @@
 @protocol SUserData <SMediaObject>
 @optional
 @property(copy, nonatomic) NSString *userName;
+@property(copy, nonatomic) NSString *userEmail;
+
 @property(copy, nonatomic) MultiImage *userPicture;
 @property(nonatomic, strong) NSNumber *isOnline;
 @property(nonatomic, strong) NSDate *birthday;

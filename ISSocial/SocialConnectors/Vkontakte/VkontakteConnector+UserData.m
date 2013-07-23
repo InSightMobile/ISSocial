@@ -14,7 +14,7 @@
 
 @implementation VkontakteConnector (UserData)
 
-- (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(CompletionBlock)completion
+- (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
 {
     if (!usersData.count) {
         completion(nil);
@@ -76,7 +76,7 @@
 - (void)updateOnlineStatus:(SUserData *)params
                      users:(NSArray *)users
                  operation:(SocialConnectorOperation *)operation
-                completion:(CompletionBlock)completion
+                completion:(SObjectCompletionBlock)completion
 {
     NSString *userId = params.objectId;
     if (!userId) userId = self.userId;
@@ -118,7 +118,7 @@
     }];
 }
 
-- (SObject *)readUserFriendsOnline:(SUserData *)params completion:(CompletionBlock)completion
+- (SObject *)readUserFriendsOnline:(SUserData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -128,7 +128,7 @@
     }];
 }
 
-- (SObject *)readUserFriends:(SUserData *)params completion:(CompletionBlock)completion
+- (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -148,7 +148,7 @@
     }];
 }
 
-- (SObject *)acceptUserFriendRequest:(SUserData *)params completion:(CompletionBlock)completion
+- (SObject *)acceptUserFriendRequest:(SUserData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -163,7 +163,7 @@
     }];
 }
 
-- (SObject *)rejectUserFriendRequest:(SUserData *)params completion:(CompletionBlock)completion
+- (SObject *)rejectUserFriendRequest:(SUserData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -178,7 +178,7 @@
     }];
 }
 
-- (SObject *)readUserFriendRequests:(SUserData *)params completion:(CompletionBlock)completion
+- (SObject *)readUserFriendRequests:(SUserData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -206,7 +206,7 @@
     }];
 }
 
-- (SObject *)readUserData:(SUserData *)params completion:(CompletionBlock)completion
+- (SObject *)readUserData:(SUserData *)params completion:(SObjectCompletionBlock)completion
 {
 
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {

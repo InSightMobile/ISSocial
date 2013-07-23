@@ -15,7 +15,7 @@
 
 
 @implementation GooglePlusConnector (Feed)
-- (SObject *)readFeedComments:(SFeedEntry *)params completion:(CompletionBlock)completion
+- (SObject *)readFeedComments:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -51,7 +51,7 @@
     }];
 }
 
-- (SObject *)readFeed:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readFeed:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 

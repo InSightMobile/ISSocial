@@ -16,7 +16,7 @@ static NSMutableDictionary *_usersById;
 
 @implementation FacebookConnector (UserData)
 
-- (SObject *)readUserData:(SUserData *)params completion:(CompletionBlock)completion
+- (SObject *)readUserData:(SUserData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -44,7 +44,7 @@ static NSMutableDictionary *_usersById;
 }
 
 
-- (SObject *)readUserFriendRequests:(SUserData *)params completion:(CompletionBlock)completion
+- (SObject *)readUserFriendRequests:(SUserData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -67,7 +67,7 @@ static NSMutableDictionary *_usersById;
     }];
 }
 
-- (SObject *)readUserFriends:(SUserData *)params completion:(CompletionBlock)completion
+- (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -112,7 +112,7 @@ static NSMutableDictionary *_usersById;
     return [self dataForUserId:userId name:nil];
 }
 
-- (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(CompletionBlock)completion
+- (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
 {
     if (!usersData.count) {
         completion(nil);

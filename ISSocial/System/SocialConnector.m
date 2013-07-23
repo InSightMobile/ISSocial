@@ -43,7 +43,7 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
 
     if (numberOfArguments == 4 && [selectorName hasSuffix:@":completion:"]) {
         __unsafe_unretained SObject *param;
-        __unsafe_unretained CompletionBlock block;
+        __unsafe_unretained SObjectCompletionBlock block;
 
         [anInvocation getArgument:&param atIndex:2];
         [anInvocation getArgument:&block atIndex:3];
@@ -68,7 +68,7 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
     [super forwardInvocation:anInvocation];
 }
 
-- (SObject *)readCached:(SEL)selector params:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readCached:(SEL)selector params:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [[CacheManager instance] cashedReadWithConnector:self
                                                   operation:selector
@@ -78,18 +78,18 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
 }
 
 
-- (SObject *)defaultOperation:(SObject *)defaultOperation completion:(CompletionBlock)completion
+- (SObject *)defaultOperation:(SObject *)defaultOperation completion:(SObjectCompletionBlock)completion
 {
 
     return [SObject failed:completion];
 }
 
-- (SObject *)implementSocialConnectorCallProtocol:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)implementSocialConnectorCallProtocol:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return nil;
 }
 
-- (SObject *)processSocialConnectorProtocol:(SObject *)params completion:(CompletionBlock)completion operation:(SEL)selector
+- (SObject *)processSocialConnectorProtocol:(SObject *)params completion:(SObjectCompletionBlock)completion operation:(SEL)selector
 {
     SObject *obj = [SObject objectWithState:SObjectStateUnsupported];
     if (completion)completion(obj);
@@ -136,7 +136,7 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
 }
 
 - (SObject *)operationWithObject:(SObject *)params
-                      completion:(CompletionBlock)completion
+                      completion:(SObjectCompletionBlock)completion
 {
     SObject *operationObject = [self operationWithObject:params];
     SocialConnectorOperation *op = operationObject.operation;
@@ -150,7 +150,7 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
 }
 
 - (SObject *)operationWithObject:(SObject *)params
-                      completion:(CompletionBlock)completion
+                      completion:(SObjectCompletionBlock)completion
                        processor:(void (^)(SocialConnectorOperation *op))processor
 {
     if (params.state == SObjectStateUnsupported) {

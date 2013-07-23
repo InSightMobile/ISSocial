@@ -53,7 +53,7 @@
     return video;
 }
 
-- (SObject *)addVideo:(SVideoData *)params completion:(CompletionBlock)completion
+- (SObject *)addVideo:(SVideoData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -93,7 +93,7 @@
     }];
 }
 
-- (SObject *)readVideo:(SObject *)params completion:(CompletionBlock)completion
+- (SObject *)readVideo:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -122,7 +122,7 @@
     return result;
 }
 
-- (SObject *)addVideoComment:(SCommentData *)params completion:(CompletionBlock)completion
+- (SObject *)addVideoComment:(SCommentData *)params completion:(SObjectCompletionBlock)completion
 {
     NSLog(@"params = %@", params);
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
@@ -146,7 +146,7 @@
     }];
 }
 
-- (SObject *)readVideoLikes:(SVideoData *)params completion:(CompletionBlock)completion
+- (SObject *)readVideoLikes:(SVideoData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -179,7 +179,7 @@
     }];
 }
 
-- (SObject *)addVideoLike:(SVideoData *)params completion:(CompletionBlock)completion
+- (SObject *)addVideoLike:(SVideoData *)params completion:(SObjectCompletionBlock)completion
 {
     NSLog(@"params = %@", params);
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
@@ -188,7 +188,7 @@
     }];
 }
 
-- (SObject *)removeVideoLike:(SVideoData *)params completion:(CompletionBlock)completion
+- (SObject *)removeVideoLike:(SVideoData *)params completion:(SObjectCompletionBlock)completion
 {
     NSLog(@"params = %@", params);
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
@@ -223,7 +223,7 @@
     }];
 }
 
-- (SObject *)readVideoComments:(SVideoData *)params completion:(CompletionBlock)completion
+- (SObject *)readVideoComments:(SVideoData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
