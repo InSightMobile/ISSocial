@@ -40,9 +40,8 @@
 }
 
 - (WebLoginController *)loadLoginController
-{
-    UIStoryboard *st =
-            [UIStoryboard storyboardWithName:[[NSBundle mainBundle].infoDictionary objectForKey:@"UIMainStoryboardFile"] bundle:[NSBundle mainBundle]];
+{    
+    UIStoryboard *st =[[UIApplication sharedApplication].windows[0] rootViewController].storyboard;
 
     WebLoginController *controller = [st instantiateViewControllerWithIdentifier:@"webLogin"];
 

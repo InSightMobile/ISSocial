@@ -9,6 +9,8 @@
 #import "SUserData.h"
 #import "MultiImage.h"
 #import "NSString+TypeSafety.h"
+#import "NSDate+Facebook.h"
+#import "NSDate+Vkontakte.h"
 
 @implementation VkontakteConnector (UserData)
 
@@ -21,7 +23,7 @@
 
     NSSet *userIds = [NSSet setWithArray:[usersData valueForKey:@"objectId"]];
 
-    [self simpleMethod:@"users.get" parameters:@{@"uids" : [userIds.allObjects componentsJoinedByString:@","], @"fields" : @"uid,first_name,last_name,photo"}
+    [self simpleMethod:@"users.get" parameters:@{@"uids" : [userIds.allObjects componentsJoinedByString:@","], @"fields" : @"uid,first_name,last_name,photo,bdate"}
              operation:operation processor:^(id response) {
 
         NSLog(@"response = %@", response);
@@ -45,6 +47,11 @@
 
     if (userInfo[@"name"]) {
         userData.userName = userInfo[@"name"];
+    }
+
+    if(userInfo[@"bdate"]) {
+        NSString *bdate = userInfo[@"bdate"];
+        userData.birthday = [NSDate dateWithVkontakteBirthdayString:bdate];
     }
 
     MultiImage *image = [MultiImage new];
@@ -128,7 +135,7 @@
         NSString *userId = params.objectId;
         if (!userId) userId = self.userId;
 
-        [self simpleMethod:@"friends.get" parameters:@{@"uid" : userId, @"fields" : @"uid,first_name,last_name,photo"}
+        [self simpleMethod:@"friends.get" parameters:@{@"uid" : userId, @"fields" : @"uid,first_name,last_name,photo,bdate"}
                  operation:operation processor:^(id response) {
 
             NSLog(@"response = %@", response);

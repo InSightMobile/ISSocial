@@ -193,7 +193,11 @@
 
 - (void)presentWithSuperview:(UIView *)superview
 {
-    self.view.frame = superview.bounds;
+    CGRect frame = superview.bounds;
+    frame.origin.y = 20;
+    frame.size.height -= 20;
+
+    self.view.frame = frame;
     [superview addSubview:self.view];
     self.view.alpha = 0;
 }

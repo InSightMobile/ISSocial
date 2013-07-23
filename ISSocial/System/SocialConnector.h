@@ -149,6 +149,8 @@ FOUNDATION_EXPORT NSString *const kNewMessagesUnreadStatusChanged;
 
 - (SObject *)addPhoto:(SPhotoData *)params completion:(CompletionBlock)completion;
 
+- (SObject *)publishPhoto:(SPhotoData *)params completion:(CompletionBlock)completion;
+
 - (SObject *)addPhotoToAlbum:(SPhotoData *)params completion:(CompletionBlock)completion;
 
 - (SObject *)readPhotoAlbums:(SObject *)params completion:(CompletionBlock)completion;

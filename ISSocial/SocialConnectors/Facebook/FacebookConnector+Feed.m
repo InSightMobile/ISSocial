@@ -516,5 +516,14 @@
     return result;
 }
 
+- (SObject *)publishPhoto:(SPhotoData *)params completion:(CompletionBlock)completion {
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+
+
+        [operation complete:nil];
+
+    }];
+}
+
 
 @end
