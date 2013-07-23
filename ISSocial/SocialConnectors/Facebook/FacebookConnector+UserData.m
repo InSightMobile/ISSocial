@@ -159,6 +159,9 @@ static NSMutableDictionary *_usersById;
     if([userData[@"birthday_date"] isKindOfClass:[NSString class]]) {
 
         data.birthday = [NSDate dateWithFacebookBirthdayString:userData[@"birthday_date"]];
+        if(!data.birthday) {
+
+        }
 
     }
 
