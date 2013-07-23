@@ -313,7 +313,7 @@
     }
 
     if (exclusive) {
-        [self deactivateConnectors:[self.availableConnectors setByMinusingSet:connectors]];
+        [self deactivateConnectors:[self.activeConnectors setByMinusingSet:connectors]];
     }
     [self activateConnectors:connectors];
 }

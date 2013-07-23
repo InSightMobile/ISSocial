@@ -7,13 +7,14 @@
 #import "CompositeConnector.h"
 #import "AsyncBlockOperation.h"
 #import "NetworkCheck.h"
+#import "BlockOperationQueue.h"
 
 typedef void (^BlockCompletionBlock)();
 
 @interface LoginManager ()
 @property(nonatomic) BOOL canceled;
 
-@property(nonatomic, strong) NSOperationQueue *queue;
+@property(nonatomic, strong) BlockOperationQueue *queue;
 @property(nonatomic, strong) NSMutableArray *completions;
 @end
 
@@ -37,29 +38,11 @@ typedef void (^BlockCompletionBlock)();
     self = [super init];
     if (self) {
         self.resultConnector = [[CompositeConnector alloc] initWithConnectorSpecifications:nil];
-        self.queue = [[NSOperationQueue alloc] init];
+        self.queue = [[BlockOperationQueue alloc] init];
         self.queue.maxConcurrentOperationCount = 1;
 
         self.completions = [NSMutableArray array];
         CompositeConnector *globalConnector = self.destinationConnectors;
-
-        [_queue addObserverForKeyPath:@"operationCount" task:^(id sender) {
-
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([sender operationCount] == 0) {
-
-                    [globalConnector addAndActivateConnectors:self.resultConnector.activeConnectors exclusive:YES];
-
-                    if (!self.canceled) {
-                        for (BlockCompletionBlock block in _completions) {
-                            block();
-                        }
-                        [_completions removeAllObjects];
-                    }
-                    self.canceled = NO;
-                }
-            });
-        }];
     }
     return self;
 }
@@ -108,7 +91,7 @@ typedef void (^BlockCompletionBlock)();
 
             if (!self.canceled && !connector.isLoggedIn) {
                 [connector openSession:nil completion:^(SObject *result) {
-                    if (!result.isFailed) {
+                    if (result.isSuccessful) {
                         [self.resultConnector activateConnector:connector];
                     }
                     else {
@@ -123,6 +106,19 @@ typedef void (^BlockCompletionBlock)();
         }];
         [_queue addOperation:blockOperation];
     }
+
+        [self.queue setCompletionHandler:^(NSError *error)
+        {
+            [globalConnector addAndActivateConnectors:self.resultConnector.activeConnectors exclusive:YES];
+
+            if (!self.canceled) {
+                for (BlockCompletionBlock block in _completions) {
+                    block();
+                }
+                [_completions removeAllObjects];
+            }
+            self.canceled = NO;
+        }];
 
     }];
 }

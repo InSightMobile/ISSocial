@@ -11,6 +11,7 @@ typedef void (^BlockOperationCompletionHandler)(NSError *);
 
 @interface BlockOperationQueue ()
 @property(copy) BlockOperationCompletionHandler completion;
+@property(nonatomic) BOOL didCompleted;
 @end
 
 @implementation BlockOperationQueue
@@ -31,7 +32,19 @@ typedef void (^BlockOperationCompletionHandler)(NSError *);
 
 - (void)setCompletionHandler:(void (^)(NSError *errorOrNil))completion
 {
-    self.completion = completion;
+    if(!completion) {
+        _completion = nil;
+        return;
+    }
+
+    if(_didCompleted) {
+        if(completion) {
+            completion(nil);
+        }
+    }
+    else {
+        _completion = completion;
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
@@ -40,13 +53,19 @@ typedef void (^BlockOperationCompletionHandler)(NSError *);
     if (object == self && [keyPath isEqualToString:@"operationCount"]) {
         if (self.operationCount == 0) {
             // Do something here when your queue has completed
-            if (_completion && !_error) {
+            if (_completion) {
                 BlockOperationCompletionHandler op = [_completion copy];
-                [self setCompletionHandler:nil];
+                _didCompleted = YES;
+                _completion = nil;
+                NSError *error = _error;
+                _error = nil;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    op(nil);
+                    op(error);
                 });
             }
+        }
+        else {
+            _didCompleted = NO;
         }
     }
     else {
@@ -65,6 +84,12 @@ typedef void (^BlockOperationCompletionHandler)(NSError *);
         handler([NSError errorWithDomain:@"BlockOperationQueue" code:1 userInfo:nil]);
     }
 }
+
+- (void)addOperation:(NSOperation *)op
+{
+    [super addOperation:op];
+}
+
 
 - (void)failWithError:(NSError *)error
 {
