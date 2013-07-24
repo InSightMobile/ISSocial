@@ -519,6 +519,18 @@
 - (SObject *)publishPhoto:(SPhotoData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
+        [operation complete:nil];
+
+    }];
+}
+
+- (SObject *)publish:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion
+{
+    return [self postToFeed:params completion:completion];
+
+
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+
 
         [operation complete:nil];
 
