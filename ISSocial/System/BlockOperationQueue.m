@@ -32,13 +32,13 @@ typedef void (^BlockOperationCompletionHandler)(NSError *);
 
 - (void)setCompletionHandler:(void (^)(NSError *errorOrNil))completion
 {
-    if(!completion) {
+    if (!completion) {
         _completion = nil;
         return;
     }
 
-    if(_didCompleted) {
-        if(completion) {
+    if (_didCompleted) {
+        if (completion) {
             completion(nil);
         }
     }
@@ -59,7 +59,8 @@ typedef void (^BlockOperationCompletionHandler)(NSError *);
                 _completion = nil;
                 NSError *error = _error;
                 _error = nil;
-                dispatch_async(dispatch_get_main_queue(), ^{
+                dispatch_async(dispatch_get_main_queue(), ^
+                {
                     op(error);
                 });
             }
@@ -87,6 +88,7 @@ typedef void (^BlockOperationCompletionHandler)(NSError *);
 
 - (void)addOperation:(NSOperation *)op
 {
+    _didCompleted = NO;
     [super addOperation:op];
 }
 
