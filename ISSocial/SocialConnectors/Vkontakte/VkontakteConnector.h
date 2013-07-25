@@ -41,4 +41,6 @@
 - (void)addLike:(SVideoData *)params operation:(SocialConnectorOperation *)operation type:(NSString *)type itemId:(NSString *)itemId owner:(SUserData *)owner;
 
 - (void)removeLike:(SVideoData *)params operation:(SocialConnectorOperation *)operation type:(NSString *)type itemId:(NSString *)itemId owner:(SUserData *)owner;
+
+
 @end

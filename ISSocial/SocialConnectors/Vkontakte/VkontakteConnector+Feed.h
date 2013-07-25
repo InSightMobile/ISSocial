@@ -21,5 +21,5 @@
 
 - (SCommentData *)parseCommentEntries:(NSArray *)response object:(SObject *)object paging:(SObject *)paging;
 
-- (void)uploadAttachments:(NSArray *)attachments destination:(NSString *)destination operation:(SocialConnectorOperation *)operation completion:(void (^)(NSArray *))completion;
+- (void)uploadAttachments:(NSArray *)attachments owner:(SUserData *)owner destination:(NSString *)destination operation:(SocialConnectorOperation *)operation completion:(void (^)(NSArray *))completion;
 @end

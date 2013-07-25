@@ -393,7 +393,7 @@
     return entry;
 }
 
-- (void)uploadAttachments:(NSArray *)attachments destination:(NSString *)destination operation:(SocialConnectorOperation *)operation completion:(void (^)(NSArray *))completion
+- (void)uploadAttachments:(NSArray *)attachments owner:(SUserData *)owner destination:(NSString *)destination operation:(SocialConnectorOperation *)operation completion:(void (^)(NSArray *))completion
 {
     if (!attachments.count) {
         completion(nil);
@@ -407,6 +407,10 @@
         [attachments asyncEach:^(SPhotoData *atatchment, ISArrayAsyncEachResultBlock next) {
             SPhotoData *object = [atatchment copy];
             object.operation = operation;
+
+            if(owner) {
+                object.owner = owner;
+            }
 
             if ([object.mediaType isEqualToString:@"photo"]) {
                 [self uploadPhoto:object album:destination operation:operation completion:^(SObject *result) {
@@ -472,7 +476,8 @@
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        [self uploadAttachments:params.attachments destination:@"wall" operation:operation completion:^(NSArray *attachments) {
+        [self uploadAttachments:params.attachments owner:params.owner destination:kWallAlbum operation:operation completion:^(NSArray *attachments)
+        {
 
             NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
 
@@ -480,22 +485,29 @@
                 parameters[@"message"] = params.message;
             }
 
+            if (params.owner) {
+                parameters[@"owner_id"] = params.owner.objectId;
+            }
+
             if (attachments.count) {
-                NSString *attach = [[(NSArray *) attachments map:^id(id <SMultimediaObject> obj) {
+                NSString *attach = [[(NSArray *) attachments map:^id(id <SMultimediaObject> obj)
+                {
                     return [NSString stringWithFormat:@"%@%@", obj.mediaType, obj.objectId];
                 }] componentsJoinedByString:@","];
 
                 parameters[@"attachments"] = attach;
             }
 
-            [[VKRequest requestMethod:@"wall.post" parameters:parameters] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
+            [[VKRequest requestMethod:@"wall.post" parameters:parameters] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error)
+            {
                 if (error) {
                     [operation completeWithError:error];
                     return;
                 }
                 NSString *postId = [NSString stringWithFormat:@"%@_%@", self.userId, response[@"post_id"]];
 
-                [[VKRequest requestMethod:@"wall.getById" parameters:@{@"posts" : postId}] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
+                [[VKRequest requestMethod:@"wall.getById" parameters:@{@"posts" : postId}] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error)
+                {
                     if (error) {
                         [operation completeWithError:error];
                         return;
@@ -518,4 +530,8 @@
         }];
     }];
 }
+
+
+
+
 @end

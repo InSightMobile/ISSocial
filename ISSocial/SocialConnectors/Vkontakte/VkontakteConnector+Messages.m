@@ -59,7 +59,8 @@
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        [self uploadAttachments:params.attachments destination:@"message" operation:operation completion:^(NSArray *attachments) {
+        [self uploadAttachments:params.attachments owner:nil destination:@"message" operation:operation completion:^(NSArray *attachments)
+        {
 
             NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
 
@@ -70,14 +71,16 @@
             }
 
             if (attachments.count) {
-                NSString *attach = [[attachments map:^id(id <SMultimediaObject> obj) {
+                NSString *attach = [[attachments map:^id(id <SMultimediaObject> obj)
+                {
                     return [NSString stringWithFormat:@"%@%@", obj.mediaType, obj.objectId];
                 }] componentsJoinedByString:@","];
 
                 parameters[@"attachment"] = attach;
             }
 
-            [self simpleMethod:@"messages.send" parameters:parameters operation:operation processor:^(id response) {
+            [self simpleMethod:@"messages.send" parameters:parameters operation:operation processor:^(id response)
+            {
 
                 NSLog(@"response = %@", response);
 
@@ -85,7 +88,8 @@
                     response = response[0];
                 }
 
-                [self simpleMethod:@"messages.getById" parameters:@{@"mid" : response} operation:operation processor:^(id response) {
+                [self simpleMethod:@"messages.getById" parameters:@{@"mid" : response} operation:operation processor:^(id response)
+                {
 
                     for (NSDictionary *info in response) {
 

@@ -19,6 +19,8 @@
 #import "SUserData.h"
 
 
+
+
 @implementation VkontakteConnector (Photos)
 
 - (SObject *)readPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion {
@@ -350,12 +352,13 @@
     NSString *uploadServer, *saveMethod;
     NSDictionary *parameters;
 
-    if ([album isEqualToString:@"wall"]) {
+    if ([album isEqualToString:kWallAlbum]) {
         uploadServer = @"photos.getWallUploadServer";
         saveMethod = @"photos.saveWallPhoto";
         parameters = nil;
     }
-    else if ([album isEqualToString:@"message"]) {
+
+    else if ([album isEqualToString:kMessageAlbum]) {
         uploadServer = @"photos.getMessagesUploadServer";
         saveMethod = @"photos.saveMessagesPhoto";
         parameters = nil;
@@ -386,7 +389,15 @@
 
 - (void)uploadPhoto:(SPhotoData *)params uploadServer:(NSString *)uploadServer saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completionn {
 
-    [[VKRequest requestMethod:uploadServer parameters:nil] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
+    NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+    if(params.owner) {
+        uploadParams[@"uid"] = params.owner.objectId;
+    }
+    if(params.title.length) {
+        uploadParams[@"text"] = params.title;
+    }
+
+    [[VKRequest requestMethod:uploadServer parameters:uploadParams] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
         NSLog(@"response = %@", response);
         if (error) {
             completionn([SObject error:error]);
@@ -399,12 +410,11 @@
             }
         }
 
-        [self uploadPhoto:params toURL:response[@"upload_url"] saveMethod:saveMethod operation:operation completionn:completionn];
+        [self uploadPhoto:params toURL:response[@"upload_url"] saveMethod:saveMethod operation:operation completion:completionn];
     }];
-
 }
 
-- (void)uploadPhoto:(SPhotoData *)params toURL:(NSString *)URL saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation completionn:(SObjectCompletionBlock)completionn {
+- (void)uploadPhoto:(SPhotoData *)params toURL:(NSString *)URL saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completionn {
 
     [VKSession sendPOSTRequest:URL withImageData:params.sourceData handler:^(VKRequestOperation *connection, id result, NSError *error) {
 
@@ -414,20 +424,32 @@
             return;
         }
 
-        [[VKRequest requestMethod:saveMethod parameters:result] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
+        [self savePhoto:params saveMethod:saveMethod operation:operation uploadResult:result completion:completionn];
+    }];
+}
 
-            NSLog(@" result = %@", result);
+- (void)savePhoto:(SPhotoData *)params saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation
+                                                                      uploadResult:(id)uploadResult completion:(SObjectCompletionBlock)completionn
+{
+    NSMutableDictionary *saveParams = [NSMutableDictionary dictionaryWithDictionary:uploadResult];
+   if(params.owner) {
+       saveParams[@"uid"] = params.owner.objectId;
+   }
+    if(params.title.length) {
+        saveParams[@"text"] = params.title;
+    }
+
+    [[VKRequest requestMethod:saveMethod parameters:saveParams] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
+            NSLog(@" result = %@", response);
             if (error) {
-                completionn([SObject error:error]);
+                [operation completeWithError:error];
             }
             else {
                 NSDictionary *photoData = response[0];
                 SPhotoData *photo = [self parsePhotoResponse:photoData];
-
                 completionn(photo);
             }
         }];
-    }];
 }
 
 - (SObject *)addPhotoToAlbum:(SPhotoData *)params completion:(SObjectCompletionBlock)completionn {
@@ -481,12 +503,35 @@
 }
 
 - (SObject *)publishPhoto:(SPhotoData *)params completion:(SObjectCompletionBlock)completion {
-    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
+    SFeedEntry *entry = [[SFeedEntry alloc] init];
+    entry.message = params.title;
+    entry.attachments = @[params];
+    entry.owner = params.owner;
 
-        [operation complete:nil];
+    return [self postToFeed:entry completion:^(SObject *result)
+    {
+
+        completion(result);
 
     }];
+
+
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+
+        [self uploadPhoto:params album:kWallAlbum operation:operation completion:^(SObject *result)
+        {
+            if (result.isFailed) {
+                [operation completeWithError:result.error];
+            }
+            else {
+                [operation complete:result];
+            }
+
+        }];
+    }];
 }
+
+
 
 @end
