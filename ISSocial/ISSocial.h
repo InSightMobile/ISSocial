@@ -7,6 +7,8 @@
 
 @class LoginManager;
 
+static NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated";
+
 @interface ISSocial : NSObject
 - (void)loadConnectors;
 

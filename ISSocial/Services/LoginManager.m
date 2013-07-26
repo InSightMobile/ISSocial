@@ -78,14 +78,25 @@ typedef void (^BlockCompletionBlock)();
         return;
     }
 
+    NSMutableArray *targetConnectors = [NSMutableArray new];
+
     for (SocialConnector *connector in connectors) {
         if (connector.isLoggedIn) {
             [self.resultConnector activateConnector:connector];
         }
+        else {
+            [targetConnectors addObject:connector];
+        }
+    }
+
+    if(targetConnectors.count == 0) {
+        [self applyChanges];
+        completion();
+        return;
     }
     [self.completions addObject:[completion copy]];
 
-    for (SocialConnector *connector in connectors) {
+    for (SocialConnector *connector in targetConnectors) {
         AsyncBlockOperation *blockOperation = [AsyncBlockOperation operationWithBlock:^(AsyncBlockOperation *operation,
                 AsyncBlockOperationCompletionBlock completionBlock) {
 
@@ -109,7 +120,7 @@ typedef void (^BlockCompletionBlock)();
 
         [self.queue setCompletionHandler:^(NSError *error)
         {
-            [globalConnector addAndActivateConnectors:self.resultConnector.activeConnectors exclusive:YES];
+            [self applyChanges];
 
             if (!self.canceled) {
                 for (BlockCompletionBlock block in _completions) {
@@ -121,6 +132,11 @@ typedef void (^BlockCompletionBlock)();
         }];
 
     }];
+}
+
+- (void)applyChanges
+{
+    [self.destinationConnectors addAndActivateConnectors:self.resultConnector.activeConnectors exclusive:YES];
 }
 
 - (CompositeConnector *)sourceConnectors

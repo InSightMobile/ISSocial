@@ -56,7 +56,6 @@
 {
     [self loadConnectors];
     [self.loginManager loginWithCompletion:^{
-        [self.rootConnectors setConnectors:self.loggedInConnectors.allObjects asActive:YES];
         completion();
     }];
 }
