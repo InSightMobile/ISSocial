@@ -7,6 +7,17 @@
 //
 
 #import "SocialConnector.h"
+#import "ISSocial.h"
+
+typedef enum
+{
+
+    CompositeConnectorUseActiveConnectors = 0,
+    CompositeConnectorUseAviableConnectors = 1,
+    CompositeConnectorDefaultActivated = 0,
+    CompositeConnectorDefaultDeactivated = 2,
+
+} CompositeConnectorOptions;
 
 static NSString *const AviableConnectorsDidChangedNotification = @"AviableConnectorsChanged";
 
@@ -22,7 +33,7 @@ typedef void (^CompositeConnectorProcessorBlock)(SocialConnector *connector, SOb
 
 + (CompositeConnector *)globalConnectors;
 
-- (id)initWithConnectorSpecifications:(NSArray *)specifications superConnector:(CompositeConnector *)superConnector restorationId:(NSString *)restorationId;
+- (id)initWithConnectorSpecifications:(NSArray *)specifications superConnector:(CompositeConnector *)superConnector restorationId:(NSString *)restorationId options:(CompositeConnectorOptions)options;
 
 + (CompositeConnector *)instance;
 
@@ -55,6 +66,9 @@ typedef void (^CompositeConnectorProcessorBlock)(SocialConnector *connector, SOb
 
 
 - (void)setConnectors:(NSArray *)connectors asActive:(BOOL)active;
+
+- (void)addConnector:(SocialConnector *)connector;
+
 - (void)addConnector:(SocialConnector *)connector asActive:(BOOL)active;
 
 - (void)activateConnector:(SocialConnector *)connector;
@@ -65,7 +79,7 @@ typedef void (^CompositeConnectorProcessorBlock)(SocialConnector *connector, SOb
 
 - (void)activateConnectors:(id <NSFastEnumeration>)connectors;
 
-- (void)activateConnectors:(NSSet *)connectors exclusive:(BOOL)exclusive;
+- (void)activateConnectors:(id <NSFastEnumeration>)connectors exclusive:(BOOL)exclusive;
 
 - (void)addAndActivateConnectors:(NSSet *)connectors exclusive:(BOOL)exclusive;
 

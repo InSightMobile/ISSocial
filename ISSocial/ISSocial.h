@@ -6,6 +6,8 @@
 #import "CompositeConnector.h"
 
 @class LoginManager;
+@class CompositeConnector;
+
 
 static NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated";
 
@@ -21,7 +23,8 @@ static NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendIn
 - (void)tryLoginWithCompletion:(void (^)())completion;
 
 - (void)logoutWithCompletion:(void (^)())completion;
-- (void)logoutConnector:(SocialConnector*)connector completion:(void (^)())completion;
+
+- (void)logoutConnector:(SocialConnector *)connector completion:(void (^)())completion;
 
 
 - (void)loginWithConnectorName:(NSString *)connectorName completion:(void (^)(SocialConnector *connector, NSError *error))completion;

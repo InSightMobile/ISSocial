@@ -1,13 +1,13 @@
 //
 //
 
-#import <BlocksKit/NSObject+BlockObservation.h>
 #import <BlocksKit/UIAlertView+BlocksKit.h>
 #import "LoginManager.h"
 #import "CompositeConnector.h"
 #import "AsyncBlockOperation.h"
 #import "NetworkCheck.h"
 #import "BlockOperationQueue.h"
+#import "NSArray+AsyncBlocks.h"
 
 typedef void (^BlockCompletionBlock)();
 
@@ -27,7 +27,8 @@ typedef void (^BlockCompletionBlock)();
 {
     static LoginManager *_instance = nil;
     static dispatch_once_t pred;
-    dispatch_once(&pred, ^{
+    dispatch_once(&pred, ^
+    {
         _instance = [[self alloc] init];
     });
     return _instance;
@@ -49,7 +50,7 @@ typedef void (^BlockCompletionBlock)();
 
 - (CompositeConnector *)destinationConnectors
 {
-    if(_destinationConnectors) {
+    if (_destinationConnectors) {
         return _destinationConnectors;
     }
     return [CompositeConnector globalConnectors];
@@ -57,66 +58,71 @@ typedef void (^BlockCompletionBlock)();
 
 - (void)loginWithCompletion:(void (^)())completion
 {
-    [[NetworkCheck instance] checkConnectionWithCompletion:^(BOOL connected) {
+    [[NetworkCheck instance] checkConnectionWithCompletion:^(BOOL connected)
+    {
 
-        if(!connected) {
-            [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"No network access", @"No network access") message:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+        if (!connected) {
+            [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"No network access", @"No network access") message:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex)
+            {
                 completion();
             }];
             return;
         }
 
-    self.canceled = NO;
-    CompositeConnector *globalConnector = self.sourceConnectors;
+        self.canceled = NO;
+        CompositeConnector *globalConnector = self.sourceConnectors;
 
-    [self.resultConnector setConnectors:globalConnector.sortedAvailableConnectors asActive:NO];
-    [self.resultConnector deactivateAllConnectors];
+        [self.resultConnector setConnectors:globalConnector.sortedAvailableConnectors asActive:NO];
+        [self.resultConnector deactivateAllConnectors];
 
-    NSArray *connectors = globalConnector.sortedActiveConnectors;
-    if (!connectors.count) {
-        completion();
-        return;
-    }
-
-    NSMutableArray *targetConnectors = [NSMutableArray new];
-
-    for (SocialConnector *connector in connectors) {
-        if (connector.isLoggedIn) {
-            [self.resultConnector activateConnector:connector];
+        NSArray *connectors = globalConnector.sortedActiveConnectors;
+        if (!connectors.count) {
+            completion();
+            return;
         }
-        else {
-            [targetConnectors addObject:connector];
-        }
-    }
 
-    if(targetConnectors.count == 0) {
-        [self applyChanges];
-        completion();
-        return;
-    }
-    [self.completions addObject:[completion copy]];
+        NSMutableArray *targetConnectors = [NSMutableArray new];
 
-    for (SocialConnector *connector in targetConnectors) {
-        AsyncBlockOperation *blockOperation = [AsyncBlockOperation operationWithBlock:^(AsyncBlockOperation *operation,
-                AsyncBlockOperationCompletionBlock completionBlock) {
-
-            if (!self.canceled && !connector.isLoggedIn) {
-                [connector openSession:nil completion:^(SObject *result) {
-                    if (result.isSuccessful) {
-                        [self.resultConnector activateConnector:connector];
-                    }
-                    else {
-                        [self.resultConnector deactivateConnector:connector];
-                    }
-                    completionBlock(nil);
-                }];
+        for (SocialConnector *connector in connectors) {
+            if (connector.isLoggedIn) {
+                [self.resultConnector activateConnector:connector];
             }
             else {
-                completionBlock(nil);
+                [targetConnectors addObject:connector];
             }
-        }];
-        [_queue addOperation:blockOperation];
-    }
+        }
+
+        if (targetConnectors.count == 0) {
+            [self applyChanges];
+            completion();
+            return;
+        }
+        [self.completions addObject:[completion copy]];
+
+        for (SocialConnector *connector in targetConnectors) {
+            AsyncBlockOperation
+                    *blockOperation = [AsyncBlockOperation operationWithBlock:^(AsyncBlockOperation *operation,
+                    AsyncBlockOperationCompletionBlock completionBlock)
+            {
+
+                if (!self.canceled && !connector.isLoggedIn) {
+                    [connector openSession:nil completion:^(SObject *result)
+                    {
+                        if (result.isSuccessful) {
+                            [self.resultConnector activateConnector:connector];
+                        }
+                        else {
+                            [self.resultConnector deactivateConnector:connector];
+                        }
+                        completionBlock(nil);
+                    }];
+                }
+                else {
+                    completionBlock(nil);
+                }
+            }];
+            [_queue addOperation:blockOperation];
+        }
 
         [self.queue setCompletionHandler:^(NSError *error)
         {
@@ -136,12 +142,14 @@ typedef void (^BlockCompletionBlock)();
 
 - (void)applyChanges
 {
-    [self.destinationConnectors addAndActivateConnectors:self.resultConnector.activeConnectors exclusive:YES];
+    for (CompositeConnector *connector in _destinationConnectors) {
+        [connector addAndActivateConnectors:self.resultConnector.activeConnectors exclusive:YES];
+    }
 }
 
 - (CompositeConnector *)sourceConnectors
 {
-    if(_sourceConnectors) {
+    if (_sourceConnectors) {
         return _sourceConnectors;
     }
     return [CompositeConnector globalConnectors];
@@ -154,5 +162,46 @@ typedef void (^BlockCompletionBlock)();
     [_queue cancelAllOperations];
     [[CompositeConnector globalConnectors] activateConnectors:self.resultConnector.activeConnectors exclusive:YES];
     self.canceled = YES;
+}
+
+- (void)logoutAllWithCompletion:(void (^)())completion
+{
+    [self.sourceConnectors.availableConnectors asyncEach:^(id object, ISArrayAsyncEachResultBlock next)
+    {
+        SocialConnector *connector = object;
+
+        if (connector.isLoggedIn) {
+            [connector closeSession:nil completion:^(SObject *result)
+            {
+                next(nil);
+            }];
+        }
+        else {
+            next(nil);
+        }
+    }                                        comletition:^(NSError *errorOrNil)
+    {
+        [self.resultConnector deactivateAllConnectors];
+        [self applyChanges];
+        completion();
+    }];
+
+}
+
+- (void)logoutConnector:(SocialConnector *)connector withCompletion:(void (^)())completion
+{
+    if (connector.isLoggedIn) {
+        [connector closeSession:nil completion:^(SObject *result)
+        {
+            [self.resultConnector deactivateConnector:connector];
+            [self applyChanges];
+            completion();
+        }];
+    }
+    else {
+        [self.resultConnector deactivateConnector:connector];
+        [self applyChanges];
+        completion();
+    }
 }
 @end
