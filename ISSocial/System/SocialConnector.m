@@ -92,7 +92,9 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
 - (SObject *)processSocialConnectorProtocol:(SObject *)params completion:(SObjectCompletionBlock)completion operation:(SEL)selector
 {
     SObject *obj = [SObject objectWithState:SObjectStateUnsupported];
-    if (completion)completion(obj);
+    if (completion) {
+            completion(obj);
+    }
     return obj;
 }
 
@@ -109,7 +111,7 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
 
 - (NSString *)connectorName
 {
-   return NSLocalizedString(self.connectorCode, nil);
+    return NSLocalizedString(self.connectorCode, nil);
 }
 
 - (NSInteger)connectorPriority
@@ -143,7 +145,8 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
 
     op.completionHandler = completion;
     __block SocialConnectorOperation *weakOp = op;
-    op.completion = ^(SObject *result) {
+    op.completion = ^(SObject *result)
+    {
         [weakOp complete:result];
     };
     return operationObject;
@@ -154,7 +157,9 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
                        processor:(void (^)(SocialConnectorOperation *op))processor
 {
     if (params.state == SObjectStateUnsupported) {
-        if (completion)completion([SObject successful]);
+        if (completion) {
+                    completion([SObject successful]);
+        }
         return [SObject successful];
     }
     SObject *operationObject = [self operationWithObject:params completion:completion];

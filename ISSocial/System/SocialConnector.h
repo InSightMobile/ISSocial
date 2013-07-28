@@ -23,6 +23,7 @@
 @class SNewsEntry;
 @class SMessageThread;
 @class SAudioData;
+@class SLinkData;
 
 
 FOUNDATION_EXPORT NSString *const kNewMessagesNotification;
@@ -150,6 +151,7 @@ FOUNDATION_EXPORT NSString *const kNewMessagesUnreadStatusChanged;
 - (SObject *)addPhoto:(SPhotoData *)params completion:(SObjectCompletionBlock)completion;
 
 - (SObject *)publishPhoto:(SPhotoData *)params completion:(SObjectCompletionBlock)completion;
+
 - (SObject *)publish:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion;
 
 - (SObject *)addPhotoToAlbum:(SPhotoData *)params completion:(SObjectCompletionBlock)completion;
@@ -173,6 +175,12 @@ FOUNDATION_EXPORT NSString *const kNewMessagesUnreadStatusChanged;
 - (SObject *)removePhotoLike:(SCommentData *)params completion:(SObjectCompletionBlock)completion;
 
 - (SObject *)readPhotoLikes:(SPhotoData *)params completion:(SObjectCompletionBlock)completion;
+
+- (SObject *)addLinkLike:(SLinkData *)link completion:(SObjectCompletionBlock)completion;
+
+- (SObject *)removeLinkLike:(SLinkData *)link completion:(SObjectCompletionBlock)completion;
+
+- (SObject *)readLinkLikes:(SLinkData *)link completion:(SObjectCompletionBlock)completion;
 
 // Session
 - (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion;

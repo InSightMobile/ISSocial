@@ -134,7 +134,9 @@
 
 - (void)addSubObject:(SObject *)subObject
 {
-    if (!subObject)return;
+    if (!subObject) {
+            return;
+    }
 
     if (!_subObjects) {
         self.subObjects = [NSMutableArray array];
@@ -144,7 +146,9 @@
 
 - (void)complete:(SObjectCompletionBlock)completion
 {
-    if (completion)completion(self);
+    if (completion) {
+            completion(self);
+    }
 }
 
 - (id)objectForKeyedSubscript:(id)key
@@ -180,6 +184,11 @@
     return copy;
 }
 
+- (NSUInteger)count
+{
+    return self.data.count;
+}
+
 - (void)setObjectId:(NSString *)objectId
 {
     if (_objectId && ![objectId isEqualToString:_objectId]) {
@@ -198,14 +207,16 @@
     }
 }
 
-id dynamicGetterIMP(SObject *self, SEL _cmd) {
+id dynamicGetterIMP(SObject *self, SEL _cmd)
+{
 
     NSString *name = NSStringFromSelector(_cmd);
 
     return [self.data objectForKey:NSStringFromSelector(_cmd)];
 }
 
-void dynamicSetterIMP(SObject *self, SEL _cmd, id object) {
+void dynamicSetterIMP(SObject *self, SEL _cmd, id object)
+{
 
     NSString *sel = NSStringFromSelector(_cmd);
     sel = [sel substringWithRange:NSMakeRange(3, sel.length - 4)];
@@ -215,10 +226,12 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object) {
     if (!self.data) {
         self.data = [NSMutableDictionary dictionaryWithCapacity:1];
     }
-    if (object)
-        [self.data setObject:object forKey:sel];
-    else
-        [self.data removeObjectForKey:sel];
+    if (object) {
+            [self.data setObject:object forKey:sel];
+        }
+    else {
+            [self.data removeObjectForKey:sel];
+    }
 }
 
 + (BOOL)resolveInstanceMethod:(SEL)aSEL
@@ -226,8 +239,9 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object) {
     NSString *name = NSStringFromSelector(aSEL);
 
     BOOL upper = NO;
-    if (name.length > 3)
-        upper = [[NSCharacterSet uppercaseLetterCharacterSet] characterIsMember:[name characterAtIndex:3]];
+    if (name.length > 3) {
+            upper = [[NSCharacterSet uppercaseLetterCharacterSet] characterIsMember:[name characterAtIndex:3]];
+    }
 
     if ([name hasSuffix:@":"]) {
         if (upper && [name hasPrefix:@"set"]) {
@@ -247,7 +261,9 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object) {
 - (id)valueForKey:(NSString *)key
 {
     id obj = [_data objectForKey:key];
-    if (obj) return obj;
+    if (obj) {
+            return obj;
+    }
 
     return [super valueForKey:key];
 }
@@ -358,12 +374,15 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object) {
     SObject *result = [self copy];
     [result.subObjects removeAllObjects];
 
-    [self.subObjects asyncEach:^(id object, ISArrayAsyncEachResultBlock next) {
-        [object loadNextPageWithCompletion:^(SObject *updated) {
+    [self.subObjects asyncEach:^(id object, ISArrayAsyncEachResultBlock next)
+    {
+        [object loadNextPageWithCompletion:^(SObject *updated)
+        {
             [result addSubObject:updated];
             next(nil);
         }];
-    }              comletition:^(NSError *errorOrNil) {
+    }              comletition:^(NSError *errorOrNil)
+    {
         completion(result);
     }];
 }

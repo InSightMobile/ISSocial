@@ -58,7 +58,9 @@ typedef void (^SObjectCompletionBlock)(SObject *result);
 
 @end
 
-@interface SObject : NSObject <SObject, NSCopying, NSCoding>
+@interface SObject : NSObject <SObject>
+
+@property(nonatomic, readonly) NSUInteger count;
 
 @property(strong, nonatomic) NSMutableDictionary *data;
 @property(nonatomic, strong) NSMutableArray *subObjects;
