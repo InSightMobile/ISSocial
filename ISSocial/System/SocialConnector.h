@@ -182,6 +182,9 @@ FOUNDATION_EXPORT NSString *const kNewMessagesUnreadStatusChanged;
 
 - (SObject *)readLinkLikes:(SLinkData *)link completion:(SObjectCompletionBlock)completion;
 
+- (SObject *)publishLink:(SLinkData *)link completion:(SObjectCompletionBlock)completion;
+
+
 // Session
 - (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion;
 

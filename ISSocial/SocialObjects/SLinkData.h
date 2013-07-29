@@ -13,7 +13,7 @@
 @property(copy, nonatomic) NSDate *date;
 @property(copy, nonatomic) NSString *title;
 @property(copy, nonatomic) NSString *linkURL;
-
+@property(copy, nonatomic) NSString *message;
 @end
 
 @interface SLinkData : SMediaObject <SLinkData>
