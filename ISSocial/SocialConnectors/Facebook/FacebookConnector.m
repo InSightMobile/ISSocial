@@ -258,7 +258,7 @@
         permissions = @[
             @"user_about_me", @"read_stream", @"user_photos",
             @"read_mailbox", @"xmpp_login", @"friends_about_me",
-            @"friends_online_presence", @"user_videos"];
+            @"friends_online_presence", @"user_videos",@"email"];
     }
 
 
@@ -276,7 +276,9 @@
                             [SObject successful:completion];
                             self.loggedIn = YES;
                             if([session.permissions indexOfObject:@"xmpp_login"] != NSNotFound) {
-                                [self xmppConnect];
+                                if([self respondsToSelector:@selector(xmppConnect)]) {
+                                    [self xmppConnect];
+                                }
                             }
                         }];
                     }
