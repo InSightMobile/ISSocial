@@ -12,7 +12,7 @@
 #import "SUserData.h"
 #import "FacebookConnector+Messages.h"
 
-@interface FacebookConnector ()
+@interface FacebookConnector () 
 @property(nonatomic) BOOL loggedIn;
 @property(nonatomic, strong) id defaultReadPermissions;
 @end
