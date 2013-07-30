@@ -3,8 +3,8 @@
 
 #import <Foundation/Foundation.h>
 #import "FacebookConnector.h"
-#import "XMPPStream.h"
 
-@interface FacebookConnector (Messages) <XMPPStreamDelegate>
+
+@interface FacebookConnector (Messages) 
 - (void)xmppConnect;
 @end
