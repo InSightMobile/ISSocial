@@ -8,7 +8,6 @@
 
 #import "SUserData.h"
 #import "TwitterConnector.h"
-#import "STTwitterAPIWrapper.h"
 #import <Twitter/Twitter.h>
 #import <Accounts/Accounts.h>
 
@@ -35,7 +34,8 @@
 {
     static TwitterConnector *_instance = nil;
     static dispatch_once_t pred;
-    dispatch_once(&pred, ^{
+    dispatch_once(&pred, ^
+    {
         _instance = [[self alloc] init];
     });
     return _instance;
@@ -73,99 +73,101 @@
 
 - (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
-    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation)
+    {
 
         //  First, we need to obtain the account instance for the user's Twitter account
-    ACAccountStore *store = [[ACAccountStore alloc] init];
-    ACAccountType *twitterAccountType =
-            [store accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+        ACAccountStore *store = [[ACAccountStore alloc] init];
+        ACAccountType *twitterAccountType =
+                [store accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
 
-//  Request permission from the user to access the available Twitter accounts
-    [store requestAccessToAccountsWithType:twitterAccountType
-                     withCompletionHandler:^(BOOL granted, NSError *error) {
-                         if (!granted) {
-                             // The user rejected your request
-                             NSLog(@"User rejected access to the account.");
-                             [operation completeWithFailure];
-                         }
-                         else {
-                             // Grab the available accounts
-                             NSArray *twitterAccounts =
-                                     [store accountsWithAccountType:twitterAccountType];
+        //  Request permission from the user to access the available Twitter accounts
+        [store requestAccessToAccountsWithType:twitterAccountType
+                         withCompletionHandler:^(BOOL granted, NSError *error)
+                         {
+                             if (!granted) {
+                                 // The user rejected your request
+                                 NSLog(@"User rejected access to the account.");
+                                 [operation completeWithFailure];
+                                 return;
+                             }
+                             else {
+                                 // Grab the available accounts
+                                 NSArray *twitterAccounts =
+                                         [store accountsWithAccountType:twitterAccountType];
 
-                             if ([twitterAccounts count] > 0) {
-                                 // Use the first account for simplicity
-                                 ACAccount *account = twitterAccounts[0];
-                                 
-                                 self.account = account;
+                                 if ([twitterAccounts count] > 0) {
+                                     // Use the first account for simplicity
+                                     ACAccount *account = twitterAccounts[0];
 
-                                 // Now make an authenticated request to our endpoint
-                                 NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-                                 params[@"include_entities"] = @"1";
+                                     self.account = account;
 
-                                 //  The endpoint that we wish to call
-                                 NSURL *url =
-                                         [NSURL
-                                                 URLWithString:@"https://api.twitter.com/1.1/account/verify_credentials.json"];
+                                     // Now make an authenticated request to our endpoint
+                                     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+                                     params[@"include_entities"] = @"1";
 
-                                 //  Build the request with our parameter
-                                 TWRequest *request =
-                                         [[TWRequest alloc] initWithURL:url
-                                                             parameters:params
-                                                          requestMethod:TWRequestMethodGET];
+                                     //  The endpoint that we wish to call
+                                     NSURL *url =
+                                             [NSURL
+                                                     URLWithString:@"https://api.twitter.com/1.1/account/verify_credentials.json"];
 
-                                 // Attach the account object to this request
-                                 [request setAccount:account];
+                                     //  Build the request with our parameter
+                                     TWRequest *request =
+                                             [[TWRequest alloc] initWithURL:url
+                                                                 parameters:params
+                                                              requestMethod:TWRequestMethodGET];
 
-                                 [request performRequestWithHandler:
-                                         ^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-                                             if (!responseData) {
-                                                 // inspect the contents of error
-                                                 NSLog(@"%@", error);
-                                                 [operation completeWithError:error];
-                                             }
-                                             else {
-                                                 NSError *jsonError;
-                                                 NSDictionary *info =
-                                                         [NSJSONSerialization
-                                                                 JSONObjectWithData:responseData
-                                                                            options:NSJSONReadingMutableLeaves
-                                                                              error:&jsonError];
-                                                 if (info) {
-                                                     // at this point, we have an object that we can parse
-                                                     NSLog(@"%@", info);
+                                     // Attach the account object to this request
+                                     [request setAccount:account];
 
-                                                     SUserData *userData =
-                                                             [[SUserData alloc] initWithHandler:self];
-
-                                                     userData.userName = info[@"name"];
-
-                                                     self.currentUserData = userData;
-                                                     completion([SObject successful]);
-                                                     [operation complete:nil];
+                                     [request performRequestWithHandler:
+                                             ^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error)
+                                             {
+                                                 if (!responseData) {
+                                                     // inspect the contents of error
+                                                     NSLog(@"%@", error);
+                                                     [operation completeWithError:error];
                                                  }
                                                  else {
-                                                     // inspect the contents of jsonError
-                                                     NSLog(@"%@", jsonError);
-                                                     [operation completeWithError:jsonError];
+                                                     NSError *jsonError;
+                                                     NSDictionary *info =
+                                                             [NSJSONSerialization
+                                                                     JSONObjectWithData:responseData
+                                                                                options:NSJSONReadingMutableLeaves
+                                                                                  error:&jsonError];
+                                                     if (info) {
+                                                         // at this point, we have an object that we can parse
+                                                         NSLog(@"%@", info);
+
+                                                         SUserData *userData =
+                                                                 [[SUserData alloc] initWithHandler:self];
+
+                                                         userData.userName = info[@"name"];
+                                                         userData.objectId = info[@"id"];
+
+                                                         self.currentUserData = userData;
+                                                         _loggedIn = YES;
+                                                         [operation complete:[SObject successful]];
+                                                     }
+                                                     else {
+                                                         // inspect the contents of jsonError
+                                                         NSLog(@"%@", jsonError);
+                                                         [operation completeWithError:jsonError];
+                                                     }
                                                  }
-                                             }
-                                         }];
-
-                             } // if ([twitterAccounts count] > 0)
-                         } // if (granted)
-                     }];
-
-    completion([SObject successful]);
+                                             }];
+                                 }
+                             }
+                         }];
     }];
-    
-}
 
+}
 
 
 - (SObject *)readUserData:(SUserData *)params completion:(SObjectCompletionBlock)completion
 {
-    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation)
+    {
 
         NSString *userId = params.objectId;
         if (userId.length == 0) {
