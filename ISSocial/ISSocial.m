@@ -100,9 +100,18 @@
     SocialConnector *connector = [self connectorNamed:connectorName];
     [self.rootConnectors addConnector:connector asActive:YES];
 
+    __block NSError* connectionError = nil;
+    
+    [self.loginManager setLoginHandler:^(SocialConnector *connector, NSError *error) {
+        if([connector.connectorCode isEqualToString:connectorName]) {
+            connectionError = error;
+        }
+    }];
+
     [self.loginManager loginWithCompletion:^
     {
-        completion(connector, nil);
+        self.loginManager.loginHandler = nil;
+        completion(connector, connectionError);
     }];
 }
 

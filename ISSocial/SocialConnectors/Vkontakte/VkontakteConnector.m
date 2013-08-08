@@ -10,7 +10,6 @@
 #import "VKSession.h"
 #import "VkontakteConnector+UserData.h"
 #import "SUserData.h"
-#import "ISSocial.h"
 
 @interface VkontakteConnector ()
 @property(nonatomic) BOOL loggedIn;
@@ -73,21 +72,23 @@
 
 - (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
-    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation)
+    {
 
         NSArray *permissions = self.permissions;
-        if(!permissions) {
+        if (!permissions) {
             permissions = @[@"wall", @"messages", @"photos", @"friends", @"video", @"audio"];
         }
 
-        [VKSession openActiveSessionWithPermissions:permissions completionHandler:^(VKSession *session, VKSessionState status, NSError *error) {
+        [VKSession openActiveSessionWithPermissions:permissions completionHandler:^(VKSession *session, VKSessionState status, NSError *error)
+        {
             switch (status) {
                 case VKSessionStateOpen: {
                     self.userId = session.userId;
                     self.currentUserData = [self dataForUserId:self.userId];
 
-                    [self updateUserData:@[self.currentUserData] operation:operation completion:^(SObject *result) {
-
+                    [self updateUserData:@[self.currentUserData] operation:operation completion:^(SObject *result)
+                    {
                         self.loggedIn = YES;
                         [self startPull];
                         [operation complete:[SObject successful]];
@@ -96,11 +97,11 @@
                     break;
                 case VKSessionStateClosed:
                 case VKSessionStateClosedLoginFailed: {
-                    [operation completeWithFailure];
+                    [operation completeWithError:error];
                 }
                     break;
                 default:
-                    [operation completeWithFailure];
+                    [operation completeWithError:error];
                     break;
             }
         }];
@@ -112,14 +113,15 @@
     return _loggedIn;
 }
 
-- (void)setupSettings:(NSDictionary *)settings {
+- (void)setupSettings:(NSDictionary *)settings
+{
 
     [super setupSettings:settings];
 
-    if(settings[@"AppID"]) {
+    if (settings[@"AppID"]) {
         [VKSession activeSession].clientId = settings[@"AppID"];
     }
-    if(settings[@"Permissions"]) {
+    if (settings[@"Permissions"]) {
         self.permissions = settings[@"Permissions"];
     }
 }
@@ -131,7 +133,8 @@
            processor:(void (^)(id))processor
 {
     NSOperation *op =
-            [[VKRequest requestMethod:method parameters:parameters] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
+            [[VKRequest requestMethod:method parameters:parameters] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error)
+            {
 
                 [operation removeSubOperation:connection];
 
@@ -144,7 +147,6 @@
             }];
     [operation addSubOperation:op];
 }
-
 
 
 @end

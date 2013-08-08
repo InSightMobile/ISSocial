@@ -22,6 +22,8 @@
 
 @property(nonatomic, strong) CompositeConnector *resultConnector;
 
+@property(nonatomic, copy) void (^loginHandler)(SocialConnector *, NSError *);
+
 - (void)logoutAllWithCompletion:(void (^)())pFunction;
 
 - (void)logoutConnector:(SocialConnector *)connector withCompletion:(void (^)())completion;

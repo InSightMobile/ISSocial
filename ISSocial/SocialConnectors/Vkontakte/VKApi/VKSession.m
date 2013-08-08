@@ -12,6 +12,8 @@
 #import "AFHTTPClient.h"
 #import "WebLoginController.h"
 #import "NSString+ValueConvertion.h"
+#import "ISSocial.h"
+#import "ISSocial+Errors.h"
 
 @interface VKSession () <WebLoginControllerDelegate>
 
@@ -189,9 +191,15 @@
 
             NSLog(@"Error: %@", url.absoluteString);
 
+            NSError *error = nil;
+
+            if([params[@"error_reason"] isEqualToString:@"user_denied"]) {
+                error = [ISSocial errorWithCode:ISSocialErrorUserCanceled sourseError:nil userInfo:params];
+            }
+
             self.state = VKSessionStateClosed;
             if (_statusHandler) {
-                self.statusHandler(self, VKSessionStateClosed, nil);
+                self.statusHandler(self, VKSessionStateClosed, error);
                 self.statusHandler = nil;
             }
 

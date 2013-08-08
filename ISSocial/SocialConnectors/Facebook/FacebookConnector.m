@@ -11,8 +11,10 @@
 #import "FacebookConnectorOperation.h"
 #import "SUserData.h"
 #import "FacebookConnector+Messages.h"
+#import "ISSocial.h"
+#import "ISSocial+Errors.h"
 
-@interface FacebookConnector () 
+@interface FacebookConnector ()
 @property(nonatomic) BOOL loggedIn;
 @property(nonatomic, strong) id defaultReadPermissions;
 @end
@@ -36,7 +38,8 @@
 {
     static FacebookConnector *_instance = nil;
     static dispatch_once_t pred;
-    dispatch_once(&pred, ^{
+    dispatch_once(&pred, ^
+    {
         _instance = [[self alloc] init];
     });
     return _instance;
@@ -74,7 +77,8 @@
 {
     FBRequest *request = [[FBRequest alloc] initWithSession:FBSession.activeSession graphPath:nil];
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
-    [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+    [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error)
+    {
         if (error) {
             [operation completeWithError:error];
         }
@@ -94,7 +98,8 @@
     [fql.parameters setObject:query forKey:@"q"];
 
     FBRequestConnection *connection =
-            [fql startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+            [fql startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error)
+            {
 
                 [operation removeConnection:connection];
 
@@ -117,7 +122,8 @@
                                                  HTTPMethod:method];
 
     FBRequestConnection *connection =
-            [request startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+            [request startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error)
+            {
                 [operation removeConnection:connection];
                 if (error) {
                     NSLog(@"Facebook error on method: %@ params: %@", method, object);
@@ -134,11 +140,25 @@
 - (void)simplePost:(NSString *)method object:(NSDictionary *)object operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
 {
     FBRequestConnection *connection =
-            [[FBRequest requestForPostWithGraphPath:method graphObject:object] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+            [[FBRequest requestForPostWithGraphPath:method graphObject:object] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error)
+            {
                 [operation removeConnection:connection];
                 if (error) {
-                    NSLog(@"Facebook error on method: %@ params: %@", method, object);
-                    [operation completeWithError:error];
+                    NSLog(@"Facebook error on method: %@ params: %@ error: %@", method, object, error);
+
+                    NSDictionary *errorData = error.userInfo[FBErrorParsedJSONResponseKey];
+
+                    int facebookCode = [errorData[@"body"][@"error"][@"code"] intValue];
+
+                    int code = ISSocialErrorUnknown;
+                    if (facebookCode == 240) {
+                        code = ISSocialErrorOperationNotAllowedByTarget;
+                    }
+
+                    NSError *socialError =
+                            [ISSocial errorWithCode:code sourseError:error userInfo:nil];
+
+                    [operation completeWithError:socialError];
                 }
                 else {
                     processor(result);
@@ -155,7 +175,8 @@
                                           graphPath:path
                                          parameters:params
                                          HTTPMethod:httpMethod]
-                        startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                        startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error)
+                        {
 
                             [operation removeConnection:connection];
                             if (error) {
@@ -173,7 +194,8 @@
             httpMethod = @"POST";
         }
         FBRequestConnection *connection =
-                [[FBRequest requestWithGraphPath:path parameters:object HTTPMethod:httpMethod] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                [[FBRequest requestWithGraphPath:path parameters:object HTTPMethod:httpMethod] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error)
+                {
                     [operation removeConnection:connection];
                     if (error) {
                         NSLog(@"Facebook error on method: %@ params: %@", path, object);
@@ -190,7 +212,8 @@
 - (void)checkAuthorizationFor:(NSArray *)permissions  operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
 {
 
-    [self authorizeWithPublishPermissions:permissions completion:^(SObject *result) {
+    [self authorizeWithPublishPermissions:permissions completion:^(SObject *result)
+    {
 
         if (result.isFailed) {
             [operation completeWithFailure];
@@ -208,9 +231,12 @@
             break;
         }
     }
-    if (ok) [SObject successful:completion];
+    if (ok) {
+            [SObject successful:completion];
+        }
     else {
-        [[FBSession activeSession] requestNewPublishPermissions:permissions defaultAudience:FBSessionDefaultAudienceFriends completionHandler:^(FBSession *session, NSError *error) {
+        [[FBSession activeSession] requestNewPublishPermissions:permissions defaultAudience:FBSessionDefaultAudienceFriends completionHandler:^(FBSession *session, NSError *error)
+        {
 
             if (!error) {
                 [SObject successful:completion];
@@ -227,10 +253,10 @@
 {
     [super setupSettings:settings];
 
-    if(settings[@"AppID"]) {
+    if (settings[@"AppID"]) {
         [FBSettings setDefaultAppID:settings[@"AppID"]];
     }
-    if(settings[@"ReadPermissions"]) {
+    if (settings[@"ReadPermissions"]) {
         self.defaultReadPermissions = settings[@"ReadPermissions"];
     }
 
@@ -245,56 +271,68 @@
 
 - (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
-    // See if we have a valid token for the current state.
-    if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
-        // To-do, show logged in view
-    } else {
-        // No, display the login page.
-    }
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation)
+    {
+        // See if we have a valid token for the current state.
+        if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
+            // To-do, show logged in view
+        }
+        else {
+            // No, display the login page.
+        }
 
-    NSArray * permissions = self.defaultReadPermissions;
+        NSArray *permissions = self.defaultReadPermissions;
 
-    if(!permissions) {
-        permissions = @[
-            @"user_about_me", @"read_stream", @"user_photos",
-            @"read_mailbox", @"xmpp_login", @"friends_about_me",
-            @"friends_online_presence", @"user_videos",@"email"];
-    }
+        if (!permissions) {
+            permissions = @[
+                    @"user_about_me", @"read_stream", @"user_photos",
+                    @"read_mailbox", @"xmpp_login", @"friends_about_me",
+                    @"friends_online_presence", @"user_videos", @"email"];
+        }
 
 
-    [FBSession openActiveSessionWithReadPermissions:permissions
+        [FBSession openActiveSessionWithReadPermissions:permissions
 
-                                       allowLoginUI:YES completionHandler:
-            ^(FBSession *session,
-                    FBSessionState state, NSError *error) {
+                                           allowLoginUI:YES completionHandler:
+                ^(FBSession *session,
+                        FBSessionState state, NSError *error)
+                {
 
-                switch (state) {
-                    case FBSessionStateOpen:
-                    case FBSessionStateOpenTokenExtended: {
+                    switch (state) {
+                        case FBSessionStateOpen:
+                        case FBSessionStateOpenTokenExtended: {
 
-                        [self readUserData:[SUserData new] completion:^(SObject *result) {
-                            [SObject successful:completion];
-                            self.loggedIn = YES;
-                            if([session.permissions indexOfObject:@"xmpp_login"] != NSNotFound) {
-                                if([self respondsToSelector:@selector(xmppConnect)]) {
-                                    [self xmppConnect];
+                            [self readUserData:[SUserData new] completion:^(SObject *result)
+                            {
+                                [SObject successful:completion];
+                                self.loggedIn = YES;
+                                if ([session.permissions indexOfObject:@"xmpp_login"] != NSNotFound) {
+                                    if ([self respondsToSelector:@selector(xmppConnect)]) {
+                                        [self xmppConnect];
+                                    }
                                 }
+                            }];
+                        }
+                            break;
+                        case FBSessionStateClosed:
+                            [operation completeWithError:error];
+                            break;
+                        case FBSessionStateClosedLoginFailed:
+                            if([error.userInfo[FBErrorLoginFailedReason]
+                                    isEqualToString:FBErrorLoginFailedReasonSystemDisallowedWithoutErrorValue]) {
+
+                                [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorSystemLoginDisallowed sourseError:error userInfo:nil]];
                             }
-                        }];
+                            else {
+                                [operation completeWithError:error];
+                            }
+                            break;
+                        default:
+                            [SObject failed:completion];
+                            break;
                     }
-                        break;
-                    case FBSessionStateClosed:
-                        [SObject failed:completion];
-                        break;
-                    case FBSessionStateClosedLoginFailed:
-                        [SObject failed:completion];
-                        break;
-                    default:
-                        [SObject failed:completion];
-                        break;
-                }
-            }];
-    return [SObject objectWithState:SObjectStateProcessing];
+                }];
+    }];
 }
 
 - (SocialConnectorOperation *)operationWithParent:(SocialConnectorOperation *)operation

@@ -112,6 +112,7 @@ typedef void (^BlockCompletionBlock)();
                             [self.resultConnector activateConnector:connector];
                         }
                         else {
+                            [self handleLoginError:connector result:result];
                             [self.resultConnector deactivateConnector:connector];
                         }
                         completionBlock(nil);
@@ -138,6 +139,13 @@ typedef void (^BlockCompletionBlock)();
         }];
 
     }];
+}
+
+- (void)handleLoginError:(SocialConnector *)connector result:(SObject *)result
+{
+    if (self.loginHandler) {
+        self.loginHandler(connector, result.error);
+    }
 }
 
 - (void)applyChanges

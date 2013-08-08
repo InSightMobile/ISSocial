@@ -2,6 +2,7 @@
 // 
 
 #import "SocialConnector.h"
+#import "ISSocial+Errors.h"
 
 @interface SocialConnectorOperation ()
 @property(nonatomic, strong) SocialConnector *handler;
@@ -118,7 +119,7 @@
 
 - (void)completeWithFailure
 {
-    [self complete:[SObject failed]];
+    [self complete:[SObject error:[ISSocial errorWithError:nil]]];
 }
 
 - (SObject *)object
@@ -132,7 +133,7 @@
 
 - (void)completeWithError:(NSError *)error
 {
-    [self complete:[SObject error:error]];
+    [self complete:[SObject error:[ISSocial errorWithError:error]]];
 }
 
 - (void)addConnection:(id)connection
