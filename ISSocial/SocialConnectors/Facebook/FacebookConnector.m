@@ -290,11 +290,27 @@
                     @"friends_online_presence", @"user_videos", @"email"];
         }
 
+        /*
+                [FBSession openActiveSessionWithPermissions:permissions
+                                       allowLoginUI:YES
+                                 allowSystemAccount:NO
+                                             isRead:YES
+                                    defaultAudience:FBSessionDefaultAudienceNone
+                                  completionHandler:^(FBSession *session,
+                                          FBSessionState state, NSError *error)
+                                  {
+         */
 
-        [FBSession openActiveSessionWithReadPermissions:permissions
+        FBSession *session = [[FBSession alloc] initWithAppID:nil
+                                                   permissions:permissions
+                                               defaultAudience:FBSessionDefaultAudienceNone
+                                               urlSchemeSuffix:nil
+                                            tokenCacheStrategy:nil];
 
-                                           allowLoginUI:YES completionHandler:
-                ^(FBSession *session,
+        [FBSession setActiveSession:session];
+
+        [session openWithBehavior:FBSessionLoginBehaviorWithFallbackToWebView
+                completionHandler:^(FBSession *session,
                         FBSessionState state, NSError *error)
                 {
 
