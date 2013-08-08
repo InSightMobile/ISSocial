@@ -485,7 +485,9 @@
                 parameters[@"message"] = params.message;
             }
 
+            NSString *ownerId = self.userId;
             if (params.owner) {
+                ownerId = params.owner.objectId;
                 parameters[@"owner_id"] = params.owner.objectId;
             }
 
@@ -504,7 +506,8 @@
                     [operation completeWithError:error];
                     return;
                 }
-                NSString *postId = [NSString stringWithFormat:@"%@_%@", self.userId, response[@"post_id"]];
+                NSString *localPostId = response[@"post_id"];
+                NSString *postId = [NSString stringWithFormat:@"%@_%@", ownerId, response[@"post_id"]];
 
                 [[VKRequest requestMethod:@"wall.getById" parameters:@{@"posts" : postId}] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error)
                 {
@@ -523,8 +526,13 @@
                     }
                     if (feedEntry)
                         [operation complete:feedEntry];
-                    else
+                    else if(localPostId.length){
+                        [operation complete:[SObject successful]];
+                    }
+                    else {
                         [operation completeWithFailure];
+                    }
+
                 }];
             }];
         }];

@@ -211,7 +211,6 @@
 
 - (void)checkAuthorizationFor:(NSArray *)permissions  operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
 {
-
     [self authorizeWithPublishPermissions:permissions completion:^(SObject *result)
     {
 
@@ -303,7 +302,7 @@
 
         FBSession *session = [[FBSession alloc] initWithAppID:nil
                                                    permissions:permissions
-                                               defaultAudience:FBSessionDefaultAudienceNone
+                                               defaultAudience:FBSessionDefaultAudienceFriends
                                                urlSchemeSuffix:nil
                                             tokenCacheStrategy:nil];
 
