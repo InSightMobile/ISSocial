@@ -565,7 +565,7 @@
             userId = photo.owner.objectId;
         }
 
-        [self checkAuthorizationFor:@[@"publish_actions"] operation:operation processor:^(id res)
+        [self checkAuthorizationFor:@[@"publish_actions",@"publish_stream"] operation:operation processor:^(id res)
         {
             NSMutableDictionary *params = [NSMutableDictionary dictionary];
             if (photo.title.length) {

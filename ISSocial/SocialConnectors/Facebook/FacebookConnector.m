@@ -234,17 +234,31 @@
             [SObject successful:completion];
         }
     else {
-        [[FBSession activeSession] requestNewPublishPermissions:permissions defaultAudience:FBSessionDefaultAudienceFriends completionHandler:^(FBSession *session, NSError *error)
-        {
+        if([[FBSession activeSession] isOpen]) {
+            [[FBSession activeSession] requestNewPublishPermissions:permissions defaultAudience:FBSessionDefaultAudienceFriends completionHandler:^(FBSession *session, NSError *error)
+            {
 
-            if (!error) {
-                [SObject successful:completion];
+                if (!error) {
+                    [SObject successful:completion];
+                }
+                else {
+                    [SObject failed:completion];
+                }
             }
-            else {
-                [SObject failed:completion];
-            }
+            ];
         }
-        ];
+        else {
+            [self openSession:nil completion:^(SObject *result)
+            {
+                if(self.isLoggedIn) {
+                    [self authorizeWithPublishPermissions:permissions completion:completion];
+                }
+                else {
+                    completion([SObject failed]);
+                }
+            }];
+        }
+
     }
 }
 
