@@ -8,6 +8,8 @@
 #import <Foundation/Foundation.h>
 #import "VkontakteConnector.h"
 
+static NSString *const kNoResultObjectKey = @"NoResultObject";
+
 @interface VkontakteConnector (Feed)
 - (SObject *)parsePagingResponce:(id)response paging:(SObject *)paging processor:(SObject * (^)(id))processor;
 

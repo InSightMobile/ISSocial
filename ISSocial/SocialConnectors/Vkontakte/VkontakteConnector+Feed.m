@@ -21,6 +21,8 @@
 #import "NSString+StripHTML.h"
 #import "VkontakteConnector+Video.h"
 #import "RegexKitLite.h"
+#import "ISSocial.h"
+#import "ISSocial+Errors.h"
 
 @implementation VkontakteConnector (Feed)
 
@@ -500,22 +502,17 @@
                 parameters[@"attachments"] = attach;
             }
 
-            [[VKRequest requestMethod:@"wall.post" parameters:parameters] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error)
-            {
-                if (error) {
-                    [operation completeWithError:error];
+            [self simpleMethod:@"wall.post" parameters:parameters operation:operation processor:^(id response){
+
+                if([params[kNoResultObjectKey] boolValue]) {
+                    [operation complete:[SObject successful]];
                     return;
                 }
+
                 NSString *localPostId = response[@"post_id"];
                 NSString *postId = [NSString stringWithFormat:@"%@_%@", ownerId, response[@"post_id"]];
 
-                [[VKRequest requestMethod:@"wall.getById" parameters:@{@"posts" : postId}] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error)
-                {
-                    if (error) {
-                        [operation completeWithError:error];
-                        return;
-                    }
-
+                [self simpleMethod:@"wall.getById" parameters:@{@"posts" : postId} operation:operation processor:^(id response){
                     SFeedEntry *feedEntry = nil;
 
                     for (id entry in response) {
@@ -534,6 +531,7 @@
                     }
 
                 }];
+
             }];
         }];
     }];

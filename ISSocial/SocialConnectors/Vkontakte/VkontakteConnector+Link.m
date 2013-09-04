@@ -16,7 +16,11 @@
 {
     return [self operationWithObject:link completion:completion processor:^(SocialConnectorOperation *operation)
     {
-        [self simpleMethod:@"likes.add" parameters:@{@"item_id" : link.linkURL.absoluteString, @"type" : @"sitepage"}
+        id pageId = link.objectId;
+
+        //pageId = link.linkURL.absoluteString;
+
+        [self simpleMethod:@"likes.add" parameters:@{@"item_id":pageId, @"page_url" : link.linkURL.absoluteString,@"type" : @"sitepage"}
                  operation:operation processor:^(id response) {
 
             SLinkData *result = link;

@@ -51,8 +51,10 @@
     if (!url) {
         url = [@"method/" stringByAppendingString:_method];
         // add default params if needed
-        if (_session.accessToken)
+        if (_session.accessToken) {
             [params setObject:_session.accessToken forKey:@"access_token"];
+        }
+        [params setObject:@"3.0" forKey:@"v"];
     }
 
     NSMutableURLRequest *req = [_session.client requestWithMethod:@"POST" path:url parameters:params];

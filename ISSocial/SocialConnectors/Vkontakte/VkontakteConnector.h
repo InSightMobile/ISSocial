@@ -18,6 +18,8 @@
 
 - (void)simpleMethod:(NSString *)method parameters:(NSDictionary *)parameters operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor;
 
+- (NSError *)processVKError:(NSError *)error;
+
 @property(nonatomic, copy) NSString *userId;
 
 @property(nonatomic, strong) SObject *pullOperation;

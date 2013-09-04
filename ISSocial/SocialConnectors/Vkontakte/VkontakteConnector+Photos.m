@@ -508,6 +508,7 @@
     entry.message = params.title;
     entry.attachments = @[params];
     entry.owner = params.owner;
+    entry[kNoResultObjectKey] = @YES;
 
     return [self postToFeed:entry completion:^(SObject *result)
     {

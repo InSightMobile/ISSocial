@@ -10,6 +10,7 @@
 #import "VKSession.h"
 #import "VkontakteConnector+UserData.h"
 #import "SUserData.h"
+#import "ISSocial+Errors.h"
 
 @interface VkontakteConnector ()
 @property(nonatomic) BOOL loggedIn;
@@ -132,20 +133,36 @@
            operation:(SocialConnectorOperation *)operation
            processor:(void (^)(id))processor
 {
-    NSOperation *op =
+    VKRequestOperation *op =
             [[VKRequest requestMethod:method parameters:parameters] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error)
             {
 
                 [operation removeSubOperation:connection];
 
                 if (error) {
-                    [operation completeWithError:error];
+
+                    NSLog(@"Vkontakte error on method: %@ params: %@ error: %@", method, parameters, error);
+                    [operation completeWithError:[self processVKError:error]];
+
                 }
                 else {
                     processor(response);
                 }
             }];
     [operation addSubOperation:op];
+}
+
+- (NSError *)processVKError:(NSError *)error
+{
+    int code = ISSocialErrorUnknown;
+    if (error.code == 214) {
+        code = ISSocialErrorOperationNotAllowedByTarget;
+    }
+
+    NSError *socialError =
+            [ISSocial errorWithCode:code sourseError:error userInfo:nil];
+
+    return socialError;
 }
 
 
