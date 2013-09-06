@@ -52,6 +52,10 @@
 
         }
 
+        if(link.message.length) {
+            params[@"message"] = link.message;
+        }
+
         [self simpleMethod:@"wall.post" parameters:params operation:operation processor:^(id result)
         {
             if (result[@"post_id"]) {

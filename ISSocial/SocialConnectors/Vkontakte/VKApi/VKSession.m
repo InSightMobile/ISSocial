@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Ярослав. All rights reserved.
 //
 
-#import <BlocksKit/NSObject+BlocksKit.h>
+#import "BlocksKit/NSObject+BlocksKit.h"
 #import "VKSession.h"
 #import "AFJSONRequestOperation.h"
 #import "AFHTTPClient.h"

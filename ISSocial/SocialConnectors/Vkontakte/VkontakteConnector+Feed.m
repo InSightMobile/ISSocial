@@ -4,7 +4,7 @@
 // To change the template use AppCode | Preferences | File Templates.
 //
 
-#import <BlocksKit/NSArray+BlocksKit.h>
+#import "BlocksKit/NSArray+BlocksKit.h"
 #import "VKRequest.h"
 #import "SUserData.h"
 #import "SFeedEntry.h"
