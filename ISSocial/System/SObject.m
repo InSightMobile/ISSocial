@@ -5,9 +5,11 @@
 //
 
 
-#import "VkontakteConnector.h"
 #import "NSArray+AsyncBlocks.h"
 #import <objc/runtime.h>
+#import "SObject.h"
+#import "SocialConnectorOperation.h"
+#import "SocialConnector.h"
 
 
 @interface SObject ()
