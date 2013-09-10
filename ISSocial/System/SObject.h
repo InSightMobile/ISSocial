@@ -122,6 +122,10 @@ typedef void (^SObjectCompletionBlock)(SObject *result);
 - (void)setObject:(id)object forKeyedSubscript:(id)key;
 
 
+- (id)objectForKey:(id)key;
+
+- (NSArray *)allKeys;
+
 - (void)addSubObjects:(NSArray *)array;
 
 - (NSString *)description;

@@ -191,6 +191,16 @@
     return self.data.count;
 }
 
+- (id)objectForKey:(id)key
+{
+   return [self.data objectForKey:key];
+}
+
+- (NSArray *)allKeys
+{
+    return [self.data allKeys];
+}
+
 - (void)setObjectId:(NSString *)objectId
 {
     if (_objectId && ![objectId isEqualToString:_objectId]) {

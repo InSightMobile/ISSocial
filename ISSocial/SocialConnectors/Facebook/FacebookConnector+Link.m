@@ -48,7 +48,7 @@
 
             [self simplePost:[NSString stringWithFormat:@"%@/feed", userId] object:params operation:operation processor:^(id result)
             {
-                if(result[@"id"]) {
+                if (result[@"id"]) {
                     [operation complete:[SObject successful]];
                 }
                 else {
@@ -57,7 +57,55 @@
 
             }];
         }];
-    }];    
+    }];
+}
+
+- (SObject *)readLinkLikes:(SLinkData *)params completion:(SObjectCompletionBlock)completion
+{
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation)
+    {
+        if (params.userLikes.boolValue) {
+            [operation complete:params];
+            return;
+        }
+
+        if (!params.linkURL.absoluteString.length) {
+            [operation completeWithFailure];
+            return;
+        }
+
+        NSString *const query =
+                [NSString stringWithFormat:@"SELECT user_id FROM url_like WHERE user_id = %@ AND url = '%@';",self.currentUserData.objectId,params.linkURL.absoluteString];
+
+        SLinkData *link = [params copyWithHandler:self];
+
+        [self simpleQuery:query operation:operation processor:^(id o)
+        {
+            NSLog(@"o = %@", o);
+
+            if([o[@"data"] count]) {
+                link.userLikes = @YES;
+            }
+            else {
+                link.userLikes = @NO;
+            }
+
+            [self simpleQuery:[NSString stringWithFormat:@"select like_count from link_stat WHERE url ='%@';", params.linkURL.absoluteString] operation:operation processor:^(id result)
+            {
+                NSLog(@"o = %@", result);
+
+                if([result[@"data"] count]) {
+                    NSNumber *count = result[@"data"][0][@"like_count"];
+                    if (count) {
+                        link.likesCount = count;
+                    }
+                }
+
+                [operation complete:link];
+            }];
+        }];
+
+    }];
 }
 
 
