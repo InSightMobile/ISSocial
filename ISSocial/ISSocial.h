@@ -13,6 +13,7 @@
 
 static NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated";
 
+
 @interface ISSocial : NSObject
 - (void)loadConnectors;
 
@@ -23,6 +24,8 @@ static NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendIn
 @property(nonatomic, strong) NSMutableDictionary *connectorsByCode;
 
 - (void)tryLoginWithCompletion:(void (^)())completion;
+
+- (void)tryLoginWithUserUI:(BOOL)userUI completion:(void (^)())completion;
 
 - (void)logoutWithCompletion:(void (^)())completion;
 

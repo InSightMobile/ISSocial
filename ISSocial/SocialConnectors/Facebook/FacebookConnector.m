@@ -232,10 +232,10 @@
         }
     }
     if (ok) {
-            [SObject successful:completion];
-        }
+        [SObject successful:completion];
+    }
     else {
-        if([[FBSession activeSession] isOpen]) {
+        if ([[FBSession activeSession] isOpen]) {
             [[FBSession activeSession] requestNewPublishPermissions:permissions defaultAudience:FBSessionDefaultAudienceFriends completionHandler:^(FBSession *session, NSError *error)
             {
 
@@ -243,7 +243,7 @@
                     [self performBlock:^(id sender)
                     {
                         [SObject successful:completion];
-                    } afterDelay:0.1];
+                    }       afterDelay:0.1];
                 }
                 else {
                     [SObject failed:completion];
@@ -254,7 +254,7 @@
         else {
             [self openSession:nil completion:^(SObject *result)
             {
-                if(self.isLoggedIn) {
+                if (self.isLoggedIn) {
                     [self authorizeWithPublishPermissions:permissions completion:completion];
                 }
                 else {
@@ -296,34 +296,22 @@
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation)
     {
-        // See if we have a valid token for the current state.
-        if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
-            // To-do, show logged in view
-        }
-        else {
-            // No, display the login page.
-        }
-
         NSArray *permissions = self.defaultReadPermissions;
 
         if (!permissions) {
-            permissions = @[
-                    @"user_about_me", @"read_stream", @"user_photos",
-                    @"read_mailbox", @"xmpp_login", @"friends_about_me",
-                    @"friends_online_presence", @"user_videos", @"email"];
+            permissions = @[@"user_about_me"];
         }
 
-        /*
-                [FBSession openActiveSessionWithPermissions:permissions
-                                       allowLoginUI:YES
-                                 allowSystemAccount:NO
-                                             isRead:YES
-                                    defaultAudience:FBSessionDefaultAudienceNone
-                                  completionHandler:^(FBSession *session,
-                                          FBSessionState state, NSError *error)
-                                  {
-         */
+        BOOL allowLoginUI = YES;
+        if(params[kAllowUserUIKey]) {
+            allowLoginUI = [params[kAllowUserUIKey] boolValue];
+        }
 
+#if 1
+        [FBSession openActiveSessionWithReadPermissions:permissions allowLoginUI:allowLoginUI completionHandler:^(FBSession *session, FBSessionState state, NSError *error)
+        {
+
+#else
         FBSession *session = [[FBSession alloc] initWithAppID:nil
                                                    permissions:permissions
                                                defaultAudience:FBSessionDefaultAudienceFriends
@@ -336,45 +324,47 @@
                 completionHandler:^(FBSession *session,
                         FBSessionState state, NSError *error)
                 {
+#endif
 
-                    switch (state) {
-                        case FBSessionStateOpen:
-                        case FBSessionStateOpenTokenExtended: {
+            switch (state) {
+                case FBSessionStateOpen:
+                case FBSessionStateOpenTokenExtended: {
 
-                            [self readUserData:[SUserData new] completion:^(SObject *result)
-                            {
-                                [self performBlock:^(id sender)
-                                {
-                                    [SObject successful:completion];
-                                } afterDelay:0.1];
+                    [self readUserData:[SUserData new] completion:^(SObject *result)
+                    {
+                        [self performBlock:^(id sender)
+                        {
+                            [SObject successful:completion];
+                        }       afterDelay:0.1];
 
-                                self.loggedIn = YES;
-                                if ([session.permissions indexOfObject:@"xmpp_login"] != NSNotFound) {
-                                    if ([self respondsToSelector:@selector(xmppConnect)]) {
-                                        [self xmppConnect];
-                                    }
-                                }
-                            }];
+                        self.loggedIn = YES;
+                        if ([session.permissions indexOfObject:@"xmpp_login"] !=
+                                NSNotFound) {
+                            if ([self respondsToSelector:@selector(xmppConnect)]) {
+                                [self xmppConnect];
+                            }
                         }
-                            break;
-                        case FBSessionStateClosed:
-                            [operation completeWithError:error];
-                            break;
-                        case FBSessionStateClosedLoginFailed:
-                            if([error.userInfo[FBErrorLoginFailedReason]
-                                    isEqualToString:FBErrorLoginFailedReasonSystemDisallowedWithoutErrorValue]) {
+                    }];
+                }
+                    break;
+                case FBSessionStateClosed:
+                    [operation completeWithError:error];
+                    break;
+                case FBSessionStateClosedLoginFailed:
+                    if ([error.userInfo[FBErrorLoginFailedReason]
+                            isEqualToString:FBErrorLoginFailedReasonSystemDisallowedWithoutErrorValue]) {
 
-                                [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorSystemLoginDisallowed sourseError:error userInfo:nil]];
-                            }
-                            else {
-                                [operation completeWithError:error];
-                            }
-                            break;
-                        default:
-                            [SObject failed:completion];
-                            break;
+                        [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorSystemLoginDisallowed sourseError:error userInfo:nil]];
                     }
-                }];
+                    else {
+                        [operation completeWithError:error];
+                    }
+                    break;
+                default:
+                    [SObject failed:completion];
+                    break;
+            }
+        }];
     }];
 }
 

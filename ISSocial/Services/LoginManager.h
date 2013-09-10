@@ -8,6 +8,7 @@
 
 @class CompositeConnector;
 @class SocialConnector;
+@class SObject;
 
 @interface LoginManager : NSObject
 + (LoginManager *)instance;
@@ -27,4 +28,6 @@
 - (void)logoutAllWithCompletion:(void (^)())pFunction;
 
 - (void)logoutConnector:(SocialConnector *)connector withCompletion:(void (^)())completion;
+
+- (void)loginWithParams:(SObject *)params completion:(void (^)())completion;
 @end

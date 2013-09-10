@@ -78,6 +78,17 @@
     }];
 }
 
+- (void)tryLoginWithUserUI:(BOOL)userUI completion:(void (^)())completion
+{
+    [self loadConnectors];
+    SObject *params = [SObject new];
+    params[kAllowUserUIKey] = @(userUI);
+    [self.loginManager loginWithParams:params completion:^
+    {
+        completion();
+    }];
+}
+
 - (void)logoutWithCompletion:(void (^)())completion
 {
 

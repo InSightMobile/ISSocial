@@ -8,6 +8,8 @@
 #import <Foundation/Foundation.h>
 #import "SocialConnector.h"
 
+static NSString *const kAllowUserUIKey = @"allowUserUI";
+
 @class AccessSocialConnector;
 
 @protocol AccessSocialConnector<SocialConnector>

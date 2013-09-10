@@ -8,6 +8,7 @@
 #import "NetworkCheck.h"
 #import "BlockOperationQueue.h"
 #import "NSArray+AsyncBlocks.h"
+#import "SObject.h"
 
 typedef void (^BlockCompletionBlock)();
 
@@ -58,9 +59,13 @@ typedef void (^BlockCompletionBlock)();
 
 - (void)loginWithCompletion:(void (^)())completion
 {
+    [self loginWithParams:nil completion:completion];
+}
+
+- (void)loginWithParams:(SObject *)options completion:(void (^)())completion
+{
     [[NetworkCheck instance] checkConnectionWithCompletion:^(BOOL connected)
     {
-
         if (!connected) {
             [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"No network access", @"No network access") message:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex)
             {
@@ -106,7 +111,7 @@ typedef void (^BlockCompletionBlock)();
             {
 
                 if (!self.canceled && !connector.isLoggedIn) {
-                    [connector openSession:nil completion:^(SObject *result)
+                    [connector openSession:options completion:^(SObject *result)
                     {
                         if (result.isSuccessful) {
                             [self.resultConnector activateConnector:connector];
@@ -212,4 +217,6 @@ typedef void (^BlockCompletionBlock)();
         completion();
     }
 }
+
+
 @end
