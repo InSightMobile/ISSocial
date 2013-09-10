@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Ярослав. All rights reserved.
 //
 
+#import <BlocksKit/NSObject+BlocksKit.h>
 #import "FacebookConnector+UserData.h"
 #import "FacebookSDK.h"
 #import "FacebookConnectorOperation.h"
@@ -239,7 +240,10 @@
             {
 
                 if (!error) {
-                    [SObject successful:completion];
+                    [self performBlock:^(id sender)
+                    {
+                        [SObject successful:completion];
+                    } afterDelay:0.1];
                 }
                 else {
                     [SObject failed:completion];
@@ -261,6 +265,12 @@
 
     }
 }
+
+- (void)handleDidBecomeActive
+{
+    [[FBSession activeSession] handleDidBecomeActive];
+}
+
 
 - (void)setupSettings:(NSDictionary *)settings
 {
@@ -333,7 +343,11 @@
 
                             [self readUserData:[SUserData new] completion:^(SObject *result)
                             {
-                                [SObject successful:completion];
+                                [self performBlock:^(id sender)
+                                {
+                                    [SObject successful:completion];
+                                } afterDelay:0.1];
+
                                 self.loggedIn = YES;
                                 if ([session.permissions indexOfObject:@"xmpp_login"] != NSNotFound) {
                                     if ([self respondsToSelector:@selector(xmppConnect)]) {

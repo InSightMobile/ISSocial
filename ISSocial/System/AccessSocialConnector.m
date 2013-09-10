@@ -109,4 +109,8 @@
     return nil;
 }
 
+- (void)handleDidBecomeActive
+{
+
+}
 @end

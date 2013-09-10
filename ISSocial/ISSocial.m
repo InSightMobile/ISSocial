@@ -188,4 +188,10 @@
     }];
 }
 
+- (void)handleDidBecomeActive
+{
+    for (AccessSocialConnector *connector in self.rootConnectors.availableConnectors) {
+        [connector handleDidBecomeActive];
+    }
+}
 @end

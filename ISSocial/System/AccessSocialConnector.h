@@ -30,5 +30,7 @@
 
 + (id)instance;
 
+- (void)handleDidBecomeActive;
+
 
 @end

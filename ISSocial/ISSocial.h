@@ -42,4 +42,6 @@ static NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendIn
 - (BOOL)handleOpenURL:(NSURL *)url;
 
 - (void)configure;
+
+- (void)handleDidBecomeActive;
 @end
