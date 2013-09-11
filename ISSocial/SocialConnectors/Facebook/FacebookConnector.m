@@ -303,13 +303,14 @@
         }
 
         BOOL allowLoginUI = YES;
-        if(params[kAllowUserUIKey]) {
+        if (params[kAllowUserUIKey]) {
             allowLoginUI = [params[kAllowUserUIKey] boolValue];
         }
 
 #if 1
-        [FBSession openActiveSessionWithReadPermissions:permissions allowLoginUI:allowLoginUI completionHandler:^(FBSession *session, FBSessionState state, NSError *error)
-        {
+        BOOL loggedIn =
+                [FBSession openActiveSessionWithReadPermissions:permissions allowLoginUI:allowLoginUI completionHandler:^(FBSession *session, FBSessionState state, NSError *error)
+                {
 
 #else
         FBSession *session = [[FBSession alloc] initWithAppID:nil
@@ -326,47 +327,59 @@
                 {
 #endif
 
-            switch (state) {
-                case FBSessionStateOpen:
-                case FBSessionStateOpenTokenExtended: {
+                    switch (state) {
+                        case FBSessionStateOpen:
+                        case FBSessionStateOpenTokenExtended: {
 
-                    [self readUserData:[SUserData new] completion:^(SObject *result)
-                    {
-                        [self performBlock:^(id sender)
-                        {
-                            [SObject successful:completion];
-                        }       afterDelay:0.1];
-
-                        self.loggedIn = YES;
-                        if ([session.permissions indexOfObject:@"xmpp_login"] !=
-                                NSNotFound) {
-                            if ([self respondsToSelector:@selector(xmppConnect)]) {
-                                [self xmppConnect];
-                            }
+                            [self processLoggedInSession:session completion:completion];
                         }
-                    }];
-                }
-                    break;
-                case FBSessionStateClosed:
-                    [operation completeWithError:error];
-                    break;
-                case FBSessionStateClosedLoginFailed:
-                    if ([error.userInfo[FBErrorLoginFailedReason]
-                            isEqualToString:FBErrorLoginFailedReasonSystemDisallowedWithoutErrorValue]) {
+                            break;
+                        case FBSessionStateClosed:
+                            [operation completeWithError:error];
+                            break;
+                        case FBSessionStateClosedLoginFailed:
+                            if ([error.userInfo[FBErrorLoginFailedReason]
+                                    isEqualToString:FBErrorLoginFailedReasonSystemDisallowedWithoutErrorValue]) {
 
-                        [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorSystemLoginDisallowed sourseError:error userInfo:nil]];
+                                [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorSystemLoginDisallowed sourseError:error userInfo:nil]];
+                            }
+                            else {
+                                [operation completeWithError:error];
+                            }
+                            break;
+                        default:
+                            [operation completeWithError:error];
+                            break;
                     }
-                    else {
-                        [operation completeWithError:error];
-                    }
-                    break;
-                default:
-                    [SObject failed:completion];
-                    break;
+                }];
+
+        if (!loggedIn && !allowLoginUI) {
+            [operation completeWithFailure];
+        }
+    }];
+
+
+}
+
+- (void)processLoggedInSession:(FBSession *)session completion:(SObjectCompletionBlock)completion
+{
+    [self readUserData:[SUserData new] completion:^(SObject *result)
+    {
+        [self performBlock:^(id sender)
+        {
+            [SObject successful:completion];
+        }       afterDelay:0.1];
+
+        self.loggedIn = YES;
+        if ([session.permissions indexOfObject:@"xmpp_login"] !=
+                NSNotFound) {
+            if ([self respondsToSelector:@selector(xmppConnect)]) {
+                [self xmppConnect];
             }
-        }];
+        }
     }];
 }
+
 
 - (SocialConnectorOperation *)operationWithParent:(SocialConnectorOperation *)operation
 {

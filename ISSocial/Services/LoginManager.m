@@ -8,7 +8,6 @@
 #import "NetworkCheck.h"
 #import "BlockOperationQueue.h"
 #import "NSArray+AsyncBlocks.h"
-#import "SObject.h"
 
 typedef void (^BlockCompletionBlock)();
 
@@ -67,10 +66,15 @@ typedef void (^BlockCompletionBlock)();
     [[NetworkCheck instance] checkConnectionWithCompletion:^(BOOL connected)
     {
         if (!connected) {
-            [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"No network access", @"No network access") message:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex)
-            {
+            if (options[kAllowUserUIKey] && ![options[kAllowUserUIKey] boolValue]) {
+                [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"No network access", @"No network access") message:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex)
+                {
+                    completion();
+                }];
+            }
+            else {
                 completion();
-            }];
+            }
             return;
         }
 
