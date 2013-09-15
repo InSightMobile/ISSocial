@@ -10,7 +10,7 @@
 
 - (NSString *)stringByDecodeFromPercentEscapes
 {
-    return (__bridge NSString *) CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL,
+    return (__bridge_transfer NSString *) CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL,
             (__bridge CFStringRef) self,
             CFSTR(""),
             kCFStringEncodingUTF8);

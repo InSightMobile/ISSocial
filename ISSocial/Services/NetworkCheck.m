@@ -48,13 +48,15 @@
 
 - (void)checkConnectionWithCompletion:(void (^)(BOOL aviable))completion {
 
+    __weak NetworkCheck* wself = self;
+    
     if([_client networkReachabilityStatus] == AFNetworkReachabilityStatusUnknown) {
 
         [_client setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
 
             completion(status != AFNetworkReachabilityStatusNotReachable);
 
-            [self.client setReachabilityStatusChangeBlock:nil];
+            [wself.client setReachabilityStatusChangeBlock:nil];
         }];
 
     }

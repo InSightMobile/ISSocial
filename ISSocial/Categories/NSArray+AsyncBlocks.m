@@ -91,9 +91,9 @@
 
     __weak NSOperationQueue *weakQueue = queue;
     [queue addObserverForKeyPath:@"operationCount" task:^(id sender) {
-        if (queue.operationCount == 0) {
+        if (weakQueue.operationCount == 0) {
             completion(nil);
-            [queue removeAllBlockObservers];
+            [weakQueue removeAllBlockObservers];
         }
     }];
 }

@@ -63,6 +63,8 @@ typedef void (^BlockCompletionBlock)();
 
 - (void)loginWithParams:(SObject *)options completion:(void (^)())completion
 {
+    __weak LoginManager *wself = self;
+    
     [[NetworkCheck instance] checkConnectionWithCompletion:^(BOOL connected)
     {
         if (!connected) {
@@ -134,9 +136,9 @@ typedef void (^BlockCompletionBlock)();
             [_queue addOperation:blockOperation];
         }
 
-        [self.queue setCompletionHandler:^(NSError *error)
+        [wself.queue setCompletionHandler:^(NSError *error)
         {
-            [self applyChanges];
+            [wself applyChanges];
 
             if (!self.canceled) {
                 for (BlockCompletionBlock block in _completions) {
