@@ -295,17 +295,8 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object)
 
 - (void)encodeWithCoder:(NSCoder *)coder
 {
-
     [coder encodeObject:_data forKey:@"data"];
     [coder encodeObject:_subObjects forKey:@"subObjets"];
-
-}
-
-+ (id)objectWithState:(SObjectState)state
-{
-    SObject *object = [[SObject alloc] init];
-    object.state = state;
-    return object;
 }
 
 - (id)initWithCoder:(NSCoder *)coder
@@ -316,6 +307,14 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object)
     }
     return self;
 }
+
++ (id)objectWithState:(SObjectState)state
+{
+    SObject *object = [[SObject alloc] init];
+    object.state = state;
+    return object;
+}
+
 
 
 - (NSString *)description

@@ -19,7 +19,8 @@ typedef enum
     SObjectStateSuccess = 0,
     SObjectStateFailed,
     SObjectStateUnsupported,
-    SObjectStateProcessing
+    SObjectStateProcessing,
+    SObjectStateProcessingDelayed,
 } SObjectState;
 
 typedef void (^SObjectCompletionBlock)(SObject *result);
