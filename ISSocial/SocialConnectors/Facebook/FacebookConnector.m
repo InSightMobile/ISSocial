@@ -105,7 +105,7 @@
                 [operation removeConnection:connection];
 
                 if (error) {
-                    NSLog(@"Facebook error on FQL: %@ ", query);
+                    NSLog(@"Facebook error on FQL: %@ error: %@", query,error.userInfo);
                     NSLog(@"error = %@", error);
                     [operation completeWithError:error];
                     return;
@@ -127,7 +127,7 @@
             {
                 [operation removeConnection:connection];
                 if (error) {
-                    NSLog(@"Facebook error on method: %@ params: %@", method, object);
+                    NSLog(@"Facebook error on method: %@ params: %@ error:%@", method, object,error.userInfo);
                     [operation completeWithError:error];
                 }
                 else {
@@ -145,7 +145,7 @@
             {
                 [operation removeConnection:connection];
                 if (error) {
-                    NSLog(@"Facebook error on method: %@ params: %@ error: %@", method, object, error);
+                    NSLog(@"Facebook error on method: %@ params: %@ error: %@", method, object, error.userInfo);
 
                     NSDictionary *errorData = error.userInfo[FBErrorParsedJSONResponseKey];
 
@@ -181,7 +181,7 @@
 
                             [operation removeConnection:connection];
                             if (error) {
-                                NSLog(@"Facebook error on method: %@ ", path);
+                                NSLog(@"Facebook error on method: %@ error:%@", path,error.userInfo);
                                 [operation completeWithError:error];
                             }
                             else {
@@ -199,7 +199,7 @@
                 {
                     [operation removeConnection:connection];
                     if (error) {
-                        NSLog(@"Facebook error on method: %@ params: %@", path, object);
+                        NSLog(@"Facebook error on method: %@ params: %@ error:%@", path, object,error.userInfo);
                         [operation completeWithError:error];
                     }
                     else {
