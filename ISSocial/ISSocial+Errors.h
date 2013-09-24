@@ -12,6 +12,7 @@ typedef enum {
 
     ISSocialErrorUnknown,
     ISSocialErrorOperationNotAllowedByTarget,
+    ISSocialErrorOperationAlreadyDone,
     ISSocialErrorSystemLoginDisallowed,
     ISSocialErrorUserCanceled
 } ISSocailErrorCodes;

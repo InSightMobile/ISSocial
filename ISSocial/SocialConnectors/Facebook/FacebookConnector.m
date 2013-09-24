@@ -128,7 +128,9 @@
                 [operation removeConnection:connection];
                 if (error) {
                     NSLog(@"Facebook error on method: %@ params: %@ error:%@", method, object,error.userInfo);
-                    [operation completeWithError:error];
+                    [self processFacebookError:error operation:operation processor:^(id o)
+                    {
+                    }];
                 }
                 else {
                     processor(result);
@@ -146,20 +148,7 @@
                 [operation removeConnection:connection];
                 if (error) {
                     NSLog(@"Facebook error on method: %@ params: %@ error: %@", method, object, error.userInfo);
-
-                    NSDictionary *errorData = error.userInfo[FBErrorParsedJSONResponseKey];
-
-                    int facebookCode = [errorData[@"body"][@"error"][@"code"] intValue];
-
-                    int code = ISSocialErrorUnknown;
-                    if (facebookCode == 240) {
-                        code = ISSocialErrorOperationNotAllowedByTarget;
-                    }
-
-                    NSError *socialError =
-                            [ISSocial errorWithCode:code sourseError:error userInfo:nil];
-
-                    [operation completeWithError:socialError];
+                    [self processFacebookError:error operation:operation processor:processor];
                 }
                 else {
                     processor(result);
@@ -182,7 +171,7 @@
                             [operation removeConnection:connection];
                             if (error) {
                                 NSLog(@"Facebook error on method: %@ error:%@", path,error.userInfo);
-                                [operation completeWithError:error];
+                                [self processFacebookError:error operation:operation processor:processor];
                             }
                             else {
                                 processor(result);
@@ -191,30 +180,49 @@
         [operation addConnection:connection];
     }
     else {
-        if (!httpMethod) {
-            httpMethod = @"POST";
-        }
-        FBRequestConnection *connection =
-                [[FBRequest requestWithGraphPath:path parameters:object HTTPMethod:httpMethod] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error)
-                {
-                    [operation removeConnection:connection];
-                    if (error) {
-                        NSLog(@"Facebook error on method: %@ params: %@ error:%@", path, object,error.userInfo);
-                        [operation completeWithError:error];
-                    }
-                    else {
-                        processor(result);
-                    }
-                }];
-        [operation addConnection:connection];
+    if (!httpMethod) {
+        httpMethod = @"POST";
     }
+    FBRequestConnection *connection =
+            [[FBRequest requestWithGraphPath:path parameters:object HTTPMethod:httpMethod] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error)
+            {
+                [operation removeConnection:connection];
+                if (error) {
+                    NSLog(@"Facebook error on method: %@ params: %@ error:%@", path, object,error.userInfo);
+                    [self processFacebookError:error operation:operation processor:processor];
+                }
+                else {
+                    processor(result);
+                }
+            }];
+    [operation addConnection:connection];
+}
+}
+
+- (void)processFacebookError:(NSError *)error operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
+{
+    NSDictionary *errorData = error.userInfo[FBErrorParsedJSONResponseKey];
+
+    int facebookCode = [errorData[@"body"][@"error"][@"code"] intValue];
+
+    int code = ISSocialErrorUnknown;
+    if (facebookCode == 240) {
+        code = ISSocialErrorOperationNotAllowedByTarget;
+    }
+    if (facebookCode == 3501) {
+        code = ISSocialErrorOperationAlreadyDone;
+    }
+
+    NSError *socialError =
+            [ISSocial errorWithCode:code sourseError:error userInfo:nil];
+
+    [operation completeWithError:socialError];
 }
 
 - (void)checkAuthorizationFor:(NSArray *)permissions  operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
 {
     [self authorizeWithPublishPermissions:permissions completion:^(SObject *result)
     {
-
         if (result.isFailed) {
             [operation completeWithFailure];
         }
