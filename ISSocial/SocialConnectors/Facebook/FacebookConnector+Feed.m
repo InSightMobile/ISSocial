@@ -21,6 +21,7 @@
 #import "NSArray+AsyncBlocks.h"
 #import "NSString+StripHTML.h"
 #import "NSString+TypeSafety.h"
+#import "SLinkData.h"
 
 @implementation FacebookConnector (Feed)
 
@@ -546,7 +547,6 @@
 
     [(id) result setCommentedObject:object];
 
-
     if (response[@"paging"] && response[@"paging"][@"next"]) {
         result.pagingData = response[@"paging"][@"next"];
         result.pagingSelector = @selector(readCommentsPage:completion:);
@@ -582,6 +582,8 @@
         }];
     }];
 }
+
+
 
 
 @end
