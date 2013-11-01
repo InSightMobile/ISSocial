@@ -21,7 +21,14 @@
     {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
 
-        params[@"link"] = link.linkURL.absoluteString;
+        if(link.linkURL.absoluteString.length) {
+            params[@"link"] = link.linkURL.absoluteString;            
+        }
+        else {
+            [operation completeWithFailure];
+            return;
+        }
+
 
         if (link.message.length) {
             params[@"message"] = link.message;
