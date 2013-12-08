@@ -252,7 +252,6 @@
 
         [self checkAuthorizationFor:@[@"publish_stream"] operation:operation processor:^(id res)
         {
-
             NSDictionary *object = @{@"object" : link.linkURL.absoluteString};
 
             [self simpleMethod:@"POST" path:@"me/og.likes" params:object
