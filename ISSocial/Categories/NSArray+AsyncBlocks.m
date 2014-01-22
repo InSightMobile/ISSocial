@@ -6,9 +6,12 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+#import <ReactiveCocoa/ReactiveCocoa/NSObject+RACPropertySubscribing.h>
+#import <ReactiveCocoa/ReactiveCocoa/RACSignal.h>
+#import <ReactiveCocoa/ReactiveCocoa/RACDisposable.h>
+#import <ReactiveCocoa/ReactiveCocoa/RACSignal+Operations.h>
 #import "NSArray+AsyncBlocks.h"
 #import "AsyncBlockOperation.h"
-#import "NSObject+BlockObservation.h"
 
 
 @implementation NSArray (ISAsyncBlocks)
@@ -90,10 +93,13 @@
     }
 
     __weak NSOperationQueue *weakQueue = queue;
-    [queue addObserverForKeyPath:@"operationCount" task:^(id sender) {
+
+    __block RACDisposable *disposable;
+    disposable = [RACObserve(queue, operationCount) subscribeNext:^(id x)
+    {
         if (weakQueue.operationCount == 0) {
             completion(nil);
-            [weakQueue removeAllBlockObservers];
+            [disposable dispose];
         }
     }];
 }

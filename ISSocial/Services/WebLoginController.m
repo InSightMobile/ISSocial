@@ -7,10 +7,10 @@
 //
 
 
-#import "BlocksKit/NSObject+BlocksKit.h"
 #import "WebLoginController.h"
 #import "WebLoginManager.h"
 #import "AsyncBlockOperation.h"
+#import "NSObject+PerformBlockInBackground.h"
 
 @interface WebLoginController ()
 @property(nonatomic, copy) AsyncBlockOperationCompletionBlock completionBlock;

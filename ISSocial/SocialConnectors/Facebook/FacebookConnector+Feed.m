@@ -394,12 +394,12 @@
 
 - (SObject *)addNewsLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion
 {
-    [self addFeedLike:feed completion:completion];
+    return [self addFeedLike:feed completion:completion];
 }
 
 - (SObject *)removeNewsLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion
 {
-    [self removeFeedLike:feed completion:completion];
+    return [self removeFeedLike:feed completion:completion];
 }
 
 - (SObject *)addNewsComment:(SCommentData *)comments completion:(SObjectCompletionBlock)completion

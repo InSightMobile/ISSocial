@@ -10,7 +10,7 @@
 
 @class AFHTTPClient;
 @class AFHTTPRequestOperation;
-@class VKSession;
+@class ISSVKSession;
 
 static const int kVKMaxRequestsPerSeconds = 3;
 typedef AFHTTPRequestOperation VKRequestOperation;
@@ -19,11 +19,11 @@ typedef void (^VKRequestHandler)(VKRequestOperation *connection,
         id result,
         NSError *error);
 
-@interface VKRequest : NSObject
+@interface ISSVKRequest : NSObject
 
-+ (VKRequest *)requestMethod:(NSString *)method parameters:(NSDictionary *)parameters;
++ (ISSVKRequest *)requestMethod:(NSString *)method parameters:(NSDictionary *)parameters;
 
-+ (VKRequest *)requestWithURL:(NSString *)url parameters:(NSDictionary *)parameters;
++ (ISSVKRequest *)requestWithURL:(NSString *)url parameters:(NSDictionary *)parameters;
 
 - (VKRequestOperation *)startWithCompletionHandler:(VKRequestHandler)completion;
 @end

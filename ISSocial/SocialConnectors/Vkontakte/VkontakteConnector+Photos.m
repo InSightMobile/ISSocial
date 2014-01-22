@@ -7,10 +7,10 @@
 
 #import "VkontakteConnector.h"
 #import "VkontakteConnector+Photos.h"
-#import "VKRequest.h"
+#import "ISSVKRequest.h"
 #import "SPhotoData.h"
 #import "SPhotoAlbumData.h"
-#import "VKSession.h"
+#import "ISSVKSession.h"
 #import "NSString+TypeSafety.h"
 #import "VkontakteConnector+UserData.h"
 #import "MultiImage.h"
@@ -397,7 +397,7 @@
         uploadParams[@"text"] = params.title;
     }
 
-    [[VKRequest requestMethod:uploadServer parameters:uploadParams] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
+    [[ISSVKRequest requestMethod:uploadServer parameters:uploadParams] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
         NSLog(@"response = %@", response);
         if (error) {
             completionn([SObject error:error]);
@@ -416,7 +416,8 @@
 
 - (void)uploadPhoto:(SPhotoData *)params toURL:(NSString *)URL saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completionn {
 
-    [VKSession sendPOSTRequest:URL withImageData:params.sourceData handler:^(VKRequestOperation *connection, id result, NSError *error) {
+    [ISSVKSession sendPOSTRequest:URL withImageData:params.sourceData handler:^(VKRequestOperation *connection, id result, NSError *error)
+    {
 
         NSLog(@" result = %@", result);
         if (error) {
@@ -439,7 +440,7 @@
         saveParams[@"text"] = params.title;
     }
 
-    [[VKRequest requestMethod:saveMethod parameters:saveParams] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
+    [[ISSVKRequest requestMethod:saveMethod parameters:saveParams] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
             NSLog(@" result = %@", response);
             if (error) {
                 [operation completeWithError:error];

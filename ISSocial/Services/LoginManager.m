@@ -1,7 +1,6 @@
 //
 //
 
-#import "BlocksKit/UIAlertView+BlocksKit.h"
 #import "LoginManager.h"
 #import "CompositeConnector.h"
 #import "AsyncBlockOperation.h"
@@ -69,10 +68,11 @@ typedef void (^BlockCompletionBlock)();
     {
         if (!connected) {
             if (options[kAllowUserUIKey] && ![options[kAllowUserUIKey] boolValue]) {
-                [UIAlertView showAlertViewWithTitle:NSLocalizedString(@"No network access", @"No network access") message:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex)
-                {
+
+                //[UIAlertView showAlertViewWithTitle:NSLocalizedString(@"No network access", @"No network access") message:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex)
+                //{
                     completion();
-                }];
+                //}];
             }
             else {
                 completion();

@@ -93,11 +93,7 @@
 + (id)instance {
 
     AccessSocialConnector* connector = [[ISSocial defaultInstance] connectorNamed:[self connectorCode]];
-
-    if(connector) {
-        return connector;
-    }
-
+    return connector;
 }
 
 - (NSString *)connectorCode

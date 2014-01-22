@@ -3,34 +3,34 @@
 //  socials
 //
 
-#import "VKRequest.h"
-#import "VKSession.h"
+#import "ISSVKRequest.h"
+#import "ISSVKSession.h"
 #import "AFHTTPClient.h"
 #import "AFHTTPRequestOperation.h"
-#import "NSObject+BlocksKit.h"
+#import "NSObject+PerformBlockInBackground.h"
 
-@interface VKRequest ()
+@interface ISSVKRequest ()
 @property(nonatomic, copy) NSString *method;
 @property(nonatomic, copy) NSDictionary *parameters;
-@property(nonatomic, strong) VKSession *session;
+@property(nonatomic, strong) ISSVKSession *session;
 @property(nonatomic, copy) NSString *url;
 @end
 
-@implementation VKRequest
-+ (VKRequest *)requestMethod:(NSString *)method parameters:(NSDictionary *)parameters
+@implementation ISSVKRequest
++ (ISSVKRequest *)requestMethod:(NSString *)method parameters:(NSDictionary *)parameters
 {
-    VKRequest *req = [[VKRequest alloc] init];
+    ISSVKRequest *req = [[ISSVKRequest alloc] init];
     req.method = method;
-    req.session = [VKSession activeSession];
+    req.session = [ISSVKSession activeSession];
     req.parameters = parameters;
     return req;
 }
 
-+ (VKRequest *)requestWithURL:(NSString *)url parameters:(NSDictionary *)parameters
++ (ISSVKRequest *)requestWithURL:(NSString *)url parameters:(NSDictionary *)parameters
 {
-    VKRequest *req = [[VKRequest alloc] init];
+    ISSVKRequest *req = [[ISSVKRequest alloc] init];
     req.url = url;
-    req.session = [VKSession activeSession];
+    req.session = [ISSVKSession activeSession];
     req.parameters = parameters;
     return req;
 }
@@ -77,8 +77,8 @@
 
                         if (code == 5 && retries < kMaxSeesionRetries) {
                             // restore session
-                            [[VKSession activeSession] reopenSessionWithCompletionHandler:^(VKSession *session, VKSessionState status, NSError *error) {
-                                if (status == VKSessionStateOpen) {
+                            [[ISSVKSession activeSession] reopenSessionWithCompletionHandler:^(ISSVKSession *session, ISSVKSessionState status, NSError *error) {
+                                if (status == ISSVKSessionStateOpen) {
 
                                     [self startWithCompletionHandler:completion retries:retries + 1];
                                 }

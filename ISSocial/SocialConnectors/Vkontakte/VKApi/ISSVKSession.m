@@ -1,21 +1,16 @@
 //
-//  VKSession.m
-//  socials
-//
-//  Created by yar on 20.12.12.
-//  Copyright (c) 2012 Ярослав. All rights reserved.
 //
 
-#import "BlocksKit/NSObject+BlocksKit.h"
-#import "VKSession.h"
+#import "ISSVKSession.h"
 #import "AFJSONRequestOperation.h"
 #import "AFHTTPClient.h"
 #import "WebLoginController.h"
 #import "NSString+ValueConvertion.h"
 #import "ISSocial.h"
 #import "ISSocial+Errors.h"
+#import "NSObject+PerformBlockInBackground.h"
 
-@interface VKSession () <WebLoginControllerDelegate>
+@interface ISSVKSession () <WebLoginControllerDelegate>
 
 @property(nonatomic, copy) VKSessionStateHandler statusHandler;
 
@@ -25,13 +20,14 @@
 @property(nonatomic) BOOL invalidToken;
 @end
 
-@implementation VKSession
+@implementation ISSVKSession
 {
     BOOL _externalAuthorization;
 }
-+ (VKSession *)activeSession
+
++ (ISSVKSession *)activeSession
 {
-    static VKSession *_instance = nil;
+    static ISSVKSession *_instance = nil;
 
     @synchronized (self) {
         if (_instance == nil) {
@@ -80,7 +76,7 @@
 - (void)openWithPermissions:(NSArray *)permissions completionHandler:(VKSessionStateHandler)handler
 {
     self.currentPermissions = permissions;
-    if(!self.clientId) {
+    if (!self.clientId) {
         NSString *appID = [[NSBundle mainBundle].infoDictionary objectForKey:@"VkontakteAppID"];
         self.clientId = appID;
     }
@@ -94,12 +90,13 @@
         self.accessToken = accessToken;
         self.userId = userId;
 
-        return handler(self, VKSessionStateOpen, nil);
+        return handler(self, ISSVKSessionStateOpen, nil);
     }
     else {
         NSString *permissionsStr = @"wall";
-        if (permissions.count)
-            permissionsStr = [permissions componentsJoinedByString:@","];
+        if (permissions.count) {
+                    permissionsStr = [permissions componentsJoinedByString:@","];
+        }
 
         NSString *authLink =
                 [NSString stringWithFormat:@"https://oauth.vk.com/authorize?client_id=%@&scope=%@&redirect_uri=%@&display=touch&response_type=token", self.clientId, permissionsStr, self.redirectURI];
@@ -112,11 +109,12 @@
         else {
             WebLoginController *controller = [WebLoginController loginController];
 
-            [self performBlock:^(id sender) {
+            [self performBlock:^(id sender)
+            {
                 self.statusHandler = handler;
                 controller.delegate = self;
                 [controller presentWithRequest:[NSURLRequest requestWithURL:url]];
-            } afterDelay:0.1];
+            }       afterDelay:0.1];
         }
     }
 }
@@ -149,7 +147,7 @@
 - (void)webLoginDidCanceled:(WebLoginController *)controller
 {
     if (_statusHandler) {
-        self.statusHandler(self, VKSessionStateClosed, nil);
+        self.statusHandler(self, ISSVKSessionStateClosed, nil);
         self.statusHandler = nil;
     }
 }
@@ -181,8 +179,8 @@
             self.userId = userId;
 
             if (_statusHandler) {
-                self.state = VKSessionStateOpen;
-                self.statusHandler(self, VKSessionStateOpen, nil);
+                self.state = ISSVKSessionStateOpen;
+                self.statusHandler(self, ISSVKSessionStateOpen, nil);
                 self.statusHandler = nil;
             }
             return YES;
@@ -193,13 +191,13 @@
 
             NSError *error = nil;
 
-            if([params[@"error_reason"] isEqualToString:@"user_denied"]) {
+            if ([params[@"error_reason"] isEqualToString:@"user_denied"]) {
                 error = [ISSocial errorWithCode:ISSocialErrorUserCanceled sourseError:nil userInfo:params];
             }
 
-            self.state = VKSessionStateClosed;
+            self.state = ISSVKSessionStateClosed;
             if (_statusHandler) {
-                self.statusHandler(self, VKSessionStateClosed, error);
+                self.statusHandler(self, ISSVKSessionStateClosed, error);
                 self.statusHandler = nil;
             }
 
@@ -216,10 +214,11 @@
 
 + (VKRequestOperation *)uploadDataTo:(NSString *)uploadURL fromURL:(NSURL *)fileUrl name:(NSString *)name fileName:(NSString *)filename mime:(NSString *)mime handler:(VKRequestHandler)handler
 {
-    AFHTTPClient *client = [VKSession activeSession].client;
+    AFHTTPClient *client = [ISSVKSession activeSession].client;
 
     NSMutableURLRequest *request =
-            [client multipartFormRequestWithMethod:@"POST" path:uploadURL parameters:nil constructingBodyWithBlock:^(id <AFMultipartFormData> formData) {
+            [client multipartFormRequestWithMethod:@"POST" path:uploadURL parameters:nil constructingBodyWithBlock:^(id <AFMultipartFormData> formData)
+            {
 
                 NSString *mimeType = mime;
                 if (!mimeType) {
@@ -238,12 +237,14 @@
     NSLog(@"request = %@", request);
 
     AFHTTPRequestOperation *op =
-            [client HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            [client HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject)
+            {
 
                 NSLog(@"responseObject = %@", responseObject);
                 handler(operation, responseObject, nil);
 
-            }                               failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            }                               failure:^(AFHTTPRequestOperation *operation, NSError *error)
+            {
 
                 handler(operation, nil, error);
 
@@ -252,10 +253,11 @@
     return op;
 }
 
-- (void)closeAndClearTokenInformation {
+- (void)closeAndClearTokenInformation
+{
     self.accessToken = nil;
     self.userId = nil;
-    self.state = VKSessionStateClosed;
+    self.state = ISSVKSessionStateClosed;
     [self clearCookies];
 
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"VKUserId"];
@@ -268,10 +270,11 @@
 
 + (void)sendPOSTRequest:(NSString *)reqURl withImageData:(NSData *)imageData handler:(VKRequestHandler)handler
 {
-    AFHTTPClient *client = [VKSession activeSession].client;
+    AFHTTPClient *client = [ISSVKSession activeSession].client;
 
     NSMutableURLRequest *requestM =
-            [client multipartFormRequestWithMethod:@"POST" path:reqURl parameters:nil constructingBodyWithBlock:^(id <AFMultipartFormData> formData) {
+            [client multipartFormRequestWithMethod:@"POST" path:reqURl parameters:nil constructingBodyWithBlock:^(id <AFMultipartFormData> formData)
+            {
 
                 [formData appendPartWithFileData:imageData name:@"photo" fileName:@"photo.jpg" mimeType:@"image/jpeg"];
             }];
@@ -279,12 +282,14 @@
     NSLog(@"requestM = %@", requestM);
 
     AFHTTPRequestOperation *op =
-            [client HTTPRequestOperationWithRequest:requestM success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            [client HTTPRequestOperationWithRequest:requestM success:^(AFHTTPRequestOperation *operation, id responseObject)
+            {
 
                 NSLog(@"responseObject = %@", responseObject);
                 handler(operation, responseObject, nil);
 
-            }                               failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            }                               failure:^(AFHTTPRequestOperation *operation, NSError *error)
+            {
 
                 handler(operation, nil, error);
 
@@ -295,30 +300,26 @@
 - (void)clearCookies
 {
 
-    NSHTTPCookieStorage* cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    NSArray* vkCookies1 = [cookies cookiesForURL:
+    NSHTTPCookieStorage *cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    NSArray *vkCookies1 = [cookies cookiesForURL:
             [NSURL URLWithString:@"http://api.vk.com"]];
-    NSArray* vkCookies2 = [cookies cookiesForURL:
+    NSArray *vkCookies2 = [cookies cookiesForURL:
             [NSURL URLWithString:@"http://vk.com"]];
-    NSArray* vkCookies3 = [cookies cookiesForURL:
+    NSArray *vkCookies3 = [cookies cookiesForURL:
             [NSURL URLWithString:@"http://login.vk.com"]];
-    NSArray* vkCookies4 = [cookies cookiesForURL:
+    NSArray *vkCookies4 = [cookies cookiesForURL:
             [NSURL URLWithString:@"http://oauth.vk.com"]];
 
-    for (NSHTTPCookie* cookie in vkCookies1)
-    {
+    for (NSHTTPCookie *cookie in vkCookies1) {
         [cookies deleteCookie:cookie];
     }
-    for (NSHTTPCookie* cookie in vkCookies2)
-    {
+    for (NSHTTPCookie *cookie in vkCookies2) {
         [cookies deleteCookie:cookie];
     }
-    for (NSHTTPCookie* cookie in vkCookies3)
-    {
+    for (NSHTTPCookie *cookie in vkCookies3) {
         [cookies deleteCookie:cookie];
     }
-    for (NSHTTPCookie* cookie in vkCookies4)
-    {
+    for (NSHTTPCookie *cookie in vkCookies4) {
         [cookies deleteCookie:cookie];
     }
 }

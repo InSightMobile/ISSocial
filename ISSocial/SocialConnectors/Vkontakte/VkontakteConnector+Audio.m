@@ -6,7 +6,7 @@
 #import "VkontakteConnector+Audio.h"
 #import "VkontakteConnector+UserData.h"
 #import "SUserData.h"
-#import "VKSession.h"
+#import "ISSVKSession.h"
 
 @implementation VkontakteConnector (Audio)
 
@@ -91,7 +91,8 @@
             NSLog(@"response = %@", response);
 
             VKRequestOperation *op =
-                    [VKSession uploadDataTo:response[@"upload_url"] fromURL:params.url name:@"file" fileName:params.fileName mime:nil handler:^(VKRequestOperation *connection, id result, NSError *error) {
+                    [ISSVKSession uploadDataTo:response[@"upload_url"] fromURL:params.url name:@"file" fileName:params.fileName mime:nil handler:^(VKRequestOperation *connection, id result, NSError *error)
+                    {
 
                         if (error) {
                             [operation completeWithError:error];
@@ -111,7 +112,8 @@
                             parameters[@"title"] = params.title;
                         }
 
-                        [self simpleMethod:@"audio.save" parameters:parameters operation:operation processor:^(id response) {
+                        [self simpleMethod:@"audio.save" parameters:parameters operation:operation processor:^(id response)
+                        {
                             NSLog(@"response = %@", response);
                             SAudioData *audio = [self parseAudioResponse:response];
                             [operation complete:audio];

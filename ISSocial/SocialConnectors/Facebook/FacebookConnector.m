@@ -6,7 +6,6 @@
 //  Copyright (c) 2012 Ярослав. All rights reserved.
 //
 
-#import "BlocksKit/NSObject+BlocksKit.h"
 #import "FacebookConnector+UserData.h"
 #import "FacebookSDK.h"
 #import "FacebookConnectorOperation.h"
@@ -14,6 +13,7 @@
 #import "FacebookConnector+Messages.h"
 #import "ISSocial.h"
 #import "ISSocial+Errors.h"
+#import "NSObject+PerformBlockInBackground.h"
 
 @interface FacebookConnector ()
 @property(nonatomic) BOOL loggedIn;
@@ -298,6 +298,7 @@
     [FBSession.activeSession closeAndClearTokenInformation];
     _loggedIn = NO;
     completion([SObject successful]);
+    return [SObject successful];
 }
 
 - (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion

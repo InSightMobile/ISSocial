@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 Ярослав. All rights reserved.
 //
 
-#import <BlocksKit/NSObject+BlocksKit.h>
 #import "ODKSession.h"
 #import "Odnoklassniki.h"
+#import "NSObject+PerformBlockInBackground.h"
 
 @interface ODKSession () <OKSessionDelegate>
 

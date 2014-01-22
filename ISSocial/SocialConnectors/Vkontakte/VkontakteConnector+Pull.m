@@ -3,7 +3,7 @@
 
 
 
-#import "VKRequest.h"
+#import "ISSVKRequest.h"
 #import "SUserData.h"
 #import "VkontakteConnector+UserData.h"
 #import "SMessageData.h"
@@ -94,7 +94,7 @@ static const BOOL const kVKMessageFlagOutbox = 2;
     NSString *url = [NSString stringWithFormat:@"http://%@?act=a_check&key=%@&ts=%@&wait=25&mode=2",
                                                params[@"server"], params[@"key"], params[@"ts"]];
 
-    VKRequest *req = [VKRequest requestWithURL:url parameters:nil];
+    ISSVKRequest *req = [ISSVKRequest requestWithURL:url parameters:nil];
 
     [req startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
 
@@ -133,7 +133,7 @@ static const BOOL const kVKMessageFlagOutbox = 2;
         return;
     }
 
-    VKRequest *req = [VKRequest requestMethod:@"messages.getLongPollServer" parameters:nil];
+    ISSVKRequest *req = [ISSVKRequest requestMethod:@"messages.getLongPollServer" parameters:nil];
     [req startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
         if (error) {
 

@@ -4,8 +4,9 @@
 // To change the template use AppCode | Preferences | File Templates.
 //
 
-#import "BlocksKit/NSArray+BlocksKit.h"
-#import "VKRequest.h"
+#import <ReactiveCocoa/ReactiveCocoa/NSArray+RACSequenceAdditions.h>
+#import <ReactiveCocoa/ReactiveCocoa/RACSequence.h>
+#import "ISSVKRequest.h"
 #import "SUserData.h"
 #import "SFeedEntry.h"
 #import "VkontakteConnector.h"
@@ -494,10 +495,10 @@
             }
 
             if (attachments.count) {
-                NSString *attach = [[(NSArray *) attachments map:^id(id <SMultimediaObject> obj)
+                NSString *attach = [[[(NSArray *) attachments rac_sequence] map:^id(id <SMultimediaObject> obj)
                 {
                     return [NSString stringWithFormat:@"%@%@", obj.mediaType, obj.objectId];
-                }] componentsJoinedByString:@","];
+                }].array componentsJoinedByString:@","];
 
                 parameters[@"attachments"] = attach;
             }

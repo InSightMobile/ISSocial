@@ -376,12 +376,12 @@
 
 - (SObject *)addPhotoLike:(SPhotoData *)feed completion:(SObjectCompletionBlock)completion
 {
-    [self addFeedLike:(id) feed completion:completion];
+    return [self addFeedLike:(id) feed completion:completion];
 }
 
 - (SObject *)removePhotoLike:(SPhotoData *)feed completion:(SObjectCompletionBlock)completion
 {
-    [self removeFeedLike:(id) feed completion:completion];
+    return [self removeFeedLike:(id) feed completion:completion];
 }
 
 - (SObject *)addPhotoComment:(SPhotoData *)comments completion:(SObjectCompletionBlock)completion

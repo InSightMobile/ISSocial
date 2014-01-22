@@ -1,6 +1,8 @@
 //
 // 
 
+#import <ReactiveCocoa/ReactiveCocoa.h>
+
 #import "VkontakteConnector+News.h"
 #import "VkontakteConnector+Messages.h"
 #import "SMessageData.h"
@@ -9,7 +11,6 @@
 #import "VkontakteConnector+Feed.h"
 #import "SMessageThread.h"
 #import "NSString+StripHTML.h"
-#import "NSArray+BlocksKit.h"
 #import "SPhotoData.h"
 
 @implementation VkontakteConnector (Messages)
@@ -71,10 +72,11 @@
             }
 
             if (attachments.count) {
-                NSString *attach = [[attachments map:^id(id <SMultimediaObject> obj)
+
+                NSString *attach = [[attachments.rac_sequence map:^id(id <SMultimediaObject> obj)
                 {
                     return [NSString stringWithFormat:@"%@%@", obj.mediaType, obj.objectId];
-                }] componentsJoinedByString:@","];
+                }].array componentsJoinedByString:@","];
 
                 parameters[@"attachment"] = attach;
             }
@@ -115,9 +117,11 @@
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        NSString *mids = [[[params.subObjects select:^BOOL(SMessageData *obj) {
-            return obj.isUnread.boolValue;
-        }] valueForKey:@"objectId"] componentsJoinedByString:@","];
+        NSString *mids = [[[params.subObjects.rac_sequence filter:^BOOL(SMessageData *obj)
+        {
+             return obj.isUnread.boolValue;
+        }].array valueForKey:@"objectId"] componentsJoinedByString:@","];
+
 
         if (!mids.length) {
             [operation complete:[SObject successful]];

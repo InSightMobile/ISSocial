@@ -5,7 +5,7 @@
 #import "VkontakteConnector.h"
 #import "VkontakteConnector+Video.h"
 #import "SVideoData.h"
-#import "VKSession.h"
+#import "ISSVKSession.h"
 #import "MultiImage.h"
 #import "NSString+TypeSafety.h"
 #import "SUserData.h"
@@ -61,7 +61,8 @@
 
             NSLog(@"response = %@", response);
 
-            [VKSession uploadDataTo:response[@"upload_url"] fromURL:params.playbackURL name:@"video_file" fileName:@"video.mov" mime:nil handler:^(VKRequestOperation *connection, id result, NSError *error) {
+            [ISSVKSession uploadDataTo:response[@"upload_url"] fromURL:params.playbackURL name:@"video_file" fileName:@"video.mov" mime:nil handler:^(VKRequestOperation *connection, id result, NSError *error)
+            {
 
                 if (error) {
                     [operation completeWithError:error];
@@ -72,7 +73,8 @@
 
                 NSString *videoId = response[@"vid"];
 
-                [self simpleMethod:@"video.get" parameters:@{@"videos" : videoId} operation:operation processor:^(id response) {
+                [self simpleMethod:@"video.get" parameters:@{@"videos" : videoId} operation:operation processor:^(id response)
+                {
 
                     NSLog(@"response = %@", response);
 

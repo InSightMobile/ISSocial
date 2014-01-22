@@ -7,7 +7,7 @@
 //
 
 #import "VkontakteConnector+News.h"
-#import "VKSession.h"
+#import "ISSVKSession.h"
 #import "VkontakteConnector+UserData.h"
 #import "SUserData.h"
 #import "ISSocial+Errors.h"
@@ -65,9 +65,10 @@
 
 - (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
-    [VKSession.activeSession closeAndClearTokenInformation];
+    [ISSVKSession.activeSession closeAndClearTokenInformation];
     _loggedIn = NO;
     completion([SObject successful]);
+    return [SObject successful];
 }
 
 
@@ -81,10 +82,10 @@
             permissions = @[@"wall", @"messages", @"photos", @"friends", @"video", @"audio"];
         }
 
-        [VKSession openActiveSessionWithPermissions:permissions completionHandler:^(VKSession *session, VKSessionState status, NSError *error)
+        [ISSVKSession openActiveSessionWithPermissions:permissions completionHandler:^(ISSVKSession *session, ISSVKSessionState status, NSError *error)
         {
             switch (status) {
-                case VKSessionStateOpen: {
+                case ISSVKSessionStateOpen: {
                     self.userId = session.userId;
                     self.currentUserData = [self dataForUserId:self.userId];
 
@@ -96,8 +97,8 @@
                     }];
                 }
                     break;
-                case VKSessionStateClosed:
-                case VKSessionStateClosedLoginFailed: {
+                case ISSVKSessionStateClosed:
+                case ISSVKSessionStateClosedLoginFailed: {
                     [operation completeWithError:error];
                 }
                     break;
@@ -120,7 +121,7 @@
     [super setupSettings:settings];
 
     if (settings[@"AppID"]) {
-        [VKSession activeSession].clientId = settings[@"AppID"];
+        [ISSVKSession activeSession].clientId = settings[@"AppID"];
     }
     if (settings[@"Permissions"]) {
         self.permissions = settings[@"Permissions"];
@@ -134,7 +135,7 @@
            processor:(void (^)(id))processor
 {
     VKRequestOperation *op =
-            [[VKRequest requestMethod:method parameters:parameters] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error)
+            [[ISSVKRequest requestMethod:method parameters:parameters] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error)
             {
 
                 [operation removeSubOperation:connection];

@@ -1,30 +1,26 @@
 //
-//  VKSession.h
-//  socials
-//
-//  Created by yar on 20.12.12.
-//  Copyright (c) 2012 Ярослав. All rights reserved.
-//
+
 
 #import <Foundation/Foundation.h>
-#import "VKRequest.h"
+#import "ISSVKRequest.h"
 
 @class AFHTTPClient;
-@class VKSession;
+@class ISSVKSession;
 
 typedef enum
 {
-    VKSessionStateOpen,
-    VKSessionStateClosedLoginFailed,
-    VKSessionStateClosed
+    ISSVKSessionStateOpen,
+    ISSVKSessionStateClosedLoginFailed,
+    ISSVKSessionStateClosed
 
-} VKSessionState;
+} ISSVKSessionState;
 
-typedef void (^VKSessionStateHandler)(VKSession *session,
-        VKSessionState status,
+
+typedef void (^VKSessionStateHandler)(ISSVKSession *session,
+        ISSVKSessionState status,
         NSError *error);
 
-@interface VKSession : NSObject
+@interface ISSVKSession : NSObject
 @property(nonatomic, strong) AFHTTPClient *client;
 
 
@@ -33,9 +29,9 @@ typedef void (^VKSessionStateHandler)(VKSession *session,
 
 @property(nonatomic, copy) NSString *clientId;
 
-@property(nonatomic) VKSessionState state;
+@property(nonatomic) ISSVKSessionState state;
 
-+ (VKSession *)activeSession;
++ (ISSVKSession *)activeSession;
 
 + (void)openActiveSessionWithPermissions:(NSArray *)permissions completionHandler:(VKSessionStateHandler)handler;
 

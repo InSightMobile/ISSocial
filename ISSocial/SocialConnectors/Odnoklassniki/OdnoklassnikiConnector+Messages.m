@@ -1,11 +1,12 @@
 //
 // 
-#import <BlocksKit/NSObject+BlocksKit.h>
+
 #import "NSDate+Odnoklassniki.h"
 #import "OdnoklassnikiConnector+Users.h"
 #import "SMessageThread.h"
 #import "OdnoklassnikiConnector+Messages.h"
 #import "SUserData.h"
+#import "NSObject+PerformBlockInBackground.h"
 
 @implementation OdnoklassnikiConnector (Messages)
 

@@ -69,6 +69,7 @@
     self.account = nil;
     _loggedIn = NO;
     completion([SObject successful]);
+    return [SObject successful];
 }
 
 - (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion

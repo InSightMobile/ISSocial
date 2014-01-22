@@ -105,12 +105,12 @@
 
 - (SObject *)addVideoLike:(SVideoData *)feed completion:(SObjectCompletionBlock)completion
 {
-    [self addFeedLike:(id) feed completion:completion];
+    return [self addFeedLike:(id) feed completion:completion];
 }
 
 - (SObject *)removeVideoLike:(SVideoData *)feed completion:(SObjectCompletionBlock)completion
 {
-    [self removeFeedLike:(id) feed completion:completion];
+    return [self removeFeedLike:(id) feed completion:completion];
 }
 
 - (SObject *)addVideoComment:(SVideoData *)comments completion:(SObjectCompletionBlock)completion
