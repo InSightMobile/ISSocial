@@ -5,7 +5,6 @@
 
 #import "ISSVKRequest.h"
 #import "ISSVKSession.h"
-#import "AFHTTPClient.h"
 #import "AFHTTPRequestOperation.h"
 #import "NSObject+PerformBlockInBackground.h"
 
