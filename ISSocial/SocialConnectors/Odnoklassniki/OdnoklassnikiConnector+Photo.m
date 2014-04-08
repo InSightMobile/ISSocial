@@ -4,14 +4,13 @@
 // To change the template use AppCode | Preferences | File Templates.
 //
 
+#import <AFNetworking/AFURLRequestSerialization.h>
 #import "OdnoklassnikiConnector+Photo.h"
 #import "SPhotoData.h"
 #import "MultiImage.h"
 #import "SPhotoAlbumData.h"
 #import "NSDate+Odnoklassniki.h"
-#import "AFHTTPClient.h"
 #import "AFHTTPRequestOperation.h"
-#import "AFJSONRequestOperation.h"
 
 @implementation OdnoklassnikiConnector (Photo)
 
@@ -198,50 +197,46 @@
         NSString *photoId = response[@"photo_ids"][0];
         NSString *uploadURL = response[@"upload_url"];
 
-        NSURLRequest *req =
-                [self.client multipartFormRequestWithMethod:@"POST" path:uploadURL parameters:nil constructingBodyWithBlock:^(id <AFMultipartFormData> formData) {
 
-                    [formData appendPartWithFileData:params.sourceData name:@"pic1" fileName:@"pic1.jpg" mimeType:@"image/jpeg"];
-
-                }];
-
-        [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/plain"]];
-
-        AFHTTPRequestOperation *op =
-
-                [AFJSONRequestOperation JSONRequestOperationWithRequest:req success:^(NSURLRequest *request, NSHTTPURLResponse *response, id responseObject) {
-
-                    NSLog(@"responseObject = %@", responseObject);
-
-                    //NSString *data = [[NSString alloc] initWithBytes:[responseObject bytes] length:[responseObject length] encoding:NSUTF8StringEncoding];
-                    if ([responseObject[@"photos"] count] == 0) {
-                        completionn([SObject failed]);
-                        return;
-                    }
-                    NSString *token = responseObject[@"photos"][photoId][@"token"];
-
-                    if (!token) {
-                        completionn([SObject failed]);
-                        return;
-                    }
-
-                    [self simpleMethod:@"photosV2.commit" parameters:@{@"photo_id" : photoId, @"token" : token} operation:operation processor:^(id response) {
-
-                        NSLog(@"responseObject = %@", response);
-                        SPhotoData *result = [params copyWithHandler:self];
-
-                        if ([responseObject[@"photos"] count] == 0) {
-                            completionn([SObject failed]);
-                            return;
+        AFHTTPRequestOperation *op = [self.client POST:uploadURL
+          parameters:nil constructingBodyWithBlock:^(id <AFMultipartFormData> formData) {
+                            [formData appendPartWithFileData:params.sourceData name:@"pic1" fileName:@"pic1.jpg" mimeType:@"image/jpeg"];
                         }
+             success:
+                     ^(AFHTTPRequestOperation *op,id responseObject) {
 
-                        completionn(result);
-                    }];
+                         NSLog(@"responseObject = %@", responseObject);
 
-                }                                               failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                    completionn([SObject error:error]);
-                }];
-        [operation startSubOperation:op];
+                         //NSString *data = [[NSString alloc] initWithBytes:[responseObject bytes] length:[responseObject length] encoding:NSUTF8StringEncoding];
+                         if ([responseObject[@"photos"] count] == 0) {
+                             completionn([SObject failed]);
+                             return;
+                         }
+                         NSString *token = responseObject[@"photos"][photoId][@"token"];
+
+                         if (!token) {
+                             completionn([SObject failed]);
+                             return;
+                         }
+
+                         [self simpleMethod:@"photosV2.commit" parameters:@{@"photo_id" : photoId, @"token" : token} operation:operation processor:^(id response) {
+
+                             NSLog(@"responseObject = %@", response);
+                             SPhotoData *result = [params copyWithHandler:self];
+
+                             if ([responseObject[@"photos"] count] == 0) {
+                                 completionn([SObject failed]);
+                                 return;
+                             }
+
+                             completionn(result);
+                         }];
+
+                     }
+             failure:
+                     ^(AFHTTPRequestOperation *op, NSError *error) {
+                         completionn([SObject error:error]);
+                     }];
     }];
 }
 

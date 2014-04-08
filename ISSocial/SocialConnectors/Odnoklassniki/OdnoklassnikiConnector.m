@@ -6,11 +6,11 @@
 //  Copyright (c) 2012 Ярослав. All rights reserved.
 //
 
+#import <AFNetworking/AFHTTPRequestOperationManager.h>
 #import "OdnoklassnikiConnector.h"
 #import "ODKSession.h"
 #import "ODKRequest.h"
 #import "SUserData.h"
-#import "AFHTTPClient.h"
 
 @interface OdnoklassnikiConnector ()
 @property(nonatomic) BOOL loggedIn;
@@ -22,7 +22,7 @@
 {
     self = [super init];
     if (self) {
-        self.client = [[AFHTTPClient alloc] init];
+        self.client = [[AFHTTPRequestOperationManager alloc] init];
     }
 
     return self;

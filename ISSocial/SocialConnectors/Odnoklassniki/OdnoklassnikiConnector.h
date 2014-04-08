@@ -8,6 +8,7 @@
 
 #import "AccessSocialConnector.h"
 #import "OKSession.h"
+#import <AFNetworking/AFHTTPRequestOperationManager.h>
 
 @class Odnoklassniki;
 @class SUserData;
@@ -20,7 +21,7 @@
 
 @property(nonatomic, strong) SUserData *currentUserData;
 
-@property(nonatomic, strong) AFHTTPClient *client;
+@property(nonatomic, strong) AFHTTPRequestOperationManager *client;
 
 @property(nonatomic, strong) SPhotoAlbumData *defaultAlbum;
 @property(nonatomic, copy) NSString *defaultAlbumId;
