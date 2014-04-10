@@ -81,7 +81,7 @@
                 parameters[@"attachment"] = attach;
             }
 
-            [self simpleMethod:@"messages.send" parameters:parameters operation:operation processor:^(id response)
+            [self simpleMethod:@"messages.send" parameters:parameters operation:operation processor:^(NSArray* response)
             {
 
                 NSLog(@"response = %@", response);

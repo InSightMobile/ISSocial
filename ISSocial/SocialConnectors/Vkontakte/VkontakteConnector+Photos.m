@@ -7,10 +7,10 @@
 
 #import "VkontakteConnector.h"
 #import "VkontakteConnector+Photos.h"
-#import "ISSVKRequest.h"
+//#import "ISSVKRequest.h"
 #import "SPhotoData.h"
 #import "SPhotoAlbumData.h"
-#import "ISSVKSession.h"
+//#import "ISSVKSession.h"
 #import "NSString+TypeSafety.h"
 #import "VkontakteConnector+UserData.h"
 #import "MultiImage.h"
@@ -345,6 +345,7 @@
     }];
 }
 
+#if 0
 - (void)uploadPhoto:(SPhotoData *)params
               album:(NSString *)album
           operation:(SocialConnectorOperation *)operation
@@ -452,6 +453,7 @@
             }
         }];
 }
+#endif
 
 - (SObject *)addPhotoToAlbum:(SPhotoData *)params completion:(SObjectCompletionBlock)completionn {
     return [self addPhotoWithParams:params completion:completionn];

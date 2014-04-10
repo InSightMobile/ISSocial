@@ -6,7 +6,7 @@
 
 #import <ReactiveCocoa/ReactiveCocoa/NSArray+RACSequenceAdditions.h>
 #import <ReactiveCocoa/ReactiveCocoa/RACSequence.h>
-#import "ISSVKRequest.h"
+//#import "ISSVKRequest.h"
 #import "SUserData.h"
 #import "SFeedEntry.h"
 #import "VkontakteConnector.h"

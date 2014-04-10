@@ -3,7 +3,7 @@
 
 
 
-#import "ISSVKRequest.h"
+//#import "ISSVKRequest.h"
 #import "SUserData.h"
 #import "VkontakteConnector+UserData.h"
 #import "SMessageData.h"
@@ -20,6 +20,8 @@ typedef enum _VKUpdatesCodes
 static const BOOL const kVKMessageFlagOutbox = 2;
 
 @implementation VkontakteConnector (Pull)
+
+#if 0
 - (void)processPullUpdates:(NSArray *)updatesData
 {
     SObject *messageUpdates = nil;
@@ -146,6 +148,7 @@ static const BOOL const kVKMessageFlagOutbox = 2;
     }];
 }
 
+
 - (void)addPullReceiver:(SObject *)reseiverOperation forArea:(NSString *)area
 {
     [self startPull];
@@ -157,4 +160,6 @@ static const BOOL const kVKMessageFlagOutbox = 2;
     }
     [receivers addObject:reseiverOperation];
 }
+
+#endif
 @end

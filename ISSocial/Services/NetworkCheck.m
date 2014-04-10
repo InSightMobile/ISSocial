@@ -1,15 +1,14 @@
 //
-// Created by Ярослав on 24.04.13.
-// Copyright (c) 2013 ‚Äì√ò‚Äî√Ñ‚Äì√¶‚Äî√Ö‚Äì¬™‚Äì‚àû‚Äì‚â§. All rights reserved.
-//
-// To change the template use AppCode | Preferences | File Templates.
 //
 
-#import "SystemConfiguration/SystemConfiguration.h"
-#import "AFNetworking/AFHTTPClient.h"
+
+#import <AFNetworking/AFNetworkReachabilityManager.h>
 #import "NetworkCheck.h"
 
 
+@interface NetworkCheck ()
+@property(nonatomic, strong) AFNetworkReachabilityManager *manager;
+@end
 
 @implementation NetworkCheck {
 
@@ -30,7 +29,10 @@
 - (id)init {
     self = [super init];
     if (self) {
-        self.client = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:@"http://vk.com"]];
+
+        self.manager = [AFNetworkReachabilityManager managerForDomain:@"vk.com"];
+        
+        //self.client = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:@"http://vk.com"]];
     }
 
     return self;
@@ -43,25 +45,25 @@
 }
 
 - (BOOL)connectionAviable {
-    return [_client networkReachabilityStatus] != AFNetworkReachabilityStatusNotReachable;
+    return [_manager networkReachabilityStatus] != AFNetworkReachabilityStatusNotReachable;
 }
 
 - (void)checkConnectionWithCompletion:(void (^)(BOOL aviable))completion {
 
     __weak NetworkCheck* wself = self;
     
-    if([_client networkReachabilityStatus] == AFNetworkReachabilityStatusUnknown) {
+    if([_manager networkReachabilityStatus] == AFNetworkReachabilityStatusUnknown) {
 
-        [_client setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        [_manager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
 
             completion(status != AFNetworkReachabilityStatusNotReachable);
 
-            [wself.client setReachabilityStatusChangeBlock:nil];
+            [wself.manager setReachabilityStatusChangeBlock:nil];
         }];
 
     }
     else {
-        completion([_client networkReachabilityStatus] != AFNetworkReachabilityStatusNotReachable);
+        completion([_manager networkReachabilityStatus] != AFNetworkReachabilityStatusNotReachable);
     }
 }
 

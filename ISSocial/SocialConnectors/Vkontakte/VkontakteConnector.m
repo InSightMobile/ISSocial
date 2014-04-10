@@ -7,15 +7,18 @@
 //
 
 #import "VkontakteConnector+News.h"
-#import "ISSVKSession.h"
+//#import "ISSVKSession.h"
 #import "VkontakteConnector+UserData.h"
 #import "SUserData.h"
 #import "ISSocial+Errors.h"
+
 
 @interface VkontakteConnector ()
 @property(nonatomic) BOOL loggedIn;
 
 @property(nonatomic, strong) SUserData *currentUserData;
+@property(nonatomic, strong) SocialConnectorOperation *autorizationOperation;
+@property(nonatomic, strong) id clientId;
 @end
 
 @implementation VkontakteConnector
@@ -65,7 +68,7 @@
 
 - (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
-    [ISSVKSession.activeSession closeAndClearTokenInformation];
+    //[ISSVKSession.activeSession closeAndClearTokenInformation];
     _loggedIn = NO;
     completion([SObject successful]);
     return [SObject successful];
@@ -76,12 +79,14 @@
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation)
     {
-
         NSArray *permissions = self.permissions;
         if (!permissions) {
             permissions = @[@"wall", @"messages", @"photos", @"friends", @"video", @"audio"];
         }
 
+        self.autorizationOperation = operation;
+        [VKSdk authorize:permissions];
+        /*
         [ISSVKSession openActiveSessionWithPermissions:permissions completionHandler:^(ISSVKSession *session, ISSVKSessionState status, NSError *error)
         {
             switch (status) {
@@ -107,6 +112,7 @@
                     break;
             }
         }];
+        */
     }];
 }
 
@@ -117,11 +123,11 @@
 
 - (void)setupSettings:(NSDictionary *)settings
 {
-
     [super setupSettings:settings];
-
     if (settings[@"AppID"]) {
-        [ISSVKSession activeSession].clientId = settings[@"AppID"];
+        //[ISSVKSession activeSession].clientId = settings[@"AppID"];
+        self.clientId = settings[@"AppID"];
+        [VKSdk initializeWithDelegate:self andAppId:self.clientId];
     }
     if (settings[@"Permissions"]) {
         self.permissions = settings[@"Permissions"];
@@ -134,6 +140,23 @@
            operation:(SocialConnectorOperation *)operation
            processor:(void (^)(id))processor
 {
+
+    VKRequest * request = [VKRequest requestWithMethod:method andParameters:parameters andHttpMethod:@"GET"];
+
+    [request executeWithResultBlock:^(VKResponse *response) {
+        [operation removeSubOperation:request.executionOperation];
+
+        processor(response.json);
+
+    } errorBlock:^(NSError *error) {
+        [operation removeSubOperation:request.executionOperation];
+
+        NSLog(@"Vkontakte error on method: %@ params: %@ error: %@", method, parameters, error);
+        [operation completeWithError:error];
+    }];
+    [operation addSubOperation:request.executionOperation];
+
+   /*
     VKRequestOperation *op =
             [[ISSVKRequest requestMethod:method parameters:parameters] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error)
             {
@@ -151,6 +174,7 @@
                 }
             }];
     [operation addSubOperation:op];
+    */
 }
 
 - (NSError *)processVKError:(NSError *)error
@@ -164,6 +188,36 @@
             [ISSocial errorWithCode:code sourseError:error userInfo:nil];
 
     return socialError;
+}
+
+- (void)vkSdkNeedCaptchaEnter:(VKError *)captchaError
+{
+
+}
+
+- (void)vkSdkTokenHasExpired:(VKAccessToken *)expiredToken
+{
+
+}
+
+- (void)vkSdkUserDeniedAccess:(VKError *)authorizationError
+{
+    [self.autorizationOperation completeWithError:[NSError errorWithVkError:authorizationError]];
+}
+
+- (void)vkSdkShouldPresentViewController:(UIViewController *)controller
+{
+
+}
+
+- (void)vkSdkReceivedNewToken:(VKAccessToken *)newToken
+{
+    [self updateUserData:@[self.currentUserData] operation:self.autorizationOperation completion:^(SObject *result)
+    {
+        self.loggedIn = YES;
+        [self startPull];
+        [self.autorizationOperation complete:[SObject successful]];
+    }];
 }
 
 

@@ -6,7 +6,7 @@
 #import "VkontakteConnector+Audio.h"
 #import "VkontakteConnector+UserData.h"
 #import "SUserData.h"
-#import "ISSVKSession.h"
+//#import "ISSVKSession.h"
 
 @implementation VkontakteConnector (Audio)
 
@@ -80,6 +80,7 @@
     return result;
 }
 
+#if 0
 - (SObject *)addAudio:(SAudioData *)params completion:(SObjectCompletionBlock)completion
 {
     NSLog(@"add audio = %@", params);
@@ -123,5 +124,6 @@
         }];
     }];
 }
+#endif
 
 @end

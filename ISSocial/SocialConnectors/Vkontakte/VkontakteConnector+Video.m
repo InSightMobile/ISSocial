@@ -5,7 +5,7 @@
 #import "VkontakteConnector.h"
 #import "VkontakteConnector+Video.h"
 #import "SVideoData.h"
-#import "ISSVKSession.h"
+//#import "ISSVKSession.h"
 #import "MultiImage.h"
 #import "NSString+TypeSafety.h"
 #import "SUserData.h"
@@ -52,7 +52,7 @@
 
     return video;
 }
-
+#if 0
 - (SObject *)addVideo:(SVideoData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
@@ -94,6 +94,7 @@
         }];
     }];
 }
+#endif
 
 - (SObject *)readVideo:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
