@@ -9,7 +9,7 @@
 #import "ISSocial.h"
 #import "ISSocial+Errors.h"
 #import "NSObject+PerformBlockInBackground.h"
-#import "ISSAuthorisationToken.h"
+#import "ISSAuthorisationInfo.h"
 
 @interface FacebookConnector ()
 @property(nonatomic) BOOL loggedIn;
@@ -234,9 +234,9 @@
             [[FBSession activeSession] requestNewPublishPermissions:permissions defaultAudience:FBSessionDefaultAudienceFriends completionHandler:^(FBSession *session, NSError *error) {
 
                 if (!error) {
-                    [self performBlock:^(id sender) {
+                    [self iss_performBlock:^(id sender) {
                         [SObject successful:completion];
-                    }       afterDelay:0.1];
+                    }           afterDelay:0.1];
                 }
                 else {
                     [SObject failed:completion];
@@ -355,9 +355,9 @@
 - (void)processLoggedInSession:(FBSession *)session completion:(SObjectCompletionBlock)completion
 {
     [self readUserData:[SUserData new] completion:^(SObject *result) {
-        [self performBlock:^(id sender) {
+        [self iss_performBlock:^(id sender) {
             [SObject successful:completion];
-        }       afterDelay:0.1];
+        }           afterDelay:0.1];
 
         self.loggedIn = YES;
         if ([session.permissions indexOfObject:@"xmpp_login"] !=
@@ -385,9 +385,10 @@
     return [[FBSession activeSession] handleOpenURL:url];
 }
 
-- (ISSAuthorisationToken *)authorizationToken
+- (ISSAuthorisationInfo *)authorizatioInfo
 {
-    ISSAuthorisationToken *token = [ISSAuthorisationToken new];
+    ISSAuthorisationInfo *token = [ISSAuthorisationInfo new];
+    token.handler = self;
     token.accessToken = [FBSession activeSession].accessTokenData.accessToken;
     token.userId = self.currentUserData.objectId;
     return token;

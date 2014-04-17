@@ -132,12 +132,12 @@
 - (void)didActivated:(NSNotification *)notification
 {
     if(self.sessionOpenHandler) {
-        [self performBlock:^(id sender) {
-            if(self.sessionOpenHandler) {
+        [self iss_performBlock:^(id sender) {
+            if (self.sessionOpenHandler) {
                 self.sessionOpenHandler(self, ODKSessionStateClosed, nil);
                 self.sessionOpenHandler = nil;
             }
-        } afterDelay:1.0];
+        }           afterDelay:1.0];
 
     }
 }

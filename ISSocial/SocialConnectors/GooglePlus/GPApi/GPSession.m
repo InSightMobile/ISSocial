@@ -1,11 +1,11 @@
 //
 // 
 
-#import <BlocksKit/NSObject+BlocksKit.h>
 #import <GoogleOpenSource/GoogleOpenSource.h>
 #import <GooglePlus/GooglePlus.h>
 
 #import "GPSession.h"
+#import "NSObject+PerformBlockInBackground.h"
 
 
 @interface GPSession () <GPPSignInDelegate>
@@ -108,12 +108,12 @@ sourceApplication:(NSString *)sourceApplication
 - (void)didActivated:(NSNotification *)notification
 {
     if(self.handler) {
-        [self performBlock:^(id sender) {
-            if(self.handler) {
+        [self iss_performBlock:^(id sender) {
+            if (self.handler) {
                 self.handler(self, GPSessionStateClosed, nil);
                 self.handler = nil;
             }
-        } afterDelay:1.0];
+        }           afterDelay:1.0];
 
     }
 }

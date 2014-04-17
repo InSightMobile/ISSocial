@@ -11,7 +11,7 @@
 #import "VkontakteConnector+UserData.h"
 #import "SUserData.h"
 #import "ISSocial+Errors.h"
-#import "ISSAuthorisationToken.h"
+#import "ISSAuthorisationInfo.h"
 
 
 @interface VkontakteConnector ()
@@ -123,9 +123,10 @@
     return _loggedIn;
 }
 
-- (ISSAuthorisationToken *)authorizationToken
+- (ISSAuthorisationInfo *)authorizatioInfo
 {
-    ISSAuthorisationToken *token = [ISSAuthorisationToken new];
+    ISSAuthorisationInfo *token = [ISSAuthorisationInfo new];
+    token.handler = self;
     token.accessToken = self.accessToken.accessToken;
     token.userId = self.accessToken.userId;
     return token;

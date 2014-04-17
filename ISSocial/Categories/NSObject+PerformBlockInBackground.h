@@ -7,11 +7,11 @@
 
 @interface NSObject (PerformBlockInBackground)
 
-+ (void)performBlockInBackground:(void (^)())block completion:(void (^)())completionBlock;
++ (void)iss_performBlockInBackground:(void (^)())block completion:(void (^)())completionBlock;
 
-+ (void)performBlock:(void (^)())block afterDelay:(NSTimeInterval)interval;
++ (void)iss_performBlock:(void (^)())block afterDelay:(NSTimeInterval)interval;
 
-- (void)performBlock:(void (^)(id sender))block afterDelay:(NSTimeInterval)interval;
+- (void)iss_performBlock:(void (^)(id sender))block afterDelay:(NSTimeInterval)interval;
 
-- (void)performBlockInBackground:(void (^)())block completion:(void (^)())completionBlock;
+- (void)iss_performBlockInBackground:(void (^)())block completion:(void (^)())completionBlock;
 @end

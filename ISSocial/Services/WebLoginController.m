@@ -95,10 +95,10 @@
     _disappeared = YES;
     [super viewDidDisappear:animated];
 
-    [self performBlock:^(id sender){
+    [self iss_performBlock:^(id sender) {
         self.completionBlock(self.error);
         self.completionBlock = nil;
-    } afterDelay:0.1];
+    }           afterDelay:0.1];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -112,10 +112,10 @@
 {
     _disappeared = NO;
     if (_dissmissing) {
-        [self performBlock:^(id sender){
+        [self iss_performBlock:^(id sender) {
             _appeared = YES;
             [self dismiss];
-        } afterDelay:0.1];
+        }           afterDelay:0.1];
     }
     else {
         _appeared = YES;

@@ -99,7 +99,7 @@
         SObject *updateParams = [params copyWithHandler:self];
         updateParams.operation = operation;
 
-        [self performBlock:^(id sender) {
+        [self iss_performBlock:^(id sender) {
 
             if ([[(id) updateParams mediaType] isEqualToString:@"user"]) {
                 [self readMessageHistory:updateParams completion:^(SObject *object) {
@@ -114,7 +114,7 @@
                 }];
             }
 
-        }       afterDelay:kMessagesUpdateRate];
+        }           afterDelay:kMessagesUpdateRate];
     }];
 }
 

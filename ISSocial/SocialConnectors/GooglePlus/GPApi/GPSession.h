@@ -12,7 +12,6 @@ typedef enum
 } GPSessionState;
 
 @class GPSession;
-@class Odnoklassniki;
 @class GPPSignIn;
 @class GTMOAuth2Authentication;
 @class GTLServicePlus;

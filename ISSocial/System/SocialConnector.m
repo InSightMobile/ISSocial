@@ -9,7 +9,7 @@
 #import "SocialConnector.h"
 #import "CacheManager.h"
 #import "SUserData.h"
-#import "ISSAuthorisationToken.h"
+#import "ISSAuthorisationInfo.h"
 
 NSString *const kNewMessagesNotification = @"NewMessageNotification";
 NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChanged";
@@ -171,7 +171,7 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
 }
 
 
-- (ISSAuthorisationToken *)authorizationToken
+- (ISSAuthorisationInfo *)authorizatioInfo
 {
     return nil;
 }
