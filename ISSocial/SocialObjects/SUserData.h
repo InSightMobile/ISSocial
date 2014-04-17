@@ -13,6 +13,8 @@
 
 @protocol SUserData <SMediaObject>
 @optional
+@property(copy, nonatomic) NSString *userFirstName;
+@property(copy, nonatomic) NSString *userLastName;
 @property(copy, nonatomic) NSString *userName;
 @property(copy, nonatomic) NSString *userEmail;
 @property(copy, nonatomic) NSString *userGender;

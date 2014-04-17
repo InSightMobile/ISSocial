@@ -9,6 +9,7 @@
 #import "ISSocial.h"
 #import "ISSocial+Errors.h"
 #import "NSObject+PerformBlockInBackground.h"
+#import "ISSAuthorisationToken.h"
 
 @interface FacebookConnector ()
 @property(nonatomic) BOOL loggedIn;
@@ -382,6 +383,14 @@
 - (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication
 {
     return [[FBSession activeSession] handleOpenURL:url];
+}
+
+- (ISSAuthorisationToken *)authorizationToken
+{
+    ISSAuthorisationToken *token = [ISSAuthorisationToken new];
+    token.accessToken = [FBSession activeSession].accessTokenData.accessToken;
+    token.userId = self.currentUserData.objectId;
+    return token;
 }
 
 

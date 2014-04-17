@@ -24,6 +24,7 @@
 @class SMessageThread;
 @class SAudioData;
 @class SLinkData;
+@class ISSAuthorisationToken;
 
 
 FOUNDATION_EXPORT NSString *const kNewMessagesNotification;
@@ -227,6 +228,7 @@ FOUNDATION_EXPORT NSString *const kNewMessagesUnreadStatusChanged;
 @property(strong, nonatomic) SObject *connectorState;
 
 - (SUserData *)currentUserData;
+- (ISSAuthorisationToken *)authorizationToken;
 
 @property(readonly, nonatomic) BOOL isLoggedIn;
 

@@ -11,6 +11,7 @@
 #import "VkontakteConnector+UserData.h"
 #import "SUserData.h"
 #import "ISSocial+Errors.h"
+#import "ISSAuthorisationToken.h"
 
 
 @interface VkontakteConnector ()
@@ -19,6 +20,7 @@
 @property(nonatomic, strong) SUserData *currentUserData;
 @property(nonatomic, strong) SocialConnectorOperation *autorizationOperation;
 @property(nonatomic, strong) id clientId;
+@property(nonatomic, strong) VKAccessToken *accessToken;
 @end
 
 @implementation VkontakteConnector
@@ -121,6 +123,13 @@
     return _loggedIn;
 }
 
+- (ISSAuthorisationToken *)authorizationToken
+{
+    ISSAuthorisationToken *token = [ISSAuthorisationToken new];
+    token.accessToken = self.accessToken.accessToken;
+    token.userId = self.accessToken.userId;
+    return token;
+}
 
 - (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication
 {
@@ -228,6 +237,7 @@
 
 - (void)vkSdkReceivedNewToken:(VKAccessToken *)newToken
 {
+    self.accessToken = newToken;
     if(!self.currentUserData) {
         self.currentUserData = [[SUserData alloc] initWithHandler:self];
     }

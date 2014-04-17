@@ -9,6 +9,7 @@
 #import "SocialConnector.h"
 #import "CacheManager.h"
 #import "SUserData.h"
+#import "ISSAuthorisationToken.h"
 
 NSString *const kNewMessagesNotification = @"NewMessageNotification";
 NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChanged";
@@ -169,6 +170,11 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
     return operationObject;
 }
 
+
+- (ISSAuthorisationToken *)authorizationToken
+{
+    return nil;
+}
 
 - (BOOL)isLoggedIn
 {
