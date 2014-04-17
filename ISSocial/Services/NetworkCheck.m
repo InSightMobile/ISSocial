@@ -31,8 +31,7 @@
     if (self) {
 
         self.manager = [AFNetworkReachabilityManager managerForDomain:@"vk.com"];
-        
-        //self.client = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:@"http://vk.com"]];
+        [_manager startMonitoring];
     }
 
     return self;

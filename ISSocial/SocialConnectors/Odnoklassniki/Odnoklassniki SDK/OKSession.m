@@ -68,12 +68,10 @@ static OKSession *_activeSession = nil;
 
 - (BOOL)handleOpenURL:(NSURL *)url {
 	if (![[url absoluteString] hasPrefix:self.getAppBaseUrl]) {
-		NSLog(@"wrong prefix = %@, %@", [url absoluteString], self.getAppBaseUrl);
+		//NSLog(@"wrong prefix = %@, %@", [url absoluteString], self.getAppBaseUrl);
 		return NO;
 	}
     NSLog(@"handle url %@", [url absoluteString]);
-
-    
 
 	NSString *query = [url query];
 	NSDictionary *params = [OKUtils dictionaryByParsingURLQueryPart:query];

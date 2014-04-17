@@ -23,7 +23,7 @@
 
     NSSet *userIds = [NSSet setWithArray:[usersData valueForKey:@"objectId"]];
 
-    [self simpleMethod:@"users.get" parameters:@{@"uids" : [userIds.allObjects componentsJoinedByString:@","], @"fields" : @"uid,first_name,last_name,photo,bdate"}
+    [self simpleMethod:@"users.get" parameters:@{@"uids" : [userIds.allObjects componentsJoinedByString:@","], @"fields" : @"uid,first_name,last_name,photo,bdate,city, country"}
              operation:operation processor:^(id response) {
 
         NSLog(@"response = %@", response);

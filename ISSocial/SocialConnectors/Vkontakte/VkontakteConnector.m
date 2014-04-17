@@ -43,7 +43,7 @@
 
 + (NSString *)connectorCode
 {
-    return @"Vkontakte";
+    return ISSocialConnectorIdVkontakte;
 }
 
 
@@ -120,6 +120,21 @@
 {
     return _loggedIn;
 }
+
+
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication
+{
+    return [VKSdk processOpenURL:url fromApplication:sourceApplication];
+}
+
+- (void)handleDidBecomeActive
+{
+    if(![VKSdk isLoggedIn]) {
+        [self.autorizationOperation completeWithFailure];
+        self.autorizationOperation = nil;
+    }
+}
+
 
 - (void)setupSettings:(NSDictionary *)settings
 {
@@ -203,6 +218,7 @@
 - (void)vkSdkUserDeniedAccess:(VKError *)authorizationError
 {
     [self.autorizationOperation completeWithError:[NSError errorWithVkError:authorizationError]];
+    self.autorizationOperation = nil;
 }
 
 - (void)vkSdkShouldPresentViewController:(UIViewController *)controller
@@ -212,11 +228,17 @@
 
 - (void)vkSdkReceivedNewToken:(VKAccessToken *)newToken
 {
+    if(!self.currentUserData) {
+        self.currentUserData = [[SUserData alloc] initWithHandler:self];
+    }
     [self updateUserData:@[self.currentUserData] operation:self.autorizationOperation completion:^(SObject *result)
     {
         self.loggedIn = YES;
-        [self startPull];
+        if([self respondsToSelector:@selector(startPull)]) {
+            [self startPull];
+        }
         [self.autorizationOperation complete:[SObject successful]];
+        self.autorizationOperation = nil;
     }];
 }
 

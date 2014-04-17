@@ -4,11 +4,11 @@
 
 
 #import "ISSocial.h"
-#import "LoginManager.h"
+#import "ISSocialLoginManager.h"
 
 
 @interface ISSocial ()
-@property(nonatomic, strong) LoginManager *loginManager;
+@property(nonatomic, strong) ISSocialLoginManager *loginManager;
 @property(nonatomic, strong, readwrite) CompositeConnector *rootConnectors;
 @property(nonatomic, strong) CompositeConnector *currentConnectors;
 @end
@@ -39,7 +39,7 @@
                                                           restorationId:nil options:
                     CompositeConnectorUseAviableConnectors | CompositeConnectorDefaultDeactivated];
 
-    self.loginManager = [LoginManager new];
+    self.loginManager = [ISSocialLoginManager new];
     self.loginManager.sourceConnectors = self.rootConnectors;
     self.loginManager.destinationConnectors = @[self.currentConnectors, self.rootConnectors];
 
@@ -168,10 +168,10 @@
 }
 
 
-- (BOOL)handleOpenURL:(NSURL *)url
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString*)sourceApplication
 {
     for (AccessSocialConnector *connector in self.rootConnectors.availableConnectors) {
-        if ([connector handleOpenURL:url]) {
+        if ([connector handleOpenURL:url fromApplication:sourceApplication]) {
             return YES;
         }
     }

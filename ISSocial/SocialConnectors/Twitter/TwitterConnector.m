@@ -8,6 +8,7 @@
 
 #import "SUserData.h"
 #import "TwitterConnector.h"
+#import "ISSocial.h"
 #import <Twitter/Twitter.h>
 #import <Accounts/Accounts.h>
 
@@ -43,7 +44,7 @@
 
 + (NSString *)connectorCode
 {
-    return @"Twitter";
+    return ISSocialConnectorIdTwitter;
 }
 
 

@@ -10,8 +10,8 @@
 @class SocialConnector;
 @class SObject;
 
-@interface LoginManager : NSObject
-+ (LoginManager *)instance;
+@interface ISSocialLoginManager : NSObject
++ (ISSocialLoginManager *)instance;
 
 @property(nonatomic, copy) NSArray *destinationConnectors;
 @property(nonatomic, strong) CompositeConnector *sourceConnectors;

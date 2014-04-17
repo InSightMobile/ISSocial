@@ -7,12 +7,16 @@
 
 
 
-@class LoginManager;
+@class ISSocialLoginManager;
 @class CompositeConnector;
 
 
 static NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated";
 
+static NSString *const ISSocialConnectorIdFacebook = @"Facebook";
+static NSString *const ISSocialConnectorIdVkontakte = @"Vkontakte";
+static NSString *const ISSocialConnectorIdTwitter = @"Twitter";
+static NSString *const ISSocialConnectorIdOdnoklasniki = @"Odnoklassniki";
 
 @interface ISSocial : NSObject
 - (void)loadConnectors;
@@ -42,7 +46,7 @@ static NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendIn
 
 - (NSSet *)loggedInConnectors;
 
-- (BOOL)handleOpenURL:(NSURL *)url;
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString*)sourceApplication;
 
 - (void)configure;
 

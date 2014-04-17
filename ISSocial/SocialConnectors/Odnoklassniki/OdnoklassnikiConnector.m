@@ -11,6 +11,7 @@
 #import "ODKSession.h"
 #import "ODKRequest.h"
 #import "SUserData.h"
+#import "ISSocial.h"
 
 @interface OdnoklassnikiConnector ()
 @property(nonatomic) BOOL loggedIn;
@@ -54,12 +55,7 @@
 
 - (NSString *)connectorCode
 {
-    return @"Ok";
-}
-
-- (NSString *)connectorName
-{
-    return NSLocalizedString(@"Odnoklassniki", @"Odnoklassniki");
+    return ISSocialConnectorIdOdnoklasniki;
 }
 
 - (BOOL)isLoggedIn
@@ -120,7 +116,8 @@
     [operation addConnection:requst];
 }
 
-- (BOOL)handleOpenURL:(NSURL *)url
+
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication
 {
     return [[OKSession activeSession] handleOpenURL:url];
 }

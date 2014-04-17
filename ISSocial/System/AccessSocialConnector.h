@@ -28,7 +28,7 @@ static NSString *const kAllowUserUIKey = @"allowUserUI";
 - (void)setupSettings:(NSDictionary *)settings;
 
 
-- (BOOL)handleOpenURL:(NSURL *)url;
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString*)sourceApplication;
 
 + (id)instance;
 

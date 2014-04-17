@@ -85,7 +85,7 @@
 
 }
 
-- (BOOL)handleOpenURL:(NSURL *)url
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString*)sourceApplication
 {
     return NO;
 }

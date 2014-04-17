@@ -1,7 +1,7 @@
 //
 //
 
-#import "LoginManager.h"
+#import "ISSocialLoginManager.h"
 #import "CompositeConnector.h"
 #import "AsyncBlockOperation.h"
 #import "NetworkCheck.h"
@@ -10,21 +10,21 @@
 
 typedef void (^BlockCompletionBlock)();
 
-@interface LoginManager ()
+@interface ISSocialLoginManager ()
 @property(nonatomic) BOOL canceled;
 
 @property(nonatomic, strong) BlockOperationQueue *queue;
 @property(nonatomic, strong) NSMutableArray *completions;
 @end
 
-@implementation LoginManager
+@implementation ISSocialLoginManager
 {
 
 }
 
-+ (LoginManager *)instance
++ (ISSocialLoginManager *)instance
 {
-    static LoginManager *_instance = nil;
+    static ISSocialLoginManager *_instance = nil;
     static dispatch_once_t pred;
     dispatch_once(&pred, ^
     {
@@ -62,7 +62,7 @@ typedef void (^BlockCompletionBlock)();
 
 - (void)loginWithParams:(SObject *)options completion:(void (^)())completion
 {
-    __weak LoginManager *wself = self;
+    __weak ISSocialLoginManager *wself = self;
     
     [[NetworkCheck instance] checkConnectionWithCompletion:^(BOOL connected)
     {
