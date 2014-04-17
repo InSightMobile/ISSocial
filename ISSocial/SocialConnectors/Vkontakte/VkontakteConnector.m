@@ -12,6 +12,8 @@
 #import "SUserData.h"
 #import "ISSocial+Errors.h"
 #import "ISSAuthorisationInfo.h"
+#import "NSObject+PerformBlockInBackground.h"
+#import "ISSPresentingViewController.h"
 
 
 @interface VkontakteConnector ()
@@ -139,10 +141,12 @@
 
 - (void)handleDidBecomeActive
 {
-    if(![VKSdk isLoggedIn]) {
-        [self.autorizationOperation completeWithFailure];
-        self.autorizationOperation = nil;
-    }
+    [self iss_performBlock:^(id sender) {
+        if(![VKSdk isLoggedIn]) {
+            [self.autorizationOperation completeWithFailure];
+            self.autorizationOperation = nil;
+        }
+    } afterDelay:1];
 }
 
 
@@ -233,17 +237,22 @@
 
 - (void)vkSdkShouldPresentViewController:(UIViewController *)controller
 {
-
+    [[ISSPresentingViewController presentingController] presentController:controller];
 }
 
 - (void)vkSdkReceivedNewToken:(VKAccessToken *)newToken
 {
     self.accessToken = newToken;
     if(!self.currentUserData) {
-        self.currentUserData = [[SUserData alloc] initWithHandler:self];
+        self.currentUserData = [self dataForUserId:newToken.userId];
     }
+
     [self updateUserData:@[self.currentUserData] operation:self.autorizationOperation completion:^(SObject *result)
     {
+        if(result.isSuccessful && result.subObjects.count == 1) {
+            self.currentUserData = result.subObjects[0];
+        }
+
         self.loggedIn = YES;
         if([self respondsToSelector:@selector(startPull)]) {
             [self startPull];

@@ -23,7 +23,8 @@
 
     NSSet *userIds = [NSSet setWithArray:[usersData valueForKey:@"objectId"]];
 
-    [self simpleMethod:@"users.get" parameters:@{@"uids" : [userIds.allObjects componentsJoinedByString:@","], @"fields" : @"uid,first_name,last_name,photo,bdate,city, country"}
+    [self simpleMethod:@"users.get" parameters:@{@"uids" : [userIds.allObjects componentsJoinedByString:@","],
+            @"fields" : @"uid,first_name,last_name,photo,bdate,city,country,sex,screen_name"}
              operation:operation processor:^(id response) {
 
         NSLog(@"response = %@", response);
@@ -43,15 +44,23 @@
     }
 
     SUserData *userData = [self dataForUserId:[userId stringValue]];
+
+    userData.userFirstName = userInfo[@"first_name"];
+    userData.userLastName = userInfo[@"last_name"];
+
     userData.userName = [NSString stringWithFormat:@"%@ %@", userInfo[@"first_name"], userInfo[@"last_name"]];
 
     if (userInfo[@"name"]) {
         userData.userName = userInfo[@"name"];
     }
 
-    if(userInfo[@"bdate"]) {
+    if (userInfo[@"bdate"]) {
         NSString *bdate = userInfo[@"bdate"];
         userData.birthday = [NSDate dateWithVkontakteBirthdayString:bdate];
+    }
+
+    if (userInfo[@"sex"]) {
+        userData.userGender = userInfo[@"sex"];
     }
 
     MultiImage *image = [MultiImage new];
@@ -79,7 +88,9 @@
                 completion:(SObjectCompletionBlock)completion
 {
     NSString *userId = params.objectId;
-    if (!userId) userId = self.userId;
+    if (!userId) {
+            userId = self.userId;
+    }
 
     [self simpleMethod:@"friends.getOnline" parameters:@{@"uid" : userId, @"online_mobile" : @YES}
              operation:operation processor:^(id response) {
@@ -133,7 +144,9 @@
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSString *userId = params.objectId;
-        if (!userId) userId = self.userId;
+        if (!userId) {
+                    userId = self.userId;
+        }
 
         [self simpleMethod:@"friends.get" parameters:@{@"uid" : userId, @"fields" : @"uid,first_name,last_name,photo,bdate"}
                  operation:operation processor:^(id response) {
@@ -183,7 +196,9 @@
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSString *userId = params.objectId;
-        if (!userId) userId = self.userId;
+        if (!userId) {
+                    userId = self.userId;
+        }
 
         [self simpleMethod:@"friends.getRequests" parameters:@{
                 @"uid" : userId,
@@ -212,7 +227,9 @@
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSString *userId = params.objectId;
-        if (!userId) userId = self.userId;
+        if (!userId) {
+                    userId = self.userId;
+        }
 
         if (!userId.length) {
             [operation completeWithFailure];
@@ -224,8 +241,12 @@
 
             SObject *result = [self parseUsersData:response];
 
-            if (!result.subObjects.count) [operation completeWithFailure];
-            else [operation complete:result.subObjects[0]];
+            if (!result.subObjects.count) {
+                            [operation completeWithFailure];
+                        }
+            else {
+                            [operation complete:result.subObjects[0]];
+            }
 
         }];
 

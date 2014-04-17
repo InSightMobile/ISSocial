@@ -339,6 +339,16 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object)
     return @"SObject: empty";
 }
 
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id __unsafe_unretained [])buffer count:(NSUInteger)len
+{
+    if (_data.count) {
+        return [_data countByEnumeratingWithState:state objects:buffer count:len];
+    }
+    else {
+        return [_subObjects countByEnumeratingWithState:state objects:buffer count:len];
+    }
+}
+
 
 - (void)cancelOperation
 {

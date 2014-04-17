@@ -111,6 +111,11 @@
     SocialConnector *connector = [self connectorNamed:connectorName];
     [self.rootConnectors addConnector:connector asActive:YES];
 
+    if(connector.isLoggedIn) {
+        completion(connector,nil);
+        return;
+    }
+
     __block NSError* connectionError = nil;
     
     [self.loginManager setLoginHandler:^(SocialConnector *connector, NSError *error) {

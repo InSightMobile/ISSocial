@@ -152,6 +152,9 @@ static NSMutableDictionary *_usersById;
 
     SUserData *data = [self dataForUserId:objectId name:userData[@"name"]];
 
+    data.userFirstName = userData[@"first_name"];
+    data.userLastName = userData[@"last_name"];
+
     if ([userData[@"online_presence"] isKindOfClass:[NSString class]]) {
         data.isOnline = @(![userData[@"online_presence"] isEqualToString:@"offline"]);
     }
@@ -160,12 +163,26 @@ static NSMutableDictionary *_usersById;
         data.birthday = [NSDate dateWithFacebookBirthdayString:userData[@"birthday_date"]];
     }
 
+    if([userData[@"birthday"] isKindOfClass:[NSString class]]) {
+        data.birthday = [NSDate dateWithFacebookBirthdayString:userData[@"birthday"]];
+    }
+
     if([userData[@"email"] isKindOfClass:[NSString class]]) {
         data.userEmail = userData[@"email"];
     }
 
     if([userData[@"gender"] isKindOfClass:[NSString class]]) {
-        data.userGender = userData[@"gender"];
+        NSString *facebookGender = userData[@"gender"];
+
+        if([facebookGender isEqualToString:@"male"]) {
+            data.userGender = @(ISSMaleUserGender);
+        }
+        else if([facebookGender isEqualToString:@"female"]) {
+            data.userGender = @(ISSFemaleUserGender);
+        }
+        else {
+            data.userGender = @(ISSUnknownUserGender);
+        }
     }
 
     return data;

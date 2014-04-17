@@ -59,7 +59,7 @@ typedef void (^SObjectCompletionBlock)(SObject *result);
 
 @end
 
-@interface SObject : NSObject <SObject>
+@interface SObject : NSObject <SObject,NSFastEnumeration>
 
 @property(nonatomic, readonly) NSUInteger count;
 
