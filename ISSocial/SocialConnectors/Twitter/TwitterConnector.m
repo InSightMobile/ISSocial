@@ -75,8 +75,8 @@
     [super setupSettings:settings];
 
     _apiManager = [TWAPIManager new];
-    _apiManager.consumerKey = settings[@"ApiKey"] ?: settings[@"AppID"];
-    _apiManager.consumerSecret = settings[@"ApiSecret"] ?: settings[@"Secret"];
+    _apiManager.consumerKey = settings[@"AppKey"];
+    _apiManager.consumerSecret = settings[@"AppSecret"];
 }
 
 - (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion

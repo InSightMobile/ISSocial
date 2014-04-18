@@ -15,6 +15,10 @@
 
 @property(nonatomic, strong) Odnoklassniki *okAPI;
 @property(nonatomic, copy) ODKSessionStateHandler sessionOpenHandler;
+@property(nonatomic, copy) NSString *appId;
+@property(nonatomic, copy) NSString *appSecret;
+@property(nonatomic, copy) NSString *appKey;
+@property(nonatomic, strong) NSArray *permissions;
 @end
 
 @implementation ODKSession
@@ -84,17 +88,14 @@
 
 - (void)reopenSessionWithCompletionHandler:(ODKSessionStateHandler)handler
 {
-    [self openSessionWithPermissions:nil completionHandler:handler];
+    [self openSessionWithCompletionHandler:handler];
 }
 
-- (void)openSessionWithPermissions:(NSArray *)permissions completionHandler:(ODKSessionStateHandler)handler
+- (void)openSessionWithCompletionHandler:(ODKSessionStateHandler)handler
 {
-    NSString *appId = NSBundle.mainBundle.infoDictionary[@"OdnoklassnikiAppID"];
-    NSString *appSecret = NSBundle.mainBundle.infoDictionary[@"OdnoklassnikiAppSecret"];
-    NSString *appKey = NSBundle.mainBundle.infoDictionary[@"OdnoklassnikiAppKey"];
 
-    if (!permissions) {
-        permissions = @[@"VALUABLE ACCESS", @"SET STATUS", @"PUBLISH TO STREAM", @"PHOTO CONTENT", @"MESSAGING"];
+    if (!self.permissions) {
+        self.permissions = @[@"VALUABLE ACCESS", @"SET STATUS", @"PUBLISH TO STREAM", @"PHOTO CONTENT", @"MESSAGING"];
     }
 
     self.sessionOpenHandler = handler;
@@ -103,25 +104,33 @@
         [self.session refreshAuthToken];
         return;
     }
-    else if ([OKSession openActiveSessionWithPermissions:permissions appId:appId appSecret:appSecret]) {
+    else if ([OKSession openActiveSessionWithPermissions:self.permissions appId:self.appId appSecret:self.appSecret]) {
         self.session = [OKSession activeSession];
         self.session.delegate = self;
-        self.session.appKey = appKey;
+        self.session.appKey = self.appKey;
         [self.session refreshAuthToken];
     }
     else {
-        self.session = [[OKSession alloc] initWithAppID:appId permissions:permissions appSecret:appSecret];
+        self.session = [[OKSession alloc] initWithAppID:self.appId permissions:self.permissions appSecret:self.appSecret];
         self.session.delegate = self;
-        self.session.appKey = appKey;
+        self.session.appKey = self.appKey;
         [OKSession setActiveSession:self.session];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didActivated:) name:UIApplicationDidBecomeActiveNotification object:nil];
         [self.session authorizeWithOKAppAuth:YES safariAuth:YES];
     }
 }
 
-+ (void)openActiveSessionWithPermissions:(NSArray *)permissions completionHandler:(ODKSessionStateHandler)handler
++ (void)openActiveSessionWithPermissions:(NSArray *)permissions appId:(NSString *)appId
+                               appSecret:(NSString *)appSecret appKey:(NSString *)appKey
+                       completionHandler:(ODKSessionStateHandler)handler
 {
-    [[self activeSession] openSessionWithPermissions:permissions completionHandler:handler];
+    ODKSession *session = [self activeSession];
+    session.appId = appId;
+    session.appSecret = appSecret;
+    session.appKey = appKey;
+    session.permissions = permissions;
+
+    [session openSessionWithCompletionHandler:handler];
 }
 
 - (BOOL)isLoggedIn
@@ -131,7 +140,7 @@
 
 - (void)didActivated:(NSNotification *)notification
 {
-    if(self.sessionOpenHandler) {
+    if (self.sessionOpenHandler) {
         [self iss_performBlock:^(id sender) {
             if (self.sessionOpenHandler) {
                 self.sessionOpenHandler(self, ODKSessionStateClosed, nil);

@@ -15,6 +15,10 @@
 
 @interface OdnoklassnikiConnector ()
 @property(nonatomic) BOOL loggedIn;
+@property(nonatomic, copy) NSString *appID;
+@property(nonatomic, copy) NSString *appKey;
+@property(nonatomic, copy) NSString *appSecret;
+@property(nonatomic, strong) NSArray *permissions;
 @end
 
 @implementation OdnoklassnikiConnector
@@ -37,6 +41,16 @@
 - (NSInteger)connectorDisplayPriority
 {
     return 3;
+}
+
+- (void)setupSettings:(NSDictionary *)settings
+{
+    [super setupSettings:settings];
+
+    self.appID = settings[@"AppID"];
+    self.appKey = settings[@"AppKey"];
+    self.appSecret = settings[@"AppSecret"];
+    self.permissions = settings[@"Permissions"];
 }
 
 
@@ -67,33 +81,34 @@
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        [ODKSession openActiveSessionWithPermissions:@[@"VALUABLE_ACCESS", @"VALUABLE ACCESS", @"SET STATUS", @"PHOTO CONTENT", @"MESSAGING"] completionHandler:^(ODKSession *session, ODKSessionState status, NSError *error) {
-            switch (status) {
-                case ODKSessionStateOpen: {
+        [ODKSession openActiveSessionWithPermissions:self.permissions appId:self.appID appSecret:self.appSecret appKey:self.appKey
+                                   completionHandler:^(ODKSession *session, ODKSessionState status, NSError *error) {
+                                       switch (status) {
+                                           case ODKSessionStateOpen: {
 
-                    [self readUserData:nil completion:^(SObject *result) {
-                        if (!result.isFailed) {
-                            self.currentUserData = (SUserData *) result;
+                                               [self readUserData:nil completion:^(SObject *result) {
+                                                   if (!result.isFailed) {
+                                                       self.currentUserData = (SUserData *) result;
 
-                            [operation complete:[SObject successful]];
-                        }
-                        else {
-                            [operation completeWithFailure];
-                        }
-                    }];
-                }
-                    break;
-                case ODKSessionStateClosed:
-                case ODKSessionStateClosedLoginFailed: {
-                    [operation completeWithFailure];
-                }
-                    break;
-                default:
-                    [operation completeWithFailure];
-                    break;
-            }
+                                                       [operation complete:[SObject successful]];
+                                                   }
+                                                   else {
+                                                       [operation completeWithFailure];
+                                                   }
+                                               }];
+                                           }
+                                               break;
+                                           case ODKSessionStateClosed:
+                                           case ODKSessionStateClosedLoginFailed: {
+                                               [operation completeWithFailure];
+                                           }
+                                               break;
+                                           default:
+                                               [operation completeWithFailure];
+                                               break;
+                                       }
 
-        }];
+                                   }];
 
     }];
 }
