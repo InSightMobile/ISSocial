@@ -20,18 +20,40 @@
         completion(nil);
         return;
     }
-
     NSSet *userIds = [NSSet setWithArray:[usersData valueForKey:@"objectId"]];
+    [self updateCountryCodesWithOperation:operation completion:^(SObject *result) {
+        [self simpleMethod:@"users.get" parameters:@{@"uids" : [userIds.allObjects componentsJoinedByString:@","],
+                @"fields" : @"uid,first_name,last_name,photo,bdate,city,country,sex,screen_name"}
+                 operation:operation processor:^(id response) {
 
-    [self simpleMethod:@"users.get" parameters:@{@"uids" : [userIds.allObjects componentsJoinedByString:@","],
-            @"fields" : @"uid,first_name,last_name,photo,bdate,city,country,sex,screen_name"}
-             operation:operation processor:^(id response) {
+            NSLog(@"response = %@", response);
 
-        NSLog(@"response = %@", response);
+            SObject *result = [self parseUsersData:response];
 
-        SObject *result = [self parseUsersData:response];
+            [result complete:completion];
+        }];
+    }];
+}
 
-        [result complete:completion];
+- (void)updateCountryCodesWithOperation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
+{
+    NSArray *countryArray = [NSLocale ISOCountryCodes];
+    if(self.countryCodesById) {
+        completion([SObject successful]);
+        return;
+    }
+    self.countryCodesById = [NSMutableDictionary dictionaryWithCapacity:countryArray.count];
+
+    [self simpleMethod:@"database.getCountries" parameters:@{@"count":@(countryArray.count), @"code" : [countryArray componentsJoinedByString:@","]}
+             operation:operation processor:^(NSDictionary * response) {
+
+        NSArray *countryCodes = response[@"items"];
+
+        for (int i = 0; i < countryCodes.count; i++) {
+            self.countryCodesById[countryCodes[i][@"id"]] = countryArray[i];
+        }
+
+        completion([SObject successful]);
     }];
 }
 
@@ -45,8 +67,8 @@
 
     SUserData *userData = [self dataForUserId:[userId stringValue]];
 
-    userData.userFirstName = userInfo[@"first_name"];
-    userData.userLastName = userInfo[@"last_name"];
+    userData.firstName = userInfo[@"first_name"];
+    userData.lastName = userInfo[@"last_name"];
 
     userData.userName = [NSString stringWithFormat:@"%@ %@", userInfo[@"first_name"], userInfo[@"last_name"]];
 
@@ -60,7 +82,21 @@
     }
 
     if (userInfo[@"sex"]) {
+        // matches internal structure
         userData.userGender = userInfo[@"sex"];
+    }
+
+    if (userInfo[@"city"]) {
+        userData.vkontakteCityId =  userInfo[@"city"][@"id"];
+
+        userData.cityName = userInfo[@"city"][@"title"];
+    }
+
+    if (userInfo[@"country"]) {
+        NSNumber *countryId = userInfo[@"country"][@"id"];
+        userData.vkontakteCountryId =  countryId;
+        userData.countryCode = self.countryCodesById[countryId];
+        userData.countryName = userInfo[@"country"][@"title"];
     }
 
     MultiImage *image = [MultiImage new];

@@ -27,6 +27,8 @@
 
 @property(nonatomic, strong) id permissions;
 
+@property(nonatomic, strong) NSMutableDictionary *countryCodesById;
+
 - (SObject *)operationWithObject:(SObject *)object;
 
 - (void)startPull;

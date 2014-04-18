@@ -16,6 +16,8 @@
 #import "ISSPresentingViewController.h"
 
 
+static const int kMaxRetries = 3;
+
 @interface VkontakteConnector ()
 @property(nonatomic) BOOL loggedIn;
 
@@ -72,7 +74,7 @@
 
 - (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
-    //[ISSVKSession.activeSession closeAndClearTokenInformation];
+    [VKSdk forceLogout];
     _loggedIn = NO;
     completion([SObject successful]);
     return [SObject successful];
@@ -81,42 +83,20 @@
 
 - (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
-    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation)
-    {
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         NSArray *permissions = self.permissions;
         if (!permissions) {
-            permissions = @[@"wall", @"messages", @"photos", @"friends", @"video", @"audio"];
+            self.permissions = @[@"wall", @"messages", @"photos", @"friends", @"video", @"audio"];
         }
-
         self.autorizationOperation = operation;
-        [VKSdk authorize:permissions];
-        /*
-        [ISSVKSession openActiveSessionWithPermissions:permissions completionHandler:^(ISSVKSession *session, ISSVKSessionState status, NSError *error)
-        {
-            switch (status) {
-                case ISSVKSessionStateOpen: {
-                    self.userId = session.userId;
-                    self.currentUserData = [self dataForUserId:self.userId];
 
-                    [self updateUserData:@[self.currentUserData] operation:operation completion:^(SObject *result)
-                    {
-                        self.loggedIn = YES;
-                        [self startPull];
-                        [operation complete:[SObject successful]];
-                    }];
-                }
-                    break;
-                case ISSVKSessionStateClosed:
-                case ISSVKSessionStateClosedLoginFailed: {
-                    [operation completeWithError:error];
-                }
-                    break;
-                default:
-                    [operation completeWithError:error];
-                    break;
-            }
-        }];
-        */
+        if ([VKSdk wakeUpSession]) {
+            self.accessToken = [VKSdk getAccessToken];
+            [self completeAuthorization];
+        }
+        else {
+            [VKSdk authorize:permissions];
+        }
     }];
 }
 
@@ -142,11 +122,11 @@
 - (void)handleDidBecomeActive
 {
     [self iss_performBlock:^(id sender) {
-        if(![VKSdk isLoggedIn]) {
+        if (![VKSdk isLoggedIn]) {
             [self.autorizationOperation completeWithFailure];
             self.autorizationOperation = nil;
         }
-    } afterDelay:1];
+    }           afterDelay:1];
 }
 
 
@@ -170,40 +150,52 @@
            processor:(void (^)(id))processor
 {
 
-    VKRequest * request = [VKRequest requestWithMethod:method andParameters:parameters andHttpMethod:@"GET"];
+    VKRequest *request = [VKRequest requestWithMethod:method andParameters:parameters andHttpMethod:@"GET"];
 
+    [self executeRequest:request operation:operation processor:processor retries:0];
+}
+
+- (void)executeRequest:(VKRequest *)request operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor retries:(NSInteger)retries
+{
     [request executeWithResultBlock:^(VKResponse *response) {
         [operation removeSubOperation:request.executionOperation];
 
         processor(response.json);
 
-    } errorBlock:^(NSError *error) {
+    }                    errorBlock:^(NSError *error) {
         [operation removeSubOperation:request.executionOperation];
 
-        NSLog(@"Vkontakte error on method: %@ params: %@ error: %@", method, parameters, error);
+        VKError *vkError = [error vkError];
+        if (vkError) {
+            if (vkError.errorCode == 5) {
+                if (retries == 0) {
+                    [self executeRequest:request operation:operation processor:processor retries:1];
+                    return;
+                }
+                else if (retries < kMaxRetries) {
+                    [self reauthorizeWithOperation:operation completion:^(SObject *result) {
+
+                        if (result.isSuccessful) {
+                            [self executeRequest:request operation:operation processor:processor retries:retries + 1];
+                        }
+                        else {
+                            [operation completeWithError:error];
+                        }
+                    }];
+                    return;
+                }
+            }
+        }
         [operation completeWithError:error];
     }];
     [operation addSubOperation:request.executionOperation];
+}
 
-   /*
-    VKRequestOperation *op =
-            [[ISSVKRequest requestMethod:method parameters:parameters] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error)
-            {
-
-                [operation removeSubOperation:connection];
-
-                if (error) {
-
-                    NSLog(@"Vkontakte error on method: %@ params: %@ error: %@", method, parameters, error);
-                    [operation completeWithError:[self processVKError:error]];
-
-                }
-                else {
-                    processor(response);
-                }
-            }];
-    [operation addSubOperation:op];
-    */
+- (void)reauthorizeWithOperation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
+{
+    SObject *op = [self operationWithObject:operation.object completion:completion];
+    self.autorizationOperation = op.operation;
+    [VKSdk authorize:self.permissions];
 }
 
 - (NSError *)processVKError:(NSError *)error
@@ -243,20 +235,27 @@
 - (void)vkSdkReceivedNewToken:(VKAccessToken *)newToken
 {
     self.accessToken = newToken;
-    if(!self.currentUserData) {
-        self.currentUserData = [self dataForUserId:newToken.userId];
+
+    [self completeAuthorization];
+
+}
+
+- (void)completeAuthorization
+{
+    if (!self.currentUserData) {
+        self.currentUserData = [self dataForUserId:self.accessToken.userId];
     }
 
-    [self updateUserData:@[self.currentUserData] operation:self.autorizationOperation completion:^(SObject *result)
-    {
-        if(result.isSuccessful && result.subObjects.count == 1) {
+    [self updateUserData:@[self.currentUserData] operation:self.autorizationOperation completion:^(SObject *result) {
+        if (result.isSuccessful && result.subObjects.count == 1) {
             self.currentUserData = result.subObjects[0];
         }
 
         self.loggedIn = YES;
-        if([self respondsToSelector:@selector(startPull)]) {
+        if ([self respondsToSelector:@selector(startPull)]) {
             [self startPull];
         }
+
         [self.autorizationOperation complete:[SObject successful]];
         self.autorizationOperation = nil;
     }];

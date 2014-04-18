@@ -27,14 +27,22 @@ typedef NS_ENUM(NSInteger, ISSUserGender) {
 
 @protocol SUserData <SMediaObject>
 @optional
-@property(copy, nonatomic) NSString *userFirstName;
-@property(copy, nonatomic) NSString *userLastName;
+@property(copy, nonatomic) NSString *firstName;
+@property(copy, nonatomic) NSString *lastName;
 @property(copy, nonatomic) NSString *userName;
 @property(copy, nonatomic) NSString *userEmail;
 @property(copy, nonatomic) NSNumber *userGender;
 @property(copy, nonatomic) MultiImage *userPicture;
+@property(copy, nonatomic) NSString *cityName;
+@property(copy, nonatomic) NSString *countryName;
+@property(copy, nonatomic) NSString *countryCode;
+
 @property(nonatomic, strong) NSNumber *isOnline;
 @property(nonatomic, strong) NSDate *birthday;
+
+
+@property(nonatomic, strong) NSNumber *vkontakteCityId;
+@property(nonatomic, strong) NSNumber *vkontakteCountryId;
 
 @end
 
