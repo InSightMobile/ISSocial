@@ -7,6 +7,7 @@
 #import "OdnoklassnikiConnector+Users.h"
 #import "SUserData.h"
 #import "MultiImage.h"
+#import "NSDate+ISSOdnoklassniki.h"
 
 
 @implementation OdnoklassnikiConnector (Users)
@@ -26,6 +27,32 @@
     SUserData *user = [self dataForUserId:objectId];
 
     user.userName = responce[@"name"];
+    user.firstName = responce[@"first_name"];
+    user.lastName = responce[@"last_name"];
+    user.birthday = [NSDate dateWithOdnoklassnikiBirthdayString:responce[@"birthday"]];
+
+    if([responce[@"gender"] isKindOfClass:[NSString class]]) {
+        NSString *facebookGender = responce[@"gender"];
+
+        if([facebookGender isEqualToString:@"male"]) {
+            user.userGender = @(ISSMaleUserGender);
+        }
+        else if([facebookGender isEqualToString:@"female"]) {
+            user.userGender = @(ISSFemaleUserGender);
+        }
+        else {
+            user.userGender = @(ISSUnknownUserGender);
+        }
+    }
+
+    if([responce[@"location"] isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *location = responce[@"location"];
+
+        user.countryCode = location[@"countryCode"];
+        user.cityName = location[@"city"];
+
+    }
+    user.userGender = responce[@"gender"];
 
     MultiImage *image = [MultiImage new];
 
@@ -47,6 +74,9 @@
             SObject *user = [self dataForUserId:response];
 
             [self updateUserData:@[user] operation:operation completion:^(SObject *result) {
+                if(result.isSuccessful) {
+                    self.currentUserData = result.subObjects[0];
+                }
                 [operation complete:user];
             }];
         }];
@@ -64,7 +94,7 @@
 
     NSDictionary *parameters = @{
             @"uids" : [userIds.allObjects componentsJoinedByString:@","],
-            @"fields" : @"uid,name,online,pic_1,pic_2,pic_3,pic_4"
+            @"fields" : @"uid,name,online,pic_1,pic_2,pic_3,pic_4,first_name,last_name,birthday,gender,age,location"
     };
 
     SObject *result = [SObject objectCollectionWithHandler:self];

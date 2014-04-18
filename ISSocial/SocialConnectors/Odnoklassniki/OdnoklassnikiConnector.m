@@ -12,6 +12,7 @@
 #import "ODKRequest.h"
 #import "SUserData.h"
 #import "ISSocial.h"
+#import "ISSAuthorisationInfo.h"
 
 @interface OdnoklassnikiConnector ()
 @property(nonatomic) BOOL loggedIn;
@@ -69,12 +70,22 @@
 
 - (NSString *)connectorCode
 {
-    return ISSocialConnectorIdOdnoklasniki;
+    return ISSocialConnectorIdOdnoklassniki;
 }
 
 - (BOOL)isLoggedIn
 {
     return [[ODKSession activeSession] isLoggedIn];
+}
+
+
+- (ISSAuthorisationInfo *)authorizatioInfo
+{
+    ISSAuthorisationInfo *token = [ISSAuthorisationInfo new];
+    token.handler = self;
+    token.accessToken = [ODKSession activeSession].accessToken;
+    token.userId = self.currentUserData.objectId;
+    return token;
 }
 
 - (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion

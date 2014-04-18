@@ -5,8 +5,6 @@
 #import "AccessSocialConnector.h"
 #import "CompositeConnector.h"
 
-
-
 @class ISSocialLoginManager;
 @class CompositeConnector;
 
@@ -16,7 +14,7 @@ static NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendIn
 static NSString *const ISSocialConnectorIdFacebook = @"Facebook";
 static NSString *const ISSocialConnectorIdVkontakte = @"Vkontakte";
 static NSString *const ISSocialConnectorIdTwitter = @"Twitter";
-static NSString *const ISSocialConnectorIdOdnoklasniki = @"Odnoklassniki";
+static NSString *const ISSocialConnectorIdOdnoklassniki = @"Odnoklassniki";
 
 @interface ISSocial : NSObject
 - (void)loadConnectors;

@@ -151,4 +151,9 @@
     }
 }
 
+- (NSString *) accessToken
+{
+    return self.session.accessToken;
+}
+
 @end
