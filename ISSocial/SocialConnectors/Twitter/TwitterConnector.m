@@ -29,6 +29,7 @@
 @property(nonatomic, copy) AuthSuccessCallback successCallback;
 @property(nonatomic, copy) FailureCallback failureCallback;
 
+@property(nonatomic, strong) id tokenSecret;
 @end
 
 @implementation TwitterConnector
@@ -93,6 +94,7 @@
     ISSAuthorisationInfo *token = [ISSAuthorisationInfo new];
     token.handler = self;
     token.accessToken = self.token;
+    token.accessTokenSecret = self.tokenSecret;
     token.userId = self.currentUserData.objectId;
 
     return token;
@@ -104,7 +106,8 @@
 
         [self reverseAuthWithSuccess:^(NSDictionary *data) {
 
-            self.token = data[@"oauth_token"];
+            self.token = data[@"oauth_token"]; 
+            self.tokenSecret = data[@"oauth_token_secret"];
 
             [self updateUserDataWithOperation:operation];
 
