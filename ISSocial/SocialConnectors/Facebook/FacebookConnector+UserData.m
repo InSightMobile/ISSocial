@@ -27,7 +27,9 @@ static NSMutableDictionary *_usersById;
             myself = YES;
         }
 
-        [self simpleMethod:userId operation:operation processor:^(id response) {
+        NSString *fields = @"picture,first_name,last_name,birthday,email,gender,location";
+
+        [self simpleMethod:userId params:@{@"fields":fields} operation:operation processor:^(id response) {
 
             NSLog(@"response = %@", response);
 
@@ -183,6 +185,23 @@ static NSMutableDictionary *_usersById;
         else {
             data.userGender = @(ISSUnknownUserGender);
         }
+    }
+
+    if([userData[@"picture"] isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *pictureData = userData[@"picture"][@"data"];
+
+        BOOL isDefault = [pictureData[@"is_silhouette"] boolValue];
+        NSString *url = pictureData[@"url"];
+
+        MultiImage *image = [MultiImage new];
+
+        [image addImageURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/picture", FBGraphBasePath, objectId]] quality:1];
+        [image setImageWightHeightURLFormat:[NSString stringWithFormat:@"%@/%@/picture?width=%%d&height=%%d", FBGraphBasePath, objectId]];
+        data.userPicture = image;
+
+        image.defaultImage = isDefault;
+
+        data.userPicture = image;
     }
 
     return data;

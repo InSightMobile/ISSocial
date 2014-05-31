@@ -7,6 +7,8 @@
 @interface MultiImage : NSObject
 
 @property(nonatomic, readonly) CGFloat aspect;
+@property(nonatomic) BOOL defaultImage;
+
 
 - (BOOL)isAspectKnown;
 
@@ -33,4 +35,5 @@
 - (void)addImage:(UIImage *)image;
 
 - (void)setImageWightHeightURLFormat:(NSString *)format;
+
 @end
