@@ -13,6 +13,7 @@ static NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendIn
 
 static NSString *const ISSocialConnectorIdFacebook = @"Facebook";
 static NSString *const ISSocialConnectorIdVkontakte = @"Vkontakte";
+static NSString *const ISSocialConnectorIdGooglePlus = @"GooglePlus";
 static NSString *const ISSocialConnectorIdTwitter = @"Twitter";
 static NSString *const ISSocialConnectorIdOdnoklassniki = @"Odnoklassniki";
 

@@ -9,6 +9,7 @@
 #import "AccessSocialConnector.h"
 
 @protocol GTLQueryProtocol;
+@class GPSession;
 
 
 @interface GooglePlusConnector : AccessSocialConnector

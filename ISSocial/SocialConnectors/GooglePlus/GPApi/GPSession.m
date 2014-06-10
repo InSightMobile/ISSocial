@@ -12,6 +12,8 @@
 @property(nonatomic, strong) GPPSignIn *signIn;
 @property(nonatomic, copy) GPSessionStateHandler handler;
 @property(nonatomic, strong) GTMOAuth2Authentication *auth;
+@property(nonatomic, readwrite) NSString *accessToken;
+@property(nonatomic, readwrite) NSString *userID;
 @end
 
 @implementation GPSession
@@ -49,6 +51,9 @@
     self.auth = auth;
     if (_handler)self.handler(self, GPSessionStateOpen, error);
     self.handler = nil;
+    
+    self.accessToken = auth.accessToken;
+    self.userID =  auth.userID;
 
 
     // 1. Create a |GTLServicePlus| instance to send a request to Google+.
@@ -65,10 +70,6 @@
 sourceApplication:(NSString *)sourceApplication
        annotation:(id)annotation
 {
-    /*return [GPPURLHandler handleURL:url
-                  sourceApplication:sourceApplication
-                         annotation:annotation];     */
-
     return [_signIn handleURL:url sourceApplication:sourceApplication annotation:annotation];
 }
 

@@ -28,6 +28,10 @@ typedef void (^GPSessionStateHandler)(GPSession *session,
 
 @property(nonatomic, strong) GTLServicePlus *plusService;
 
+@property(nonatomic, readonly) NSString *accessToken;
+
+@property(nonatomic, readonly) NSString *userID;
+
 + (GPSession *)activeSession;
 
 - (BOOL)handleURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation;

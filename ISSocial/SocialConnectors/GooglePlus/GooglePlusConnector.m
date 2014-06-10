@@ -1,9 +1,4 @@
 //
-//  GooglePlusConnector.m
-//  socials
-//
-//  Created by yar on 12.01.13.
-//  Copyright (c) 2013 Ярослав. All rights reserved.
 //
 
 #import "GooglePlusConnector.h"
@@ -13,11 +8,14 @@
 #import "SUserData.h"
 #import "MultiImage.h"
 #import "NSString+TypeSafety.h"
+#import "ISSocial.h"
+#import "ISSAuthorisationInfo.h"
 
 @interface GooglePlusConnector ()
 @property(nonatomic, strong) GPPSignIn *signIn;
 @property(nonatomic, copy) SObjectCompletionBlock openSession;
 @property(nonatomic) BOOL loggedIn;
+@property(nonatomic, strong) GPSession *session;
 @end
 
 @implementation GooglePlusConnector
@@ -32,15 +30,11 @@
     return _instance;
 }
 
-- (NSString *)connectorCode
++ (NSString *)connectorCode
 {
-    return @"Gp";
+    return ISSocialConnectorIdGooglePlus;
 }
 
-- (NSString *)connectorName
-{
-    return @"GooglePlus";
-}
 
 - (NSInteger)connectorPriority
 {
@@ -61,6 +55,7 @@
             case GPSessionStateOpen: {
                 [SObject successful:completion];
                 self.loggedIn = YES;
+                self.session = session;
             }
                 break;
             case GPSessionStateClosed:
@@ -74,6 +69,15 @@
         }
     }];
     return [SObject objectWithState:SObjectStateProcessing];
+}
+
+- (ISSAuthorisationInfo *)authorizatioInfo
+{
+    ISSAuthorisationInfo *token = [ISSAuthorisationInfo new];
+    token.handler = self;
+    token.accessToken = self.session.accessToken;
+    token.userId = self.session.userID;
+    return token;
 }
 
 - (BOOL)isLoggedIn
