@@ -31,5 +31,29 @@
     return _handler;
 }
 
+- (id)initWithCoder:(NSCoder *)coder
+{
+    self = [super init];
+    if (self) {
+        self.accessToken = [coder decodeObjectForKey:@"self.accessToken"];
+        self.accessTokenSecret = [coder decodeObjectForKey:@"self.accessTokenSecret"];
+        self.userId = [coder decodeObjectForKey:@"self.userId"];
+        self.provider = [coder decodeObjectForKey:@"self.provider"];
+
+        NSString *handlerName = [coder decodeObjectForKey:@"self.handler"];
+        _handler = handlerName.length ? [[ISSocial defaultInstance] connectorNamed:handlerName] : nil;
+    }
+
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+    [coder encodeObject:self.accessToken forKey:@"self.accessToken"];
+    [coder encodeObject:self.accessTokenSecret forKey:@"self.accessTokenSecret"];
+    [coder encodeObject:self.userId forKey:@"self.userId"];
+    [coder encodeObject:self.provider forKey:@"self.provider"];
+    [coder encodeObject:_handler.connectorName forKey:@"self.handler"];
+}
 
 @end
