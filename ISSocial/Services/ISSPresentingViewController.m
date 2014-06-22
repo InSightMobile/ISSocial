@@ -4,7 +4,6 @@
 
 
 #import "ISSPresentingViewController.h"
-#import "WebLoginManager.h"
 
 @interface ISSPresentingViewController ()
 
@@ -75,5 +74,11 @@
     controller.view.frame = self.view.bounds;
     [self.view addSubview:controller.view];
     [controller didMoveToParentViewController:self];
+}
+
+- (void)dismissController:(UIViewController *)controller
+{
+    [controller.view removeFromSuperview];
+    [controller removeFromParentViewController];
 }
 @end

@@ -25,6 +25,7 @@ static const int kMaxRetries = 3;
 @property(nonatomic, strong) SocialConnectorOperation *autorizationOperation;
 @property(nonatomic, strong) id clientId;
 @property(nonatomic, strong) VKAccessToken *accessToken;
+@property(nonatomic, strong) UIViewController *presentedController;
 @end
 
 @implementation VkontakteConnector
@@ -223,21 +224,45 @@ static const int kMaxRetries = 3;
 
 - (void)vkSdkUserDeniedAccess:(VKError *)authorizationError
 {
-    [self.autorizationOperation completeWithError:[NSError errorWithVkError:authorizationError]];
+    if (self.presentedController) {
+        [[ISSPresentingViewController presentingController] dismissController:self.presentedController];
+        self.presentedController = nil;
+    }
+
+    NSError *vkError = [NSError errorWithVkError:authorizationError];
+    NSError *socialError;
+
+    if (authorizationError.errorCode == VK_API_CANCELED) {
+        socialError = [ISSocial errorWithCode:ISSocialErrorUserCanceled
+                                  sourseError:vkError
+                                     userInfo:nil];
+    }
+    else {
+        socialError = [ISSocial errorWithCode:ISSocialErrorAuthorizationFailed
+                                  sourseError:vkError
+                                     userInfo:nil];
+    }
+
+    [self.autorizationOperation completeWithError:socialError];
     self.autorizationOperation = nil;
+
 }
 
 - (void)vkSdkShouldPresentViewController:(UIViewController *)controller
 {
+    self.presentedController = controller;
     [[ISSPresentingViewController presentingController] presentController:controller];
 }
 
 - (void)vkSdkReceivedNewToken:(VKAccessToken *)newToken
 {
+    if (self.presentedController) {
+        [[ISSPresentingViewController presentingController] dismissController:self.presentedController];
+        self.presentedController = nil;
+    }
+
     self.accessToken = newToken;
-
     [self completeAuthorization];
-
 }
 
 - (void)completeAuthorization

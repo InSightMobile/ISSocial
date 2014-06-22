@@ -16,6 +16,10 @@
         info[NSUnderlyingErrorKey] = sourecError;
     }
 
+    if (userInfo) {
+        [info setValuesForKeysWithDictionary:userInfo];
+    }
+
     return [NSError errorWithDomain:ISSocailErrorDomain code:code userInfo:info];
 }
 

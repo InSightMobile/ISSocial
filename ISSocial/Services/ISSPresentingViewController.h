@@ -10,4 +10,6 @@
 + (ISSPresentingViewController *)presentingController;
 
 - (void)presentController:(UIViewController *)controller;
+
+- (void)dismissController:(UIViewController *)controller;
 @end
