@@ -96,7 +96,7 @@ static const int kMaxRetries = 3;
             [self completeAuthorization];
         }
         else {
-            [VKSdk authorize:permissions];
+            [VKSdk authorize:self.permissions revokeAccess:NO forceOAuth:NO inApp:NO display:VK_DISPLAY_IOS];
         }
     }];
 }
@@ -135,7 +135,6 @@ static const int kMaxRetries = 3;
 {
     [super setupSettings:settings];
     if (settings[@"AppID"]) {
-        //[ISSVKSession activeSession].clientId = settings[@"AppID"];
         self.clientId = settings[@"AppID"];
         [VKSdk initializeWithDelegate:self andAppId:self.clientId];
     }
@@ -196,7 +195,7 @@ static const int kMaxRetries = 3;
 {
     SObject *op = [self operationWithObject:operation.object completion:completion];
     self.autorizationOperation = op.operation;
-    [VKSdk authorize:self.permissions];
+    [VKSdk authorize:self.permissions revokeAccess:NO forceOAuth:NO inApp:NO display:VK_DISPLAY_IOS];
 }
 
 - (NSError *)processVKError:(NSError *)error
