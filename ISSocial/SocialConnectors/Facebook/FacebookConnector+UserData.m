@@ -29,7 +29,7 @@ static NSMutableDictionary *_usersById;
 
         NSString *fields = @"picture,first_name,last_name,birthday,email,gender,location";
 
-        [self simpleMethod:userId params:@{@"fields":fields} operation:operation processor:^(id response) {
+        [self simpleMethod:userId params:@{@"fields" : fields} operation:operation processor:^(id response) {
 
             NSLog(@"response = %@", response);
 
@@ -103,7 +103,7 @@ static NSMutableDictionary *_usersById;
         data.userPicture = image;
     }
 
-    if(name) {
+    if (name) {
         data.userName = name;
     }
     return data;
@@ -161,25 +161,25 @@ static NSMutableDictionary *_usersById;
         data.isOnline = @(![userData[@"online_presence"] isEqualToString:@"offline"]);
     }
 
-    if([userData[@"birthday_date"] isKindOfClass:[NSString class]]) {
+    if ([userData[@"birthday_date"] isKindOfClass:[NSString class]]) {
         data.birthday = [NSDate dateWithFacebookBirthdayString:userData[@"birthday_date"]];
     }
 
-    if([userData[@"birthday"] isKindOfClass:[NSString class]]) {
+    if ([userData[@"birthday"] isKindOfClass:[NSString class]]) {
         data.birthday = [NSDate dateWithFacebookBirthdayString:userData[@"birthday"]];
     }
 
-    if([userData[@"email"] isKindOfClass:[NSString class]]) {
+    if ([userData[@"email"] isKindOfClass:[NSString class]]) {
         data.userEmail = userData[@"email"];
     }
 
-    if([userData[@"gender"] isKindOfClass:[NSString class]]) {
+    if ([userData[@"gender"] isKindOfClass:[NSString class]]) {
         NSString *facebookGender = userData[@"gender"];
 
-        if([facebookGender isEqualToString:@"male"]) {
+        if ([facebookGender isEqualToString:@"male"]) {
             data.userGender = @(ISSMaleUserGender);
         }
-        else if([facebookGender isEqualToString:@"female"]) {
+        else if ([facebookGender isEqualToString:@"female"]) {
             data.userGender = @(ISSFemaleUserGender);
         }
         else {
@@ -187,7 +187,24 @@ static NSMutableDictionary *_usersById;
         }
     }
 
-    if([userData[@"picture"] isKindOfClass:[NSDictionary class]]) {
+    NSString *locationID = nil;
+
+    if ([userData[@"location"] isKindOfClass:[NSDictionary class]]) {
+        NSString *locationName = userData[@"location"][@"name"];
+
+        data.userLocation = locationName;
+        locationID = userData[@"location"][@"id"];
+
+        if (locationName.length > 0) {
+
+            NSArray *parts = [locationName componentsSeparatedByString:@", "];
+            data.cityName = parts[0];
+            data.countryName = parts[1];
+        }
+
+    }
+
+    if ([userData[@"picture"] isKindOfClass:[NSDictionary class]]) {
         NSDictionary *pictureData = userData[@"picture"][@"data"];
 
         BOOL isDefault = [pictureData[@"is_silhouette"] boolValue];

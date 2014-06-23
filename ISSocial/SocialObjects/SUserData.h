@@ -34,6 +34,7 @@ typedef NS_ENUM(NSInteger, ISSUserGender) {
 @property(copy, nonatomic) NSNumber *userGender;
 @property(copy, nonatomic) MultiImage *userPicture;
 @property(copy, nonatomic) NSString *cityName;
+@property(copy, nonatomic) NSString *userLocation;
 @property(copy, nonatomic) NSString *countryName;
 @property(copy, nonatomic) NSString *countryCode;
 
