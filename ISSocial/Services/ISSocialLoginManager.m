@@ -57,10 +57,10 @@ typedef void (^BlockCompletionBlock)();
 
 - (void)loginWithCompletion:(void (^)())completion
 {
-    [self loginWithParams:nil completion:completion];
+    [self loginWithParams:nil connector:nil completion:completion];
 }
 
-- (void)loginWithParams:(SObject *)options completion:(void (^)())completion
+- (void)loginWithParams:(SObject *)options connector:(SocialConnector *)connector completion:(void (^)())completion
 {
     __weak ISSocialLoginManager *wself = self;
     
@@ -86,7 +86,7 @@ typedef void (^BlockCompletionBlock)();
         [self.resultConnector setConnectors:globalConnector.sortedAvailableConnectors asActive:NO];
         [self.resultConnector deactivateAllConnectors];
 
-        NSArray *connectors = globalConnector.sortedActiveConnectors;
+        NSArray *connectors = connector ? @[connector] : globalConnector.sortedActiveConnectors;
         if (!connectors.count) {
             completion();
             return;

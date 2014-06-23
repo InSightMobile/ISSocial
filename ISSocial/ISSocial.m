@@ -61,8 +61,7 @@
 {
     static ISSocial *_instance = nil;
     static dispatch_once_t pred;
-    dispatch_once(&pred, ^
-    {
+    dispatch_once(&pred, ^{
         _instance = [[self alloc] init];
     });
     return _instance;
@@ -72,8 +71,7 @@
 - (void)tryLoginWithCompletion:(void (^)())completion
 {
     [self loadConnectors];
-    [self.loginManager loginWithCompletion:^
-    {
+    [self.loginManager loginWithCompletion:^{
         completion();
     }];
 }
@@ -83,8 +81,7 @@
     [self loadConnectors];
     SObject *params = [SObject new];
     params[kAllowUserUIKey] = @(userUI);
-    [self.loginManager loginWithParams:params completion:^
-    {
+    [self.loginManager loginWithParams:params connector:nil completion:^{
         completion();
     }];
 }
@@ -92,16 +89,14 @@
 - (void)logoutWithCompletion:(void (^)())completion
 {
 
-    [self.loginManager logoutAllWithCompletion:^
-    {
+    [self.loginManager logoutAllWithCompletion:^ {
         completion();
     }];
 }
 
 - (void)logoutConnector:(SocialConnector *)connector completion:(void (^)())completion
 {
-    [self.loginManager logoutConnector:connector withCompletion:^
-    {
+    [self.loginManager logoutConnector:connector withCompletion:^ {
         completion();
     }];
 }
@@ -109,23 +104,23 @@
 - (void)loginWithConnectorName:(NSString *)connectorName completion:(void (^)(SocialConnector *connector, NSError *error))completion
 {
     SocialConnector *connector = [self connectorNamed:connectorName];
+
     [self.rootConnectors addConnector:connector asActive:YES];
 
-    if(connector.isLoggedIn) {
-        completion(connector,nil);
+    if (connector.isLoggedIn) {
+        completion(connector, nil);
         return;
     }
 
-    __block NSError* connectionError = nil;
-    
+    __block NSError *connectionError = nil;
+
     [self.loginManager setLoginHandler:^(SocialConnector *connector, NSError *error) {
-        if([connector.connectorCode isEqualToString:connectorName]) {
+        if ([connector.connectorCode isEqualToString:connectorName]) {
             connectionError = error;
         }
     }];
 
-    [self.loginManager loginWithCompletion:^
-    {
+    [self.loginManager loginWithParams:nil connector:connector completion:^() {
         self.loginManager.loginHandler = nil;
         completion(connector, connectionError);
     }];
@@ -173,7 +168,7 @@
 }
 
 
-- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString*)sourceApplication
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication
 {
     for (AccessSocialConnector *connector in self.rootConnectors.availableConnectors) {
         if ([connector handleOpenURL:url fromApplication:sourceApplication]) {
@@ -198,10 +193,10 @@
 - (void)configureWithOptions:(NSDictionary *)dictionary
 {
     [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop)
-    {
-        AccessSocialConnector *connector = (AccessSocialConnector *) [self connectorNamed:key];
-        [connector setupSettings:obj];
-    }];
+            {
+                AccessSocialConnector *connector = (AccessSocialConnector *) [self connectorNamed:key];
+                [connector setupSettings:obj];
+            }];
 }
 
 - (void)handleDidBecomeActive

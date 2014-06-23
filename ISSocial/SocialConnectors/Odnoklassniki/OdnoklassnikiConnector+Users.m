@@ -8,6 +8,7 @@
 #import "SUserData.h"
 #import "MultiImage.h"
 #import "NSDate+ISSOdnoklassniki.h"
+#import "NSString+TypeSafety.h"
 
 
 @implementation OdnoklassnikiConnector (Users)
@@ -16,9 +17,9 @@
     return (SUserData *) [self mediaObjectForId:userId type:@"user"];
 }
 
-- (SObject *)parseUser:(id)responce
+- (SObject *)parseUser:(id)response
 {
-    NSString *objectId = [responce[@"uid"] stringValue];
+    NSString *objectId = [response[@"uid"] stringValue];
 
     if (!objectId) {
         return nil;
@@ -26,18 +27,18 @@
 
     SUserData *user = [self dataForUserId:objectId];
 
-    user.userName = responce[@"name"];
-    user.firstName = responce[@"first_name"];
-    user.lastName = responce[@"last_name"];
-    user.birthday = [NSDate dateWithOdnoklassnikiBirthdayString:responce[@"birthday"]];
+    user.userName = response[@"name"];
+    user.firstName = response[@"first_name"];
+    user.lastName = response[@"last_name"];
+    user.birthday = [NSDate dateWithOdnoklassnikiBirthdayString:response[@"birthday"]];
 
-    if([responce[@"gender"] isKindOfClass:[NSString class]]) {
-        NSString *facebookGender = responce[@"gender"];
+    if([response[@"gender"] isKindOfClass:[NSString class]]) {
+        NSString *genderString = response[@"gender"];
 
-        if([facebookGender isEqualToString:@"male"]) {
+        if([genderString isEqualToString:@"male"]) {
             user.userGender = @(ISSMaleUserGender);
         }
-        else if([facebookGender isEqualToString:@"female"]) {
+        else if([genderString isEqualToString:@"female"]) {
             user.userGender = @(ISSFemaleUserGender);
         }
         else {
@@ -45,21 +46,24 @@
         }
     }
 
-    if([responce[@"location"] isKindOfClass:[NSDictionary class]]) {
-        NSDictionary *location = responce[@"location"];
+    if([response[@"location"] isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *location = response[@"location"];
 
         user.countryCode = location[@"countryCode"];
         user.cityName = location[@"city"];
 
     }
-    user.userGender = responce[@"gender"];
 
     MultiImage *image = [MultiImage new];
 
-    [image addImageURL:responce[@"pic_1"] quality:0.25];
-    [image addImageURL:responce[@"pic_2"] quality:0.5];
-    [image addImageURL:responce[@"pic_3"] quality:0.75];
-    [image addImageURL:responce[@"pic_4"] quality:1];
+    [image addImageURL:[response[@"pic_1"] URLValue] quality:0.25];
+    [image addImageURL:[response[@"pic_2"] URLValue] quality:0.5];
+    [image addImageURL:[response[@"pic_3"] URLValue] quality:0.75];
+    [image addImageURL:[response[@"pic_4"] URLValue] quality:1];
+
+    if(!response[@"photo_id"]) {
+        image.defaultImage = YES;
+    }
 
     user.userPicture = image;
     return user;
@@ -94,7 +98,7 @@
 
     NSDictionary *parameters = @{
             @"uids" : [userIds.allObjects componentsJoinedByString:@","],
-            @"fields" : @"uid,name,online,pic_1,pic_2,pic_3,pic_4,first_name,last_name,birthday,gender,age,location"
+            @"fields" : @"uid,name,online,pic_1,pic_2,pic_3,pic_4,photo_id,first_name,last_name,birthday,gender,age,location"
     };
 
     SObject *result = [SObject objectCollectionWithHandler:self];

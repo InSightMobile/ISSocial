@@ -31,6 +31,8 @@
 {
     if (!url)return;
 
+    NSAssert([url isKindOfClass:[NSURL class]], @"Invalid url");
+
     if (!_images)_images = [NSMutableArray arrayWithCapacity:1];
 
     ImageCollectionData *data = [ImageCollectionData new];
@@ -49,6 +51,8 @@
 
 - (id)initWithURL:(NSURL *)url
 {
+    NSAssert([url isKindOfClass:[NSURL class]], @"Invalid url");
+
     self = [super init];
     if (self) {
 
@@ -61,6 +65,9 @@
 - (void)addImageURL:(NSURL *)url quality:(CGFloat)quality
 {
     if (!url)return;
+
+    NSAssert([url isKindOfClass:[NSURL class]], @"Invalid url");
+
     if (!_images) {
         _images = [NSMutableArray arrayWithCapacity:1];
     }

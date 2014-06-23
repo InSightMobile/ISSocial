@@ -29,5 +29,5 @@
 
 - (void)logoutConnector:(SocialConnector *)connector withCompletion:(void (^)())completion;
 
-- (void)loginWithParams:(SObject *)params completion:(void (^)())completion;
+- (void)loginWithParams:(SObject *)params connector:(SocialConnector *)connector completion:(void (^)())completion;
 @end

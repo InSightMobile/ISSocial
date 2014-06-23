@@ -94,8 +94,6 @@ sourceApplication:(NSString *)sourceApplication
     signIn.shouldFetchGoogleUserID = YES;
     signIn.scopes = scopes;
     signIn.delegate = self;
-    //signIn.attemptSSO = NO;
-
     self.handler = handler;
     self.signIn = signIn;
 
