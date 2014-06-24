@@ -126,7 +126,13 @@
 
 - (void)simpleMethod:(NSString *)method parameters:(NSDictionary *)parameters operation:(SocialConnectorOperation *)operation processor:(void (^)(id response))processor
 {
-    ODKRequest *requst = [ODKRequest requestMethod:method parameters:parameters];
+    NSMutableDictionary *preparedParameters = [NSMutableDictionary dictionaryWithCapacity:parameters.count];
+    [parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        preparedParameters[key] = [obj stringValue];
+    }];
+
+
+    ODKRequest *requst = [ODKRequest requestMethod:method parameters:preparedParameters];
     [requst startWithCompletionHandler:^(ODKRequest *connection, id response, NSError *error) {
 
         [operation removeConnection:connection];

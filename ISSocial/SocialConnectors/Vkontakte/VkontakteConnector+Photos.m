@@ -21,7 +21,8 @@
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"photos.getAll" parameters:@{@"photo_sizes" : @1, @"extended" : @1} operation:operation processor:^(id response) {
-            [operation complete:[self parsePhotos:response]];
+            NSArray *items = response[@"items"];
+            [operation complete:[self parsePhotos:items]];
         }];
     }];
 }

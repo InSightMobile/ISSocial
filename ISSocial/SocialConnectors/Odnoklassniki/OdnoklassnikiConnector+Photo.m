@@ -11,6 +11,7 @@
 #import "SPhotoAlbumData.h"
 #import "NSDate+Odnoklassniki.h"
 #import "AFHTTPRequestOperation.h"
+#import "NSString+TypeSafety.h"
 
 @implementation OdnoklassnikiConnector (Photo)
 
@@ -30,19 +31,19 @@
         MultiImage *image = [[MultiImage alloc] init];
 
         if (data[@"pic50x50"]) {
-            [image addImageURL:data[@"pic50x50"] forWitdh:50 height:50];
+            [image addImageURL:[data[@"pic50x50"] URLValue] forWitdh:50 height:50];
         }
         if (data[@"pic128x128"]) {
-            [image addImageURL:data[@"pic128x128"] forWitdh:128 height:128];
+            [image addImageURL:[data[@"pic128x128"] URLValue] forWitdh:128 height:128];
         }
         if (data[@"pic190x190"]) {
-            [image addImageURL:data[@"pic190x190"] forWitdh:190 height:190];
+            [image addImageURL:[data[@"pic190x190"] URLValue] forWitdh:190 height:190];
         }
         if (data[@"pic640x480"]) {
-            [image addImageURL:data[@"pic640x480"] forWitdh:640 height:480];
+            [image addImageURL:[data[@"pic640x480"] URLValue] forWitdh:640 height:480];
         }
         if (data[@"pic1024X768"]) {
-            [image addImageURL:data[@"pic1024X768"] forWitdh:1024 height:768];
+            [image addImageURL:[data[@"pic1024X768"] URLValue] forWitdh:1024 height:768];
         }
 
         photo.multiImage = image;

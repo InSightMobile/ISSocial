@@ -10,6 +10,7 @@
 #import "FacebookConnector+UserData.h"
 #import "MultiImage.h"
 #import "SCommentData.h"
+#import "NSArray+AsyncBlocks.h"
 
 @implementation FacebookConnector (Photos)
 
@@ -57,11 +58,13 @@
             int width = [image[@"width"] intValue];
             int height = [image[@"height"] intValue];
             NSURL *url = [image[@"src"] URLValue];
-            if (image[@"source"])
+            if (image[@"source"]) {
                 url = [image[@"source"] URLValue];
+            }
 
-            if (url)
+            if (url) {
                 [images addImageURL:url forWitdh:width height:height];
+            }
         }
     }
     else {
@@ -79,6 +82,11 @@
 
 - (SObject *)readPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
+    return [self readAllPhotos:params completion:completion];
+}
+
+- (SObject *)readUploadedPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion
+{
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"me/photos/uploaded" operation:operation processor:^(id response) {
 
@@ -93,10 +101,35 @@
     }];
 }
 
+- (SObject *)readAllPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion
+{
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+
+        SObject *result = [SObject objectCollectionWithHandler:self];
+
+        [self readPhotoAlbums:operation.object completion:^(SObject *albums) {
+
+            NSArray *albumObjects = albums.subObjects;
+
+            [albumObjects asyncEach:^(SPhotoAlbumData *albumData, ISArrayAsyncEachResultBlock next) {
+
+                [self readPhotosFromAlbum:albumData completion:^(SObject *photos) {
+                    [result addSubObjects:photos.subObjects];
+                    next(nil);
+                }];
+
+            }           comletition:^(NSError *errorOrNil) {
+
+                [operation complete:result];
+            }];
+        }];
+    }];
+}
+
 - (SObject *)readPhotosFromAlbum:(SPhotoAlbumData *)params completion:(SObjectCompletionBlock)completion
 {
     if (!params.objectId) {
-        return [self readPhotos:params completion:completion];
+        return [self readUploadedPhotos:params completion:completion];
     }
 
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
