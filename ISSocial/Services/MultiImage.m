@@ -114,6 +114,12 @@
         return data;
     }
 
+    for (ImageCollectionData *image in _images) {
+        if(image.width >= width && image.height >= height) {
+            return image;
+        }
+    }
+
     CGFloat d = sqrtf(width * width + height * height);
     CGFloat minDiff = CGFLOAT_MAX;
     ImageCollectionData *data = nil;
