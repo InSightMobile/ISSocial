@@ -188,7 +188,7 @@
                  operation:operation processor:^(id response) {
 
             NSLog(@"response = %@", response);
-            SObject *result = [self parseUsersData:response];
+            SObject *result = [self parseUsersData:response[@"items"]];
 
             [self updateOnlineStatus:params users:result.subObjects operation:operation completion:^(SObject *onlineResult) {
                 [operation complete:result];

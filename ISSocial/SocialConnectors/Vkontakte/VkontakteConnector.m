@@ -280,6 +280,8 @@ static const int kMaxRetries = 3;
             [self startPull];
         }
 
+        self.userId = self.accessToken.userId;
+
         [self.autorizationOperation complete:[SObject successful]];
         self.autorizationOperation = nil;
     }];
