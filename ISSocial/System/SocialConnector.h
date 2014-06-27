@@ -244,6 +244,8 @@ FOUNDATION_EXPORT NSString *const kNewMessagesUnreadStatusChanged;
 @property(nonatomic) int pageSize;
 
 
+- (BOOL)meetsSpecifications:(NSArray *)specs;
+
 - (BOOL)meetsSpecification:(NSString *)string;
 
 @end

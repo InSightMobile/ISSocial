@@ -45,7 +45,9 @@ static NSString *const ISSocialConnectorIdOdnoklassniki = @"Odnoklassniki";
 
 - (NSSet *)loggedInConnectors;
 
-- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString*)sourceApplication;
+- (NSArray *)connectorsMeetSpecifications:(NSArray *)specifications;
+
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation;
 
 - (void)configure;
 

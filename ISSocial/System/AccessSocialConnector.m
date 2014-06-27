@@ -15,6 +15,7 @@
 
     NSMutableDictionary *_media;
     NSCache *_cache;
+    NSInteger _priority;
 }
 
 
@@ -80,12 +81,25 @@
     return @"SocNetsBox";
 }
 
-- (void)setupSettings:(NSDictionary *)settings
+- (NSInteger)connectorPriority
 {
-
+    return _priority;
 }
 
-- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString*)sourceApplication
+- (void)setConnectorPriority:(NSInteger)priority
+{
+    _priority = priority;
+}
+
+
+- (void)setupSettings:(NSDictionary *)settings
+{
+    if(settings[@"Priority"]) {
+        [self setConnectorPriority:[settings[@"Priority"] integerValue] ];
+    }
+}
+
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     return NO;
 }

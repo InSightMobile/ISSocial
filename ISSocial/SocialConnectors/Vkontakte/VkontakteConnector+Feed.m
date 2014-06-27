@@ -477,11 +477,16 @@
 
 - (SObject *)sendInvitation:(SInvitation *)params completion:(SObjectCompletionBlock)completion
 {
-    SFeedEntry* feed = [SFeedEntry new];
-    feed.message = params.message;
-    feed.owner = params.user;
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-    return [self postToFeed:feed completion:completion];
+        SFeedEntry* feed = [SFeedEntry new];
+        feed.message = params.message;
+        feed.owner = params.user;
+        feed.operation = operation;
+
+        [self postToFeed:feed completion:completion];
+    }];
+
 }
 
 - (SObject *)postToFeed:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion

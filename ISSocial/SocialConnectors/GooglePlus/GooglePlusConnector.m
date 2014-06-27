@@ -16,7 +16,7 @@
 @property(nonatomic, copy) SObjectCompletionBlock openSession;
 @property(nonatomic) BOOL loggedIn;
 @property(nonatomic, strong) GPSession *session;
-@property(nonatomic, strong) NSString * appID;
+@property(nonatomic, strong) NSString *clientID;
 @property(nonatomic, strong) NSArray * permissions;
 @end
 
@@ -40,22 +40,11 @@
     return ISSocialConnectorIdGooglePlus;
 }
 
-
-- (NSInteger)connectorPriority
-{
-    return 2;
-}
-
-- (NSInteger)connectorDisplayPriority
-{
-    return 2;
-}
-
 - (void)setupSettings:(NSDictionary *)settings
 {
     [super setupSettings:settings];
 
-    self.appID = settings[@"AppID"];
+    self.clientID = settings[@"ClientID"];
     self.permissions = settings[@"Permissions"];
 }
 
@@ -65,7 +54,7 @@
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
 
-        [GPSession openActiveSessionWithAppID:nil permissions:nil completionHandler:^(GPSession *session, GPSessionState status, NSError *error) {
+        [GPSession openActiveSessionWithClientID:self.clientID permissions:self.permissions completionHandler:^(GPSession *session, GPSessionState status, NSError *error) {
 
             switch (status) {
                 case GPSessionStateOpen: {
@@ -167,8 +156,7 @@
                 user.userName = person.displayName;
 
                 NSString *userImage = person.image.url;
-                user.userPicture =
-                        [[MultiImage alloc] initWithURL:userImage.URLValue];
+                user.userPicture = [[MultiImage alloc] initWithURL:userImage.URLValue];
 
                 [result addSubObject:user];
             }
@@ -176,6 +164,18 @@
             [operation complete:result];
         }];
     }];
+}
+
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    return [[GPSession activeSession] handleURL:url sourceApplication:sourceApplication annotation:annotation];
+}
+
+
+- (void)handleDidBecomeActive
+{
+    [super handleDidBecomeActive];
+    [[GPSession activeSession] didActivated];
 }
 
 

@@ -74,11 +74,15 @@
 
 - (SObject *)sendInvitation:(SInvitation *)params completion:(SObjectCompletionBlock)completion
 {
-    SMessageData* message = [SMessageData new];
-    message.message = params.message;
-    message.messageCompanion = params.user;
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-    return [self postMessage:message completion:completion];
+        SMessageData *message = [SMessageData new];
+        message.message = params.message;
+        message.messageCompanion = params.user;
+        message.operation = operation;
+
+        [self postMessage:message completion:completion];
+    }];
 }
 
 - (SObject *)postMessage:(SMessageData *)params completion:(SObjectCompletionBlock)completion

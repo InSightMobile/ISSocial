@@ -53,7 +53,7 @@
     [coder encodeObject:self.accessTokenSecret forKey:@"self.accessTokenSecret"];
     [coder encodeObject:self.userId forKey:@"self.userId"];
     [coder encodeObject:self.provider forKey:@"self.provider"];
-    [coder encodeObject:_handler.connectorName forKey:@"self.handler"];
+    [coder encodeObject:_handler.connectorCode forKey:@"self.handler"];
 }
 
 @end

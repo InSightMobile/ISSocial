@@ -58,16 +58,6 @@
 }
 
 
-- (NSInteger)connectorPriority
-{
-    return 5;
-}
-
-- (NSInteger)connectorDisplayPriority
-{
-    return 5;
-}
-
 
 - (void)simpleMethodWithURL:(NSString *)urlString operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
 {
@@ -380,7 +370,7 @@
     return _loggedIn;
 }
 
-- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     return [[FBSession activeSession] handleOpenURL:url];
 }

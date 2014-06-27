@@ -59,16 +59,6 @@ static const int kMaxRetries = 3;
     [self simpleMethod:method parameters:nil operation:operation processor:processor];
 }
 
-- (NSInteger)connectorPriority
-{
-    return 6;
-}
-
-- (NSInteger)connectorDisplayPriority
-{
-    return 6;
-}
-
 
 #pragma mark Session management
 
@@ -115,7 +105,7 @@ static const int kMaxRetries = 3;
     return token;
 }
 
-- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     return [VKSdk processOpenURL:url fromApplication:sourceApplication];
 }

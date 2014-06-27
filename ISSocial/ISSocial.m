@@ -140,6 +140,19 @@
     [self useConnectorForCode:connector.connectorCode connector:connector];
 }
 
+- (void)useConnectorsNamed:(NSArray *)names
+{
+    for (NSString *name in names) {
+        [self useConnectorNamed:name];
+    }
+}
+
+- (void)useConnectorNamed:(NSString *)name
+{
+   [self useConnector:[self connectorNamed:name]];
+}
+
+
 
 - (AccessSocialConnector *)connectorNamed:(NSString *)connectorName
 {
@@ -150,7 +163,7 @@
     }
 
     if (!_connectorsByCode[connectorName]) {
-        _connectorsByCode[connectorName] = [[connectorClass alloc] init];
+        _connectorsByCode[connectorName] = (id)[[connectorClass alloc] init];
     }
     return _connectorsByCode[connectorName];
 }
@@ -167,11 +180,27 @@
     return set;
 }
 
+- (NSArray *)connectorsMeetSpecifications:(NSArray *)specifications
+{
+    NSMutableArray *selection = [NSMutableArray new];
 
-- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication
+    NSMutableSet *set = [NSMutableSet set];
+    for (AccessSocialConnector *connector in self.connectorsByCode.allValues) {
+
+        if ([connector meetsSpecifications:specifications]) {
+            [selection addObject:connector];
+        }
+    }
+   return [selection sortedArrayUsingDescriptors:@[
+            [NSSortDescriptor sortDescriptorWithKey:@"connectorPriority" ascending:NO],
+            [NSSortDescriptor sortDescriptorWithKey:@"connectorCode" ascending:YES]]];
+}
+
+
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     for (AccessSocialConnector *connector in self.rootConnectors.availableConnectors) {
-        if ([connector handleOpenURL:url fromApplication:sourceApplication]) {
+        if ([connector handleOpenURL:url fromApplication:sourceApplication annotation:annotation]) {
             return YES;
         }
     }
@@ -194,7 +223,7 @@
 {
     [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop)
             {
-                AccessSocialConnector *connector = (AccessSocialConnector *) [self connectorNamed:key];
+                AccessSocialConnector *connector = [self connectorNamed:key];
                 [connector setupSettings:obj];
             }];
 }

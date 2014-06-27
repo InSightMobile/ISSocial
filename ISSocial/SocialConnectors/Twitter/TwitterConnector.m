@@ -62,15 +62,6 @@
 }
 
 
-- (NSInteger)connectorPriority
-{
-    return 5;
-}
-
-- (NSInteger)connectorDisplayPriority
-{
-    return 5;
-}
 
 - (void)setupSettings:(NSDictionary *)settings
 {

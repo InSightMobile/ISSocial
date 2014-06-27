@@ -34,15 +34,6 @@
     return self;
 }
 
-- (NSInteger)connectorPriority
-{
-    return 3;
-}
-
-- (NSInteger)connectorDisplayPriority
-{
-    return 3;
-}
 
 - (void)setupSettings:(NSDictionary *)settings
 {
@@ -149,7 +140,7 @@
 }
 
 
-- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     return [[OKSession activeSession] handleOpenURL:url];
 }

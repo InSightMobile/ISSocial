@@ -73,25 +73,13 @@ sourceApplication:(NSString *)sourceApplication
     return [_signIn handleURL:url sourceApplication:sourceApplication annotation:annotation];
 }
 
-+ (void)openActiveSessionWithAppID:(NSString *)appID permissions:(NSArray *)permissions completionHandler:(GPSessionStateHandler)handler
++ (void)openActiveSessionWithClientID:(NSString *)appID permissions:(NSArray *)permissions completionHandler:(GPSessionStateHandler)handler
 {
-    [[self activeSession] openSessionWithAppID:appID permissions:permissions completionHandler:handler];
+    [[self activeSession] openSessionWithClientID:appID permissions:permissions completionHandler:handler];
 }
 
-- (void)openSessionWithAppID:(NSString *)appID permissions:(NSArray *)permissions completionHandler:(GPSessionStateHandler)handler
+- (void)openSessionWithClientID:(NSString *)clientId permissions:(NSArray *)permissions completionHandler:(GPSessionStateHandler)handler
 {
-    if(appID) {
-        self.appId = appID;
-    }
-    else
-    {
-        NSString *clientAppId = NSBundle.mainBundle.infoDictionary[@"GooglePlusAppID"];
-        self.appId = clientAppId;
-    }
-
-
-    NSString *clientId = [NSString stringWithFormat:@"%@.apps.googleusercontent.com", self.appId];
-
     NSArray *scopes = @[kGTLAuthScopePlusLogin, kGTLAuthScopePlusMe];
 
     GPPSignIn *signIn = [GPPSignIn sharedInstance];
@@ -103,13 +91,11 @@ sourceApplication:(NSString *)sourceApplication
     self.signIn = signIn;
 
     if(![signIn trySilentAuthentication]) {
-
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didActivated:) name:UIApplicationDidBecomeActiveNotification object:nil];
         [signIn authenticate];
     }
 }
 
-- (void)didActivated:(NSNotification *)notification
+- (void)didActivated
 {
     if(self.handler) {
         [self iss_performBlock:^(id sender) {

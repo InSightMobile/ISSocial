@@ -22,6 +22,9 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
 @end
 
 @implementation SocialConnector
+{
+
+}
 
 
 - (id)init
@@ -121,11 +124,11 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
     return 0;
 }
 
+
 - (NSInteger)connectorDisplayPriority
 {
-    return 0;
+    return self.connectorPriority;
 }
-
 
 - (SocialConnectorOperation *)operationWithParent:(SocialConnectorOperation *)operation
 {
@@ -192,6 +195,18 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
     else {
         return NO;
     }
+}
+
+- (BOOL)meetsSpecifications:(NSArray *)specs
+{
+    for (NSString *spec in specs) {
+
+        if(![self meetsSpecification:spec]) {
+            return NO;
+        }
+
+    }
+    return YES;
 }
 
 - (BOOL)meetsSpecification:(NSString *)spec
