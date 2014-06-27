@@ -16,9 +16,14 @@
 @property(nonatomic, copy) SObjectCompletionBlock openSession;
 @property(nonatomic) BOOL loggedIn;
 @property(nonatomic, strong) GPSession *session;
+@property(nonatomic, strong) NSString * appID;
+@property(nonatomic, strong) NSArray * permissions;
 @end
 
 @implementation GooglePlusConnector
+{
+    SUserData *_currentUserData;
+}
 
 + (GooglePlusConnector *)instance
 {
@@ -46,29 +51,44 @@
     return 2;
 }
 
+- (void)setupSettings:(NSDictionary *)settings
+{
+    [super setupSettings:settings];
+
+    self.appID = settings[@"AppID"];
+    self.permissions = settings[@"Permissions"];
+}
+
 
 - (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
-    [GPSession openActiveSessionWithPermissions:nil completionHandler:^(GPSession *session, GPSessionState status, NSError *error) {
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        switch (status) {
-            case GPSessionStateOpen: {
-                [SObject successful:completion];
-                self.loggedIn = YES;
-                self.session = session;
+
+        [GPSession openActiveSessionWithAppID:nil permissions:nil completionHandler:^(GPSession *session, GPSessionState status, NSError *error) {
+
+            switch (status) {
+                case GPSessionStateOpen: {
+                    self.loggedIn = YES;
+                    self.session = session;
+                    [self updateProfile:operation.object completion:^(id result){
+                        [operation complete:[SObject successful]];
+                    }];
+                }
+                    break;
+                case GPSessionStateClosed:
+                case GPSessionStateClosedLoginFailed: {
+                    [SObject failed:completion];
+                    [operation completeWithError:error];
+                }
+                    break;
+                default:
+                    [operation completeWithFailure];
+                    break;
             }
-                break;
-            case GPSessionStateClosed:
-            case GPSessionStateClosedLoginFailed: {
-                [SObject failed:completion];
-            }
-                break;
-            default:
-                [SObject failed:completion];
-                break;
-        }
+        }];
     }];
-    return [SObject objectWithState:SObjectStateProcessing];
+
 }
 
 - (ISSAuthorisationInfo *)authorizatioInfo
@@ -100,8 +120,34 @@
             handler(object);
         }
     }];
+}
+
+- (SObject *)updateProfile:(SObject *)params completion:(SObjectCompletionBlock)completion
+{
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+        GTLQueryPlus *query = [GTLQueryPlus queryForPeopleGetWithUserId:@"me"];
+        [self executeQuery:query operation:operation processor:^(GTLPlusPerson *person) {
+
+            SUserData *user = [[SUserData alloc] initWithHandler:self];
+            user.objectId = person.identifier;
+            user.userName = person.displayName;
+
+            NSString *userImage = person.image.url;
+            user.userPicture =
+                    [[MultiImage alloc] initWithURL:userImage.URLValue];
+
+            _currentUserData = user;
+
+            [operation complete:_currentUserData];
+        }];
+    }];
 
 
+}
+
+- (SUserData *)currentUserData
+{
+    return _currentUserData;
 }
 
 - (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion

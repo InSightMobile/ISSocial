@@ -10,6 +10,7 @@
 #import "CacheManager.h"
 #import "SUserData.h"
 #import "ISSAuthorisationInfo.h"
+#import "SInvitation.h"
 
 NSString *const kNewMessagesNotification = @"NewMessageNotification";
 NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChanged";

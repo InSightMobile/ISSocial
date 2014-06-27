@@ -7,6 +7,7 @@
 #import "OdnoklassnikiConnector+Messages.h"
 #import "SUserData.h"
 #import "NSObject+PerformBlockInBackground.h"
+#import "SInvitation.h"
 
 @implementation OdnoklassnikiConnector (Messages)
 
@@ -69,6 +70,15 @@
             }];
         }];
     }];
+}
+
+- (SObject *)sendInvitation:(SInvitation *)params completion:(SObjectCompletionBlock)completion
+{
+    SMessageData* message = [SMessageData new];
+    message.message = params.message;
+    message.messageCompanion = params.user;
+
+    return [self postMessage:message completion:completion];
 }
 
 - (SObject *)postMessage:(SMessageData *)params completion:(SObjectCompletionBlock)completion

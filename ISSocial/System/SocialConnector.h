@@ -25,6 +25,7 @@
 @class SAudioData;
 @class SLinkData;
 @class ISSAuthorisationInfo;
+@class SInvitation;
 
 
 FOUNDATION_EXPORT NSString *const kNewMessagesNotification;
@@ -33,6 +34,10 @@ FOUNDATION_EXPORT NSString *const kNewMessagesUnreadStatusChanged;
 @protocol SocialConnector <NSObject>
 
 @optional
+
+// special actions
+
+- (SObject *)sendInvitation:(SInvitation *)params completion:(SObjectCompletionBlock)completion;
 
 // messages
 - (SObject *)readDialogs:(SObject *)params completion:(SObjectCompletionBlock)completion;

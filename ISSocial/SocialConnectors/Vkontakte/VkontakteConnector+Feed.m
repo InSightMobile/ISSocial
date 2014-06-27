@@ -24,6 +24,7 @@
 #import "RegexKitLite.h"
 #import "ISSocial.h"
 #import "ISSocial+Errors.h"
+#import "SInvitation.h"
 
 @implementation VkontakteConnector (Feed)
 
@@ -474,6 +475,14 @@
     completion(uploadedObjects);
 }
 
+- (SObject *)sendInvitation:(SInvitation *)params completion:(SObjectCompletionBlock)completion
+{
+    SFeedEntry* feed = [SFeedEntry new];
+    feed.message = params.message;
+    feed.owner = params.user;
+
+    return [self postToFeed:feed completion:completion];
+}
 
 - (SObject *)postToFeed:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion
 {
@@ -487,6 +496,8 @@
             if (params.message.length) {
                 parameters[@"message"] = params.message;
             }
+
+            NSLog(@"params = %@", params);
 
             NSString *ownerId = self.userId;
             if (params.owner) {

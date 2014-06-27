@@ -73,19 +73,24 @@ sourceApplication:(NSString *)sourceApplication
     return [_signIn handleURL:url sourceApplication:sourceApplication annotation:annotation];
 }
 
-+ (void)openActiveSessionWithPermissions:(NSArray *)permissions completionHandler:(GPSessionStateHandler)handler
++ (void)openActiveSessionWithAppID:(NSString *)appID permissions:(NSArray *)permissions completionHandler:(GPSessionStateHandler)handler
 {
-    [[self activeSession] openSessionWithPermissions:permissions completionHandler:handler];
+    [[self activeSession] openSessionWithAppID:appID permissions:permissions completionHandler:handler];
 }
 
-- (void)openSessionWithPermissions:(NSArray *)permissions completionHandler:(GPSessionStateHandler)handler
+- (void)openSessionWithAppID:(NSString *)appID permissions:(NSArray *)permissions completionHandler:(GPSessionStateHandler)handler
 {
-    NSString *clientAppId = NSBundle.mainBundle.infoDictionary[@"GooglePlusAppID"];
+    if(appID) {
+        self.appId = appID;
+    }
+    else
+    {
+        NSString *clientAppId = NSBundle.mainBundle.infoDictionary[@"GooglePlusAppID"];
+        self.appId = clientAppId;
+    }
 
-    self.appId = clientAppId;
 
-
-    NSString *clientId = [NSString stringWithFormat:@"%@.apps.googleusercontent.com", clientAppId];
+    NSString *clientId = [NSString stringWithFormat:@"%@.apps.googleusercontent.com", self.appId];
 
     NSArray *scopes = @[kGTLAuthScopePlusLogin, kGTLAuthScopePlusMe];
 

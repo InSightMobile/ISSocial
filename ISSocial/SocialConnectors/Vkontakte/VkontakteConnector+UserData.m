@@ -23,7 +23,7 @@
     NSSet *userIds = [NSSet setWithArray:[usersData valueForKey:@"objectId"]];
     [self updateCountryCodesWithOperation:operation completion:^(SObject *result) {
         [self simpleMethod:@"users.get" parameters:@{@"uids" : [userIds.allObjects componentsJoinedByString:@","],
-                @"fields" : @"uid,first_name,last_name,photo,bdate,city,country,sex,screen_name"}
+                @"fields" : @"first_name,last_name,photo,bdate,city,country,sex,screen_name"}
                  operation:operation processor:^(id response) {
 
             NSLog(@"response = %@", response);
@@ -59,11 +59,17 @@
 
 - (SObject *)parseUserData:(NSDictionary *)userInfo
 {
-    NSString *userId = userInfo[@"uid"];
+
+    NSString *userId = userInfo[@"id"];
+
+    if (userInfo[@"uid"]) {
+        userId = [userInfo[@"uid"] stringValue];
+    }
 
     if (userInfo[@"gid"]) {
         userId = [NSString stringWithFormat:@"-%@", userInfo[@"gid"]];
     }
+
 
     SUserData *userData = [self dataForUserId:[userId stringValue]];
 
