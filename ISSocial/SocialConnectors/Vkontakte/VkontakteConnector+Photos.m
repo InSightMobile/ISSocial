@@ -354,7 +354,7 @@
     }];
 }
 
-#if 0
+
 - (void)uploadPhoto:(SPhotoData *)params
               album:(NSString *)album
           operation:(SocialConnectorOperation *)operation
@@ -407,36 +407,36 @@
         uploadParams[@"text"] = params.title;
     }
 
-    [[ISSVKRequest requestMethod:uploadServer parameters:uploadParams] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
-        NSLog(@"response = %@", response);
-        if (error) {
-            completionn([SObject error:error]);
-            return;
-        }
+    VKRequest *request = [VKRequest requestWithMethod:uploadServer andParameters:uploadParams andHttpMethod:@"GET"];
 
-        if (!params.sourceData) {
-            if (params.sourceImage) {
-                params.sourceData = UIImageJPEGRepresentation(params.sourceImage, 0.5);
-            }
-        }
+    [self simpleMethod:uploadServer operation:operation processor:^(NSDictionary * response) {
+
+        NSLog(@"response = %@", response);
 
         [self uploadPhoto:params toURL:response[@"upload_url"] saveMethod:saveMethod operation:operation completion:completionn];
     }];
+
 }
 
 - (void)uploadPhoto:(SPhotoData *)params toURL:(NSString *)URL saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completionn {
 
-    [ISSVKSession sendPOSTRequest:URL withImageData:params.sourceData handler:^(VKRequestOperation *connection, id result, NSError *error)
-    {
+    if (!params.sourceData) {
+        if (params.sourceImage) {
+            params.sourceData = UIImageJPEGRepresentation(params.sourceImage, 0.5);
+        }
+    }
+
+    VKUploadImage *photo = [VKUploadImage objectWithData:params.sourceData andParams:[VKImageParameters jpegImageWithQuality:0.5]];
+
+    VKRequest* reqest = [VKRequest photoRequestWithPostUrl:URL withPhotos:@[photo]];
+
+    [self executeRequest:reqest operation:operation processor:^(NSDictionary * result) {
 
         NSLog(@" result = %@", result);
-        if (error) {
-            [operation completeWithError:error];
-            return;
-        }
 
         [self savePhoto:params saveMethod:saveMethod operation:operation uploadResult:result completion:completionn];
-    }];
+
+    } retries:0];
 }
 
 - (void)savePhoto:(SPhotoData *)params saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation
@@ -450,19 +450,14 @@
         saveParams[@"text"] = params.title;
     }
 
-    [[ISSVKRequest requestMethod:saveMethod parameters:saveParams] startWithCompletionHandler:^(VKRequestOperation *connection, id response, NSError *error) {
-            NSLog(@" result = %@", response);
-            if (error) {
-                [operation completeWithError:error];
-            }
-            else {
-                NSDictionary *photoData = response[0];
-                SPhotoData *photo = [self parsePhotoResponse:photoData];
-                completionn(photo);
-            }
-        }];
+    [self simpleMethod:saveMethod parameters:saveParams operation:operation processor:^(NSArray * response) {
+        NSLog(@"response = %@", response);
+        NSDictionary *photoData = response[0];
+        SPhotoData *photo = [self parsePhotoResponse:photoData];
+        completionn(photo);
+
+    }];
 }
-#endif
 
 - (SObject *)addPhotoToAlbum:(SPhotoData *)params completion:(SObjectCompletionBlock)completionn
 {

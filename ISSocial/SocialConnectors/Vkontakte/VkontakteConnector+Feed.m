@@ -22,8 +22,6 @@
 #import "NSString+StripHTML.h"
 #import "VkontakteConnector+Video.h"
 #import "RegexKitLite.h"
-#import "ISSocial.h"
-#import "ISSocial+Errors.h"
 #import "SInvitation.h"
 #import "SShareItem.h"
 
@@ -136,7 +134,7 @@
     }];
 }
 
-- (SObject *)parsePagingResponce:(id)response paging:(SObject *)paging processor:(SObject * (^)(id responce))processor
+- (SObject *)parsePagingResponce:(id)response paging:(SObject *)paging processor:(SObject *(^)(id responce))processor
 {
     SObject *result = [[SObject alloc] initWithHandler:self];
 
@@ -233,23 +231,31 @@
         NSDictionary *photoResponse = attachment[@"photo"];
         if (photoResponse) {
             SPhotoData *photo = [self parsePhotoResponse:photoResponse];
-            if (photo) [attach addObject:photo];
+            if (photo) {
+                [attach addObject:photo];
+            }
         }
         NSDictionary *audioResponse = attachment[@"audio"];
         if (audioResponse) {
             SAudioData *audio = [self parseAudioResponse:audioResponse];
-            if (audio) [attach addObject:audio];
+            if (audio) {
+                [attach addObject:audio];
+            }
         }
         NSDictionary *videoResponse = attachment[@"video"];
         if (videoResponse) {
             SVideoData *video = [self parseVideoResponse:videoResponse];
-            if (video) [attach addObject:video];
+            if (video) {
+                [attach addObject:video];
+            }
         }
     }
-    if (attach.count)
+    if (attach.count) {
         return attach;
-    else
+    }
+    else {
         return nil;
+    }
 }
 
 - (void)updateAttachments:(NSArray *)attachments operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
@@ -413,7 +419,7 @@
             SPhotoData *object = [atatchment copy];
             object.operation = operation;
 
-            if(owner) {
+            if (owner) {
                 object.owner = owner;
             }
 
@@ -422,7 +428,9 @@
 
                     if (result.isFailed) {
                         NSError *error = result.error;
-                        if (!error) error = [NSError errorWithDomain:@"VKApi" code:100 userInfo:nil];
+                        if (!error) {
+                            error = [NSError errorWithDomain:@"VKApi" code:100 userInfo:nil];
+                        }
                         next(error);
                     }
                     else {
@@ -437,7 +445,9 @@
 
                     if (result.isFailed) {
                         NSError *error = result.error;
-                        if (!error) error = [NSError errorWithDomain:@"VKApi" code:100 userInfo:nil];
+                        if (!error) {
+                            error = [NSError errorWithDomain:@"VKApi" code:100 userInfo:nil];
+                        }
                         next(error);
                     }
                     else {
@@ -450,7 +460,9 @@
                 [self addAudio:(id) object completion:^(SObject *result) {
                     if (result.isFailed) {
                         NSError *error = result.error;
-                        if (!error) error = [NSError errorWithDomain:@"VKApi" code:100 userInfo:nil];
+                        if (!error) {
+                            error = [NSError errorWithDomain:@"VKApi" code:100 userInfo:nil];
+                        }
                         next(error);
                     }
                     else {
@@ -464,8 +476,9 @@
             }
 
         }          comletition:^(NSError *errorOrNil) {
-            if (errorOrNil)
+            if (errorOrNil) {
                 [operation completeWithError:errorOrNil];
+            }
             else {
                 completion(uploadedObjects);
                 return;
@@ -480,7 +493,7 @@
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        SFeedEntry* feed = [SFeedEntry new];
+        SFeedEntry *feed = [SFeedEntry new];
         feed.message = params.message;
         feed.owner = params.user;
         feed.operation = operation;
@@ -493,10 +506,28 @@
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        SFeedEntry* feed = [SFeedEntry new];
-        feed.message = params.text;
-        feed.operation = operation;
-        [self postToFeed:feed completion:operation.completion];
+        if (params.text) {
+
+
+            SFeedEntry *feed = [SFeedEntry new];
+            feed.message = params.text;
+            feed.operation = operation;
+            if (params.photo) {
+                feed.attachments = @[params.photo];
+            }
+
+            [self postToFeed:feed completion:operation.completion];
+        }
+        else if(params.photo) {
+
+            [self uploadPhoto:params.photo album:kWallAlbum operation:operation completion:^(SObject *result) {
+
+
+                [operation complete:[SObject successful]];
+
+            }];
+        }
+
     }];
 }
 
@@ -506,67 +537,66 @@
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self uploadAttachments:params.attachments owner:params.owner destination:kWallAlbum operation:operation completion:^(NSArray *attachments)
-        {
-
-            NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-
-            if (params.message.length) {
-                parameters[@"message"] = params.message;
-            }
-
-            NSLog(@"params = %@", params);
-
-            NSString *ownerId = self.userId;
-            if (params.owner) {
-                ownerId = params.owner.objectId;
-                parameters[@"owner_id"] = params.owner.objectId;
-            }
-
-            if (attachments.count) {
-                NSString *attach = [[[(NSArray *) attachments rac_sequence] map:^id(id <SMultimediaObject> obj)
                 {
-                    return [NSString stringWithFormat:@"%@%@", obj.mediaType, obj.objectId];
-                }].array componentsJoinedByString:@","];
 
-                parameters[@"attachments"] = attach;
-            }
+                    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
 
-            [self simpleMethod:@"wall.post" parameters:parameters operation:operation processor:^(id response){
+                    if (params.message.length) {
+                        parameters[@"message"] = params.message;
+                    }
 
-                if([params[kNoResultObjectKey] boolValue]) {
-                    [operation complete:[SObject successful]];
-                    return;
-                }
+                    NSLog(@"params = %@", params);
 
-                NSString *localPostId = response[@"post_id"];
-                NSString *postId = [NSString stringWithFormat:@"%@_%@", ownerId, response[@"post_id"]];
+                    NSString *ownerId = self.userId;
+                    if (params.owner) {
+                        ownerId = params.owner.objectId;
+                        parameters[@"owner_id"] = params.owner.objectId;
+                    }
 
-                [self simpleMethod:@"wall.getById" parameters:@{@"posts" : postId} operation:operation processor:^(id response){
-                    SFeedEntry *feedEntry = nil;
+                    if (attachments.count) {
+                        NSString *attach = [[[(NSArray *) attachments rac_sequence] map:^id(id <SMultimediaObject> obj)
+                                {
+                                    return [NSString stringWithFormat:@"%@%@", obj.mediaType, obj.objectId];
+                                }].array componentsJoinedByString:@","];
 
-                    for (id entry in response) {
-                        if ([entry isKindOfClass:[NSDictionary class]]) {
-                            feedEntry = [self parseFeedEntry:entry];
-                            break;
+                        parameters[@"attachments"] = attach;
+                    }
+
+                    [self simpleMethod:@"wall.post" parameters:parameters operation:operation processor:^(id response){
+
+                        if ([params[kNoResultObjectKey] boolValue]) {
+                            [operation complete:[SObject successful]];
+                            return;
                         }
-                    }
-                    if (feedEntry)
-                        [operation complete:feedEntry];
-                    else if(localPostId.length){
-                        [operation complete:[SObject successful]];
-                    }
-                    else {
-                        [operation completeWithFailure];
-                    }
 
+                        NSString *localPostId = response[@"post_id"];
+                        NSString *postId = [NSString stringWithFormat:@"%@_%@", ownerId, response[@"post_id"]];
+
+                        [self simpleMethod:@"wall.getById" parameters:@{@"posts" : postId} operation:operation processor:^(id response){
+                            SFeedEntry *feedEntry = nil;
+
+                            for (id entry in response) {
+                                if ([entry isKindOfClass:[NSDictionary class]]) {
+                                    feedEntry = [self parseFeedEntry:entry];
+                                    break;
+                                }
+                            }
+                            if (feedEntry) {
+                                [operation complete:feedEntry];
+                            }
+                            else if (localPostId.length) {
+                                [operation complete:[SObject successful]];
+                            }
+                            else {
+                                [operation completeWithFailure];
+                            }
+
+                        }];
+
+                    }];
                 }];
-
-            }];
-        }];
     }];
 }
-
-
 
 
 @end

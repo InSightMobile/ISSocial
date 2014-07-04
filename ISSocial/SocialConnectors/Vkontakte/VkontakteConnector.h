@@ -19,6 +19,8 @@
 
 - (void)simpleMethod:(NSString *)method parameters:(NSDictionary *)parameters operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor;
 
+- (void)executeRequest:(VKRequest *)request operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor retries:(NSInteger)retries;
+
 - (NSError *)processVKError:(NSError *)error;
 
 @property(nonatomic, copy) NSString *userId;

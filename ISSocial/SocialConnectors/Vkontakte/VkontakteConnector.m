@@ -147,12 +147,18 @@ static const int kMaxRetries = 3;
 
 - (void)executeRequest:(VKRequest *)request operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor retries:(NSInteger)retries
 {
+    NSLog(@"request = %@", request);
+
     [request executeWithResultBlock:^(VKResponse *response) {
         [operation removeSubOperation:request.executionOperation];
 
         processor(response.json);
 
     }                    errorBlock:^(NSError *error) {
+
+        NSLog(@"error = %@", error);
+
+
         [operation removeSubOperation:request.executionOperation];
 
         VKError *vkError = [error vkError];
