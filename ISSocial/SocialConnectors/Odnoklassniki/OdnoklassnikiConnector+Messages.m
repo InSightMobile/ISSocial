@@ -81,7 +81,7 @@
         message.messageCompanion = params.user;
         message.operation = operation;
 
-        [self postMessage:message completion:completion];
+        [self postMessage:message completion:operation.completion];
     }];
 }
 

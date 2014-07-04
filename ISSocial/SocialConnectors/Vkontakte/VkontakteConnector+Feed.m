@@ -25,6 +25,7 @@
 #import "ISSocial.h"
 #import "ISSocial+Errors.h"
 #import "SInvitation.h"
+#import "SShareItem.h"
 
 @implementation VkontakteConnector (Feed)
 
@@ -484,10 +485,21 @@
         feed.owner = params.user;
         feed.operation = operation;
 
-        [self postToFeed:feed completion:completion];
+        [self postToFeed:feed completion:operation.completion];
     }];
-
 }
+
+- (SObject *)share:(SShareItem *)params completion:(SObjectCompletionBlock)completion;
+{
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+
+        SFeedEntry* feed = [SFeedEntry new];
+        feed.message = params.text;
+        feed.operation = operation;
+        [self postToFeed:feed completion:operation.completion];
+    }];
+}
+
 
 - (SObject *)postToFeed:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion
 {

@@ -26,6 +26,7 @@
 @class SLinkData;
 @class ISSAuthorisationInfo;
 @class SInvitation;
+@class SShareItem;
 
 
 FOUNDATION_EXPORT NSString *const kNewMessagesNotification;
@@ -38,6 +39,8 @@ FOUNDATION_EXPORT NSString *const kNewMessagesUnreadStatusChanged;
 // special actions
 
 - (SObject *)sendInvitation:(SInvitation *)params completion:(SObjectCompletionBlock)completion;
+
+- (SObject *)share:(SShareItem *)params completion:(SObjectCompletionBlock)completion;
 
 // messages
 - (SObject *)readDialogs:(SObject *)params completion:(SObjectCompletionBlock)completion;

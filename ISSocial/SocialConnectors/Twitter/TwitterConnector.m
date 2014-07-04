@@ -315,8 +315,6 @@
         parameters[@"text"] = invitation.message;
 
         [self POST:@"direct_messages/new" parameters:parameters operation:operation processor:^(NSDictionary *response) {
-
-
             [operation complete:[SObject successful]];
         }];
     }];
