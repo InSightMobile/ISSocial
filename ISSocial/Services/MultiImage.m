@@ -146,21 +146,28 @@
 
 - (void)addImage:(UIImage *)image
 {
+    ImageCollectionData *data = [ImageCollectionData new];
 
+    data.width = (NSUInteger) image.size.width;
+    data.height = (NSUInteger) image.size.height;
+    data.quality = 1;
+    data.image = image;
+
+    [self addImageData:data];
+}
+
+- (void)addImageData:(ImageCollectionData *)imageData
+{
     if (!_images) {
         _images = [NSMutableArray arrayWithCapacity:1];
     }
 
-    ImageCollectionData *data = [ImageCollectionData new];
-
-    data.width = image.size.width;
-    data.height = image.size.height;
-    data.quality = 1;
-    data.image = image;
-    [_images addObject:data];
+    [_images addObject:imageData];
 }
+
 
 - (void)setImageWightHeightURLFormat:(NSString *)format {
     _imageWightHeightParamURLFormat = format;
 }
+
 @end

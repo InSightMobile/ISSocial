@@ -19,6 +19,14 @@
 - (void)loadImageWithCompletion:(void (^)(UIImage *, NSError *))completion;
 
 - (BOOL)isValid;
+
+- (NSString *)identificationString;
+
+- (UIImage *)fetchImage;
+
++ (instancetype)imageDataWithIdentificationString:(NSString *)identificationString obtainingBlock:(UIImage* (^)())obtainingBlock;
+
+
 @end
 
 #endif //__ImageCollectionData_H_

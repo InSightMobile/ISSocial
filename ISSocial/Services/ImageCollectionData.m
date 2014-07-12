@@ -6,23 +6,32 @@
 #import "UIImageView+WebCache.h"
 #import "MultiImage.h"
 
+@interface ImageCollectionData ()
+@property(nonatomic, copy) UIImage *(^imageObtainingBlock)();
+@end
+
 @implementation ImageCollectionData
+{
+    NSString *_identificationString;
+}
 
 - (void)updateImageForImageView:(UIImageView *)view
 {
-    if (_url)
+    if (_url) {
         [view setImageWithURL:_url placeholderImage:view.image];
-    else
+    }
+    else {
         view.image = nil;
+    }
 }
 
 - (void)loadImageWithCompletion:(void (^)(UIImage *, NSError *))completion
 {
-    if (self.image) {
-        completion(self.image, nil);
+    UIImage *readyImage = [self fetchImage];
+    if (readyImage) {
+        completion(readyImage, nil);
         return;
     }
-
 
     id <SDWebImageOperation> operation =
             [SDWebImageManager.sharedManager downloadWithURL:self.url
@@ -38,4 +47,35 @@
 {
     return self.url || self.image;
 }
+
+- (NSString *)identificationString
+{
+    if (_identificationString) {
+        return _identificationString;
+    }
+    if (self.url) {
+        return self.url.absoluteString;
+    }
+    return nil;
+}
+
+- (UIImage *)fetchImage
+{
+    if (self.image) {
+        return self.image;
+    }
+    if (self.imageObtainingBlock) {
+        return self.imageObtainingBlock();
+    }
+    return nil;
+}
+
++ (instancetype)imageDataWithIdentificationString:(NSString *)identificationString obtainingBlock:(UIImage *(^)())obtainingBlock
+{
+    ImageCollectionData *data = [self new];
+    data->_identificationString = identificationString;
+    data.imageObtainingBlock = obtainingBlock;
+    return data;
+}
+
 @end

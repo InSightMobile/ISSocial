@@ -506,7 +506,7 @@
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        if (params.text) {
+        if (params.text.length) {
 
 
             SFeedEntry *feed = [SFeedEntry new];
@@ -554,9 +554,9 @@
                     }
 
                     if (attachments.count) {
-                        NSString *attach = [[[(NSArray *) attachments rac_sequence] map:^id(id <SMultimediaObject> obj)
+                        NSString *attach = [[[attachments rac_sequence] map:^id(id <SMultimediaObject> obj)
                                 {
-                                    return [NSString stringWithFormat:@"%@%@", obj.mediaType, obj.objectId];
+                                    return [NSString stringWithFormat:@"%@%@_%@", obj.mediaType,obj.owner.objectId, obj.objectId];
                                 }].array componentsJoinedByString:@","];
 
                         parameters[@"attachments"] = attach;
