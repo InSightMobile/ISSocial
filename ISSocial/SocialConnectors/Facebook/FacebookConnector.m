@@ -179,6 +179,11 @@
 
 - (void)processFacebookError:(NSError *)error operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
 {
+    if(error.code == FBErrorHTTPError) {
+        [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorNetwork sourseError:error.userInfo[FBErrorInnerErrorKey] userInfo:nil]];
+        return;
+    }
+
     NSDictionary *errorData = error.userInfo[FBErrorParsedJSONResponseKey];
 
     int facebookCode = [errorData[@"body"][@"error"][@"code"] intValue];

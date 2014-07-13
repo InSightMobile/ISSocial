@@ -109,18 +109,35 @@
 
         [self readPhotoAlbums:operation.object completion:^(SObject *albums) {
 
+            if (!albums.isSuccessful) {
+                [operation complete:albums];
+                return;
+            }
+
             NSArray *albumObjects = albums.subObjects;
 
             [albumObjects asyncEach:^(SPhotoAlbumData *albumData, ISArrayAsyncEachResultBlock next) {
 
                 [self readPhotosFromAlbum:albumData completion:^(SObject *photos) {
+
+                    if (!albums.isSuccessful) {
+                        next(albums.error);
+                        return;
+                    }
+
                     [result addSubObjects:photos.subObjects];
                     next(nil);
                 }];
 
             }           comletition:^(NSError *errorOrNil) {
 
-                [operation complete:result];
+                if (errorOrNil) {
+                    [operation completeWithError:errorOrNil];
+                }
+                else {
+                    [operation complete:result];
+                }
+
             }];
         }];
     }];

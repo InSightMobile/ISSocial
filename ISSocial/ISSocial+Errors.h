@@ -11,6 +11,7 @@ static NSString *const ISSocialErrorDomain = @"ISSocial";
 typedef enum {
 
     ISSocialErrorUnknown,
+    ISSocialErrorNetwork,
     ISSocialErrorOperationNotAllowedByTarget,
     ISSocialErrorOperationAlreadyDone,
     ISSocialErrorSystemLoginDisallowed,

@@ -20,12 +20,16 @@
     }
 
     NSString *description = nil;
+    if(sourecError) {
+        description = sourecError.localizedDescription;
+    }
     switch (code) {
         case ISSocialErrorSystemLoginDisallowed:
         case ISSocialErrorAuthorizationFailed:
             description = @"Authorization failed";
             break;
         case ISSocialErrorUserCanceled:
+            description = nil;
             break;
 
     }
