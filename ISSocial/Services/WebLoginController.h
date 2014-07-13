@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class WebLoginController;
+@class SocialConnectorOperation;
 
 typedef enum
 {
@@ -32,6 +33,8 @@ typedef enum
 @property(weak, nonatomic) IBOutlet UIWebView *webView;
 
 @property(weak, nonatomic) id <WebLoginControllerDelegate> delegate;
+
+@property(nonatomic, strong) SocialConnectorOperation *operation;
 
 + (WebLoginController *)loginController;
 

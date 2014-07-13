@@ -5,32 +5,45 @@
 #import "TwitterConnector.h"
 #import "ISSocial.h"
 #import "ISSAuthorisationInfo.h"
-#import "YATTwitterHelper.h"
-#import "TWAPIManager.h"
 #import "MultiImage.h"
 #import "SInvitation.h"
 #import <Twitter/Twitter.h>
 #import <Accounts/Accounts.h>
+#import "STTwitter.h"
+#import "ISSocial+Errors.h"
+#import "WebLoginController.h"
+#import "NSString+ValueConvertion.h"
 
+
+typedef NS_ENUM(NSInteger, TrwitterErrors)
+{
+    TwitterErrorNoAccount = 1,
+    TwitterErrorAccessDenied,
+    TwitterErrorUserCancels,
+};
 
 #define NSErrorFromString(cd, msg) [NSError errorWithDomain:@"TwitterHelper" code:cd userInfo:@{@"NSLocalizedRecoverySuggestion": msg}]
-#define NoAccountFoundError         NSErrorFromString(1, @"You must add a Twitter account in settings before using it")
-#define AccessDeniedError           NSErrorFromString(2, @"You must allow Twitter access your account details")
-#define UserCancelsError            NSErrorFromString(3, @"User cancelled operation")
+#define NoAccountFoundError         NSErrorFromString(TwitterErrorNoAccount, @"You must add a Twitter account in settings before using it")
+#define AccessDeniedError           NSErrorFromString(TwitterErrorAccessDenied, @"You must allow Twitter access your account details")
+#define UserCancelsError            NSErrorFromString(TwitterErrorUserCancels, @"User cancelled operation")
 
 
-@interface TwitterConnector () <UIActionSheetDelegate>
+@interface TwitterConnector () <UIActionSheetDelegate, WebLoginControllerDelegate>
 @property(nonatomic) BOOL loggedIn;
 @property(nonatomic, strong) ACAccount *account;
 @property(nonatomic, copy) NSString *secret;
 @property(nonatomic, copy) NSString *token;
-
-@property(nonatomic, strong) TWAPIManager *apiManager;
 @property(nonatomic, strong) NSArray *accounts;
-@property(nonatomic, copy) AuthSuccessCallback successCallback;
-@property(nonatomic, copy) FailureCallback failureCallback;
 
-@property(nonatomic, strong) id tokenSecret;
+@property(nonatomic, copy) NSString *tokenSecret;
+@property(nonatomic, copy) NSString *consumerKey;
+@property(nonatomic, copy) NSString *consumerSecret;
+@property(nonatomic, strong) STTwitterAPI *twitterAPI;
+@property(nonatomic, copy) NSString *userID;
+@property(nonatomic, copy) NSString *screenName;
+@property(nonatomic, strong) SocialConnectorOperation *authorizationOperation;
+@property(nonatomic, copy) void (^successCallback)(ACAccount *);
+@property(nonatomic, copy) void (^failureCallback)(NSError *);
 @end
 
 @implementation TwitterConnector
@@ -62,14 +75,12 @@
 }
 
 
-
 - (void)setupSettings:(NSDictionary *)settings
 {
     [super setupSettings:settings];
 
-    _apiManager = [TWAPIManager new];
-    _apiManager.consumerKey = settings[@"AppKey"];
-    _apiManager.consumerSecret = settings[@"AppSecret"];
+    self.consumerKey = settings[@"AppKey"];
+    self.consumerSecret = settings[@"AppSecret"];
 }
 
 - (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion
@@ -87,7 +98,7 @@
     token.handler = self;
     token.accessToken = self.token;
     token.accessTokenSecret = self.tokenSecret;
-    token.userId = self.currentUserData.objectId;
+    token.userId = self.userID;
 
     return token;
 }
@@ -96,34 +107,145 @@
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        [self reverseAuthWithSuccess:^(NSDictionary *data) {
+        STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
+                                                                  consumerKey:self.consumerKey
+                                                               consumerSecret:self.consumerSecret];
 
-            self.token = data[@"oauth_token"];
-            self.tokenSecret = data[@"oauth_token_secret"];
+        [self authWithSuccess:^(ACAccount *account) {
 
-            [self updateUserDataWithOperation:operation];
+            [twitter postReverseOAuthTokenRequest:^(NSString *authenticationHeader) {
 
-        }                    failure:^(NSError *error) {
+                STTwitterAPI *twitterAPIOS = [STTwitterAPI twitterAPIOSWithAccount:account];
 
-            NSLog(@"error = %@", error);
+                [twitterAPIOS verifyCredentialsWithSuccessBlock:^(NSString *username) {
 
-            [operation completeWithFailure];
+                    [twitterAPIOS postReverseAuthAccessTokenWithAuthenticationHeader:authenticationHeader
+                                                                        successBlock:^(NSString *oAuthToken,
+                                                                                NSString *oAuthTokenSecret,
+                                                                                NSString *userID,
+                                                                                NSString *screenName) {
+                        self.token = oAuthToken;
+                        self.tokenSecret = oAuthTokenSecret;
+                        self.userID = userID;
+                        self.screenName = screenName;
+                        self.twitterAPI = twitterAPIOS;
+
+                        [self updateUserDataWithOperation:operation];
+
+
+                    } errorBlock:^(NSError *error) {
+                        [operation completeWithError:[self errorWithError:error]];
+                    }];
+
+                }                                    errorBlock:^(NSError *error) {
+                    [operation completeWithError:[self errorWithError:error]];
+                }];
+
+            }                          errorBlock:^(NSError *error) {
+                [operation completeWithError:[self errorWithError:error]];
+            }];
+        }             failure:^(NSError *error){
+
+            if (error.code == TwitterErrorNoAccount) {
+
+                NSString *callback = [self systemCallbackURL];
+
+                [twitter postTokenRequest:^(NSURL *url, NSString *oauthToken) {
+
+                    self.twitterAPI = twitter;
+                    self.authorizationOperation = operation;
+                    [[UIApplication sharedApplication] openURL:url];
+
+                }           oauthCallback:callback errorBlock:^(NSError *error) {
+
+                    [operation completeWithError:[self errorWithError:error]];
+                }];
+            }
+            else {
+                [operation completeWithError:[self errorWithError:error]];
+            }
         }];
-
     }];
 }
 
+- (NSString *)systemCallbackURL
+{
+    return [NSString stringWithFormat:@"%@://iss/twittter", [NSBundle mainBundle].bundleIdentifier];
+}
+
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    if ([url.absoluteString hasPrefix:self.systemCallbackURL]) {
+
+        NSDictionary *query = [url.query explodeURLQuery];
+
+        if (query[@"oauth_token"]) {
+            [self setOAuthToken:query[@"oauth_token"] oauthVerifier:query[@"oauth_verifier"]];
+        }
+        else {
+            [[self authorizationOperation] completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:nil userInfo:nil]];
+            self.authorizationOperation = nil;
+        }
+        return YES;
+    }
+    return NO;
+}
+
+- (void)setOAuthToken:(NSString *)token oauthVerifier:(NSString *)verifier
+{
+
+    [self.twitterAPI postAccessTokenRequestWithPIN:verifier successBlock:^(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName) {
+
+        self.token = oauthToken;
+        self.tokenSecret = oauthTokenSecret;
+        self.userID = userID;
+        self.screenName = screenName;
+        [self updateUserDataWithOperation:self.authorizationOperation];
+        self.authorizationOperation = nil;
+
+    }                                   errorBlock:^(NSError *error) {
+
+        [[self authorizationOperation] completeWithError:[self errorWithError:error]];
+        self.authorizationOperation = nil;
+    }];
+}
+
+- (NSError *)errorWithError:(NSError *)error
+{
+    NSLog(@"error = %@", error);
+    return [ISSocial errorWithError:error];
+}
+
+
+- (SObject *)readUserData:(SUserData *)params
+               completion:(SObjectCompletionBlock)completion
+{
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+
+
+        NSString *userId = params.objectId;
+        if (userId.length == 0) {
+            [operation complete:self.currentUserData];
+            return;
+        }
+
+        [operation completeWithFailure];
+    }];
+}
+
+
 - (void)updateUserDataWithOperation:(SocialConnectorOperation *)operation
 {
-    // Now make an authenticated request to our endpoint
-    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-    params[@"include_entities"] = @"1";
-    
-    [self GET:@"account/verify_credentials" parameters:params operation:operation processor:^(NSDictionary * info) {
+
+    [self.twitterAPI getAccountVerifyCredentialsWithIncludeEntites:@NO skipStatus:@YES successBlock:^(NSDictionary *info) {
+
         SUserData *userData = [self userDataWithResponse:info];
         self.currentUserData = userData;
         _loggedIn = YES;
         [operation complete:[SObject successful]];
+
+    }                                                   errorBlock:^(NSError *error) {
+        [operation completeWithError:error];
     }];
 }
 
@@ -142,35 +264,22 @@
     return userData;
 }
 
-
-- (SObject *)readUserData:(SUserData *)params
-               completion:(SObjectCompletionBlock)completion
-{
-    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
-
-        NSString *userId = params.objectId;
-        if (userId.length == 0) {
-            [operation complete:self.currentUserData];
-            return;
-        }
-
-        [operation completeWithFailure];
-    }];
-}
-
-
 - (BOOL)isLoggedIn
 {
     return _loggedIn;
 }
 
+- (BOOL)isLocalTwitterAccountAvailable
+{
+    return [SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter];
+}
 
-- (void)authWithSuccess:(AuthSuccessCallback)onSuccess failure:(FailureCallback)onError
+- (void)authWithSuccess:(void (^)(ACAccount *account))onSuccess failure:(void (^)(NSError *error))onError
 {
     self.successCallback = onSuccess;
     self.failureCallback = onError;
 
-    if (![TWAPIManager isLocalTwitterAccountAvailable]) {
+    if (![self isLocalTwitterAccountAvailable]) {
         if (onError) {
             onError(NoAccountFoundError);
         }
@@ -187,7 +296,7 @@
         if (granted) {
             newSelf.accounts = [accountStore accountsWithAccountType:twitterType];
             if (newSelf.accounts.count == 1) {
-                newSelf.successCallback(self.accounts[0]);
+                onSuccess(self.accounts[0]);
             }
             else {
                 UIActionSheet *sheet = [[UIActionSheet alloc] init];
@@ -212,145 +321,43 @@
     }];
 }
 
-- (void)reverseAuthWithSuccess:(ReverseAuthSuccessCallback)onSuccess failure:(FailureCallback)onError
-{
-    [self authWithSuccess:^(ACAccount *account) {
-        self.account = account;
-        [self.apiManager performReverseAuthForAccount:account withHandler:^(NSData *responseData, NSError *error) {
-            if (responseData) {
-                NSString *responseStr = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-                NSLog(@"Twitter Reverse Auth Response: %@", responseStr);
-
-                NSArray *parts = [responseStr componentsSeparatedByString:@"&"];
-                NSMutableDictionary *data = [NSMutableDictionary new];
-
-                for (NSString *part in parts) {
-                    NSArray *field = [part componentsSeparatedByString:@"="];
-                    [data setValue:field[1] forKey:field[0]];
-                }
-
-                if (onSuccess) {
-                    onSuccess(data);
-                }
-            }
-            else {
-                NSLog(@"Twitter Reverse Auth process failed. %@\n", [error localizedDescription]);
-                if (onError) {
-                    onError(error);
-                }
-            }
-        }];
-    }             failure:onError];
-}
-
-- (void)GET:(NSString *)path
-          parameters:(NSDictionary *)parameters
-           operation:(SocialConnectorOperation *)operation
-           processor:(void (^)(id))processor
-{
-    return [self simpleMethod:TWRequestMethodGET path:path parameters:parameters operation:operation processor:processor];
-}
-
-- (void)POST:(NSString *)path
-       parameters:(NSDictionary *)parameters
-        operation:(SocialConnectorOperation *)operation
-        processor:(void (^)(id))processor
-{
-    return [self simpleMethod:TWRequestMethodPOST path:path parameters:parameters operation:operation processor:processor];
-}
-
-- (void)simpleMethod:(TWRequestMethod)method
-                path:(NSString*)path
-          parameters:(NSDictionary *)parameters
-           operation:(SocialConnectorOperation *)operation
-           processor:(void (^)(id))processor
-{
-    //  The endpoint that we wish to call
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.twitter.com/1.1/%@.json", path]];
-
-    //  Build the request with our parameter
-    TWRequest *request = [[TWRequest alloc] initWithURL:url
-                                             parameters:parameters
-                                          requestMethod:(TWRequestMethod) method];
-
-    // Attach the account object to this request
-    [request setAccount:self.account];
-
-    [request performRequestWithHandler:
-            ^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-        if (!responseData) {
-            // inspect the contents of error
-            NSLog(@"%@", error);
-            [operation completeWithError:error];
-        }
-        else {
-            NSError *jsonError;
-            NSDictionary *info =
-                    [NSJSONSerialization JSONObjectWithData:responseData
-                                                    options:NSJSONReadingMutableLeaves
-                                                      error:&jsonError];
-            if (info) {
-                // at this point, we have an object that we can parse
-                NSLog(@"%@", info);
-
-                processor(info);
-            }
-            else {
-                // inspect the contents of jsonError
-                NSLog(@"%@", jsonError);
-                [operation completeWithError:jsonError];
-            }
-        }
-    }];
-}
-
-
 - (SObject *)sendInvitation:(SInvitation *)invitation completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:invitation completion:completion processor:^(SocialConnectorOperation *operation) {
-
-        // Now make an authenticated request to our endpoint
-        NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
-        parameters[@"user_id"] = invitation.user.objectId;
-        parameters[@"text"] = invitation.message;
-
-        [self POST:@"direct_messages/new" parameters:parameters operation:operation processor:^(NSDictionary *response) {
+        [self.twitterAPI postDirectMessage:invitation.message forScreenName:nil orUserID:invitation.user.objectId successBlock:^(NSDictionary *message) {
             [operation complete:[SObject successful]];
+        }                       errorBlock:^(NSError *error) {
+            [operation completeWithError:[self errorWithError:error]];
         }];
     }];
-
 }
 
 - (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        // Now make an authenticated request to our endpoint
-        NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
-
-        [self GET:@"friends/list" parameters:parameters operation:operation processor:^(NSDictionary *response) {
+        [self.twitterAPI getFriendsForScreenName:self.screenName successBlock:^(NSArray *users) {
 
             SObject *result = [SObject objectCollectionWithHandler:self];
 
-            NSArray *users = response[@"users"];
-
             for (NSDictionary *user in users) {
 
-                SUserData *userData =[self userDataWithResponse:user];
+                SUserData *userData = [self userDataWithResponse:user];
 
                 [result addSubObject:userData];
             }
 
             [operation complete:result];
+
+        }                             errorBlock:^(NSError *error) {
+
+            [operation completeWithError:[self errorWithError:error]];
         }];
     }];
-
-
-
 }
 
 
-#pragma mark - UIActionSheetDelgate
+#pragma mark - UIActionSheetDelegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {

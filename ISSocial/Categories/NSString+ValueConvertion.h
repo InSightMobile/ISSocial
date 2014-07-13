@@ -9,5 +9,5 @@
 
 - (NSString *)stringByDecodeFromPercentEscapes;
 
-- (NSDictionary *)exclodeURLQuery;
+- (NSDictionary *)explodeURLQuery;
 @end

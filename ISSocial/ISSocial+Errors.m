@@ -8,6 +8,9 @@
 
 
 @implementation ISSocial (Errors)
+
+
+
 + (NSError *)errorWithCode:(NSInteger)code sourseError:(NSError *)sourecError userInfo:(NSDictionary *)userInfo
 {
     NSMutableDictionary *info = [NSMutableDictionary new];

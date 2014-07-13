@@ -11,6 +11,9 @@
 #import "WebLoginManager.h"
 #import "AsyncBlockOperation.h"
 #import "NSObject+PerformBlockInBackground.h"
+#import "SocialConnectorOperation.h"
+#import "ISSocial.h"
+#import "ISSocial+Errors.h"
 
 @interface WebLoginController ()
 @property(nonatomic, copy) AsyncBlockOperationCompletionBlock completionBlock;
@@ -48,7 +51,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+
+    if(!self.webView) {
+        UIWebView *webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+        webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self.view addSubview:webView];
+        webView.delegate = self;
+        self.webView = webView;
+    }
 
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
@@ -214,6 +224,9 @@
     [self dismiss];
     if ([_delegate respondsToSelector:@selector(webLoginDidCanceled:)]) {
         [self.delegate webLoginDidCanceled:self];
+    }
+    else {
+        [self.operation completeWithError:[ISSocial errorWithCode:ISSocialErrorUserCanceled sourseError:nil userInfo:nil]];
     }
 }
 @end

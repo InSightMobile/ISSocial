@@ -40,7 +40,9 @@
 }
 
 - (WebLoginController *)loadLoginController
-{    
+{
+    return [[WebLoginController alloc] init];
+
     UIStoryboard *st =[[UIApplication sharedApplication].windows[0] rootViewController].storyboard;
 
     WebLoginController *controller = [st instantiateViewControllerWithIdentifier:@"webLogin"];

@@ -16,7 +16,7 @@
             kCFStringEncodingUTF8);
 }
 
-- (NSDictionary *)exclodeURLQuery
+- (NSDictionary *)explodeURLQuery
 {
     NSArray *arrParameters = [self componentsSeparatedByString:@"&"];
     NSMutableDictionary *dictParameters = [NSMutableDictionary dictionaryWithCapacity:arrParameters.count];
