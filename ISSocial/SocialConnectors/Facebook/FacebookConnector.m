@@ -316,26 +316,31 @@
                         }
                             break;
                         case FBSessionStateClosed:
-                            [operation completeWithError:error];
+                            [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:error userInfo:nil]];
                             break;
                         case FBSessionStateClosedLoginFailed:
-                            if ([error.userInfo[FBErrorLoginFailedReason]
-                                    isEqualToString:FBErrorLoginFailedReasonSystemDisallowedWithoutErrorValue]) {
-
+                            if ([error.userInfo[FBErrorLoginFailedReason] isEqualToString:FBErrorLoginFailedReasonSystemDisallowedWithoutErrorValue]) {
                                 [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorSystemLoginDisallowed sourseError:error userInfo:nil]];
                             }
+                            else if ([error.userInfo[FBErrorLoginFailedReason] isEqualToString:FBErrorLoginFailedReasonUserCancelledSystemValue]) {
+                                [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorSystemLoginDisallowed sourseError:error userInfo:nil]];
+                            }
+                            else if ([error.userInfo[FBErrorLoginFailedReason] isEqualToString:FBErrorLoginFailedReasonUserCancelledValue]) {
+                                [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorUserCanceled sourseError:error userInfo:nil]];
+                            }
+
                             else {
-                                [operation completeWithError:error];
+                                [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:error userInfo:nil]];
                             }
                             break;
                         default:
-                            [operation completeWithError:error];
+                            [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:error userInfo:nil]];
                             break;
                     }
                 }];
 
         if (!loggedIn && !allowLoginUI) {
-            [operation completeWithFailure];
+            [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:nil userInfo:nil]];
         }
     }];
 

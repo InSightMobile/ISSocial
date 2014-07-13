@@ -6,7 +6,7 @@
 #import <Foundation/Foundation.h>
 #import "ISSocial.h"
 
-static NSString *const ISSocailErrorDomain = @"ISSocial";
+static NSString *const ISSocialErrorDomain = @"ISSocial";
 
 typedef enum {
 
@@ -14,6 +14,7 @@ typedef enum {
     ISSocialErrorOperationNotAllowedByTarget,
     ISSocialErrorOperationAlreadyDone,
     ISSocialErrorSystemLoginDisallowed,
+    ISSocialErrorSystemLoginAbsent,
     ISSocialErrorAuthorizationFailed,
     ISSocialErrorUserCanceled
 } ISSocailErrorCodes;

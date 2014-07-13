@@ -15,19 +15,6 @@
 #import "NSString+ValueConvertion.h"
 
 
-typedef NS_ENUM(NSInteger, TrwitterErrors)
-{
-    TwitterErrorNoAccount = 1,
-    TwitterErrorAccessDenied,
-    TwitterErrorUserCancels,
-};
-
-#define NSErrorFromString(cd, msg) [NSError errorWithDomain:@"TwitterHelper" code:cd userInfo:@{@"NSLocalizedRecoverySuggestion": msg}]
-#define NoAccountFoundError         NSErrorFromString(TwitterErrorNoAccount, @"You must add a Twitter account in settings before using it")
-#define AccessDeniedError           NSErrorFromString(TwitterErrorAccessDenied, @"You must allow Twitter access your account details")
-#define UserCancelsError            NSErrorFromString(TwitterErrorUserCancels, @"User cancelled operation")
-
-
 @interface TwitterConnector () <UIActionSheetDelegate, WebLoginControllerDelegate>
 @property(nonatomic) BOOL loggedIn;
 @property(nonatomic, strong) ACAccount *account;
@@ -111,7 +98,7 @@ typedef NS_ENUM(NSInteger, TrwitterErrors)
                                                                   consumerKey:self.consumerKey
                                                                consumerSecret:self.consumerSecret];
 
-        [self authWithSuccess:^(ACAccount *account) {
+        [self getSystemAuthWithSuccess:^(ACAccount *account) {
 
             [twitter postReverseOAuthTokenRequest:^(NSString *authenticationHeader) {
 
@@ -144,9 +131,9 @@ typedef NS_ENUM(NSInteger, TrwitterErrors)
             }                          errorBlock:^(NSError *error) {
                 [operation completeWithError:[self errorWithError:error]];
             }];
-        }             failure:^(NSError *error){
+        }                      failure:^(NSError *error){
 
-            if (error.code == TwitterErrorNoAccount) {
+            if (error.code == ISSocialErrorSystemLoginAbsent) {
 
                 NSString *callback = [self systemCallbackURL];
 
@@ -274,14 +261,14 @@ typedef NS_ENUM(NSInteger, TrwitterErrors)
     return [SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter];
 }
 
-- (void)authWithSuccess:(void (^)(ACAccount *account))onSuccess failure:(void (^)(NSError *error))onError
+- (void)getSystemAuthWithSuccess:(void (^)(ACAccount *account))onSuccess failure:(void (^)(NSError *error))onError
 {
     self.successCallback = onSuccess;
     self.failureCallback = onError;
 
     if (![self isLocalTwitterAccountAvailable]) {
         if (onError) {
-            onError(NoAccountFoundError);
+            onError([ISSocial errorWithCode:ISSocialErrorSystemLoginAbsent sourseError:nil userInfo:nil]);
         }
         return;
     }
@@ -306,7 +293,7 @@ typedef NS_ENUM(NSInteger, TrwitterErrors)
                 }
 
                 sheet.delegate = newSelf;
-                sheet.cancelButtonIndex = [sheet addButtonWithTitle:@"Cancel"];
+                sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedStringWithDefaultValue(@"ISSocial_Cancel", nil, [NSBundle mainBundle], @"Cancel", @"Cancel")];
 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [sheet showInView:[UIApplication sharedApplication].keyWindow];
@@ -315,7 +302,7 @@ typedef NS_ENUM(NSInteger, TrwitterErrors)
         }
         else {
             if (onError) {
-                onError(AccessDeniedError);
+                onError([ISSocial errorWithCode:ISSocialErrorSystemLoginDisallowed sourseError:nil userInfo:nil]);
             }
         }
     }];
@@ -362,10 +349,10 @@ typedef NS_ENUM(NSInteger, TrwitterErrors)
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (actionSheet.cancelButtonIndex == buttonIndex) {
-        self.failureCallback(UserCancelsError);
+        self.failureCallback([ISSocial errorWithCode:ISSocialErrorUserCanceled sourseError:nil userInfo:nil]);
     }
     else {
-        self.successCallback(self.accounts[buttonIndex]);
+        self.successCallback(self.accounts[(NSUInteger) buttonIndex]);
     }
 }
 

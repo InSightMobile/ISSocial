@@ -72,7 +72,7 @@ static const int kMaxRetries = 3;
 }
 
 
-- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
+- (SObject *) openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         NSArray *permissions = self.permissions;
