@@ -116,6 +116,7 @@ FOUNDATION_EXPORT NSString *const kNewMessagesUnreadStatusChanged;
 - (SObject *)readUserData:(SUserData *)params completion:(SObjectCompletionBlock)completion;
 
 - (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion;
+- (SObject *)readUserMutualFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion;
 
 - (SObject *)readUserFriendsOnline:(SUserData *)params completion:(SObjectCompletionBlock)completion;
 

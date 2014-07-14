@@ -343,6 +343,46 @@
     }];
 }
 
+- (SObject *)readUserMutualFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion
+{
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+
+        [self readUserFriends:operation.object completion:^(SObject *result) {
+
+            if(!result.isSuccessful) {
+                [operation completeWithError:result.error];
+                return;
+            }
+
+            NSArray *friends = result.subObjects;
+
+            [self.twitterAPI getFollowersIDsForScreenName:self.screenName successBlock:^(NSArray *users) {
+
+                NSSet* followers = [NSSet setWithArray:users];
+
+                SObject *mutualFriends = [SObject objectCollectionWithHandler:self];
+
+                for (SUserData *sUserData in friends) {
+
+                    if([followers containsObject:sUserData.objectId]) {
+                        [mutualFriends addSubObject:sUserData];
+                    }
+
+
+                }
+
+                [operation complete:mutualFriends];
+
+            }            errorBlock:^(NSError *error) {
+
+            [operation completeWithError:[self errorWithError:error]];
+        }];
+
+        }];
+
+    }];
+}
+
 
 #pragma mark - UIActionSheetDelegate
 

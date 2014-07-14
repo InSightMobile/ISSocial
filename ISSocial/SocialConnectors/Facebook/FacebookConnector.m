@@ -394,5 +394,10 @@
     return token;
 }
 
+- (SObject *)readUserMutualFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion
+{
+    return [self readUserFriends:params completion:completion];
+}
+
 
 @end
