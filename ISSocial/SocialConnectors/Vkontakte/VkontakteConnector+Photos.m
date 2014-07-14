@@ -2,6 +2,7 @@
 //
 
 
+#import <ISAppearance/NSObject+ISAppearance.h>
 #import "VkontakteConnector.h"
 #import "VkontakteConnector+Photos.h"
 #import "SPhotoData.h"
@@ -14,18 +15,75 @@
 #import "SUserData.h"
 
 
+static const int kPageSize = 20;
+
 @implementation VkontakteConnector (Photos)
 
 - (SObject *)readPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        [self simpleMethod:@"photos.getAll" parameters:@{@"photo_sizes" : @1, @"extended" : @1} operation:operation processor:^(id response) {
+        NSString *method = @"photos.getAll";
+        NSDictionary *parameters = @{@"photo_sizes" : @1, @"extended" : @1, @"count" : @(kPageSize)};
+
+        [self readPhotosWithMethod:method parameters:parameters operation:operation];
+    }];
+}
+
+- (void)readPhotosWithMethod:(NSString *)method parameters:(NSDictionary *)parameters operation:(SocialConnectorOperation *)operation
+{
+    [self simpleMethod:method parameters:parameters operation:operation processor:^(id response) {
+        NSInteger totalCount = [response[@"count"] integerValue];
+        NSArray *items = response[@"items"];
+        SObject *photos = [self parsePhotos:items];
+
+        if (photos.subObjects.count < totalCount) {
+            SObject *pagingData = [SObject objectWithHandler:self];
+
+            pagingData[@"getMethod"] = method;
+            pagingData[@"getParameters"] = parameters;
+
+            photos.pagingData = pagingData;
+            photos.isPagable = @YES;
+            photos.pagingSelector = @selector(pagePhotos:completion:);
+        }
+
+        [operation complete:photos];
+    }];
+}
+
+- (SObject *)pagePhotos:(SPhotoData *)pagePhotos completion:(SObjectCompletionBlock)completion
+{
+
+    return [self operationWithObject:pagePhotos completion:completion processor:^(SocialConnectorOperation *operation) {
+
+        SObject *pagingData = [pagePhotos.pagingData copy];
+
+        NSString *method = pagingData[@"getMethod"];
+        NSMutableDictionary *parameters = [pagingData[@"getParameters"] mutableCopy];
+        parameters[@"offset"] = @(pagePhotos.count);
+
+        [self simpleMethod:method parameters:parameters
+                 operation:operation processor:^(id response) {
+
+            NSLog(@"response = %@", response);
+
+            NSInteger totalCount = [response[@"count"] integerValue];
             NSArray *items = response[@"items"];
-            [operation complete:[self parsePhotos:items]];
+
+            SObject *photos = [self parsePhotos:items];
+            photos.pagingSelector = @selector(pagePhotos:completion:);
+            photos.pagingData = pagingData;
+
+            SObject *object = [self addPagingData:photos to:pagePhotos];
+
+            object.isPagable = @(object.subObjects.count < totalCount);
+
+            [operation complete:object];
         }];
     }];
 }
+
 
 - (SObject *)parsePhotoCommentEntries:(NSArray *)response object:(SObject *)object paging:(SObject *)paging
 {
@@ -200,15 +258,15 @@
 
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        [self simpleMethod:@"photos.get" parameters:@{
-                @"aid" : params.objectId,
-                @"uid" : self.userId,
-                @"photo_sizes" : @1,
-                @"extended" : @1}
-                 operation:operation processor:^(NSArray *response) {
+        [self readPhotosWithMethod:@"photos.get"
+                        parameters:@{
+                                @"aid" : params.objectId,
+                                @"uid" : self.userId,
+                                @"photo_sizes" : @1,
+                                @"extended" : @1,
+                                @"count" : @(kPageSize)}
+                         operation:operation];
 
-            [operation complete:[self parsePhotos:response]];
-        }];
     }];
 }
 
@@ -358,7 +416,8 @@
 - (void)uploadPhoto:(SPhotoData *)params
               album:(NSString *)album
           operation:(SocialConnectorOperation *)operation
-         completion:(SObjectCompletionBlock)completionn {
+         completion:(SObjectCompletionBlock)completionn
+{
     NSString *uploadServer, *saveMethod;
     NSDictionary *parameters;
 
@@ -389,7 +448,8 @@
 
 - (void)uploadMessagePhoto:(SPhotoData *)params
                  operation:(SocialConnectorOperation *)operation
-                completion:(SObjectCompletionBlock)completionn {
+                completion:(SObjectCompletionBlock)completionn
+{
     NSString *uploadServer, *saveMethod;
 
     uploadServer = @"photos.getMessagesUploadServer";
@@ -397,19 +457,20 @@
     [self uploadPhoto:params uploadServer:uploadServer saveMethod:saveMethod operation:operation completion:completionn];
 }
 
-- (void)uploadPhoto:(SPhotoData *)params uploadServer:(NSString *)uploadServer saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completionn {
+- (void)uploadPhoto:(SPhotoData *)params uploadServer:(NSString *)uploadServer saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completionn
+{
 
     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
-    if(params.owner) {
+    if (params.owner) {
         uploadParams[@"uid"] = params.owner.objectId;
     }
-    if(params.title.length) {
+    if (params.title.length) {
         uploadParams[@"text"] = params.title;
     }
 
     VKRequest *request = [VKRequest requestWithMethod:uploadServer andParameters:uploadParams andHttpMethod:@"GET"];
 
-    [self simpleMethod:uploadServer operation:operation processor:^(NSDictionary * response) {
+    [self simpleMethod:uploadServer operation:operation processor:^(NSDictionary *response) {
 
         NSLog(@"response = %@", response);
 
@@ -418,7 +479,8 @@
 
 }
 
-- (void)uploadPhoto:(SPhotoData *)params toURL:(NSString *)URL saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completionn {
+- (void)uploadPhoto:(SPhotoData *)params toURL:(NSString *)URL saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completionn
+{
 
     if (!params.sourceData) {
         if (params.sourceImage) {
@@ -428,29 +490,29 @@
 
     VKUploadImage *photo = [VKUploadImage objectWithData:params.sourceData andParams:[VKImageParameters jpegImageWithQuality:0.5]];
 
-    VKRequest* reqest = [VKRequest photoRequestWithPostUrl:URL withPhotos:@[photo]];
+    VKRequest *reqest = [VKRequest photoRequestWithPostUrl:URL withPhotos:@[photo]];
 
-    [self executeRequest:reqest operation:operation processor:^(NSDictionary * result) {
+    [self executeRequest:reqest operation:operation processor:^(NSDictionary *result) {
 
         NSLog(@" result = %@", result);
 
         [self savePhoto:params saveMethod:saveMethod operation:operation uploadResult:result completion:completionn];
 
-    } retries:0];
+    }            retries:0];
 }
 
 - (void)savePhoto:(SPhotoData *)params saveMethod:(NSString *)saveMethod operation:(SocialConnectorOperation *)operation
-                                                                      uploadResult:(id)uploadResult completion:(SObjectCompletionBlock)completionn
+     uploadResult:(id)uploadResult completion:(SObjectCompletionBlock)completionn
 {
     NSMutableDictionary *saveParams = [NSMutableDictionary dictionaryWithDictionary:uploadResult];
-   if(params.owner) {
-       saveParams[@"uid"] = params.owner.objectId;
-   }
-    if(params.title.length) {
+    if (params.owner) {
+        saveParams[@"uid"] = params.owner.objectId;
+    }
+    if (params.title.length) {
         saveParams[@"text"] = params.title;
     }
 
-    [self simpleMethod:saveMethod parameters:saveParams operation:operation processor:^(NSArray * response) {
+    [self simpleMethod:saveMethod parameters:saveParams operation:operation processor:^(NSArray *response) {
         NSLog(@"response = %@", response);
         NSDictionary *photoData = response[0];
         SPhotoData *photo = [self parsePhotoResponse:photoData];
