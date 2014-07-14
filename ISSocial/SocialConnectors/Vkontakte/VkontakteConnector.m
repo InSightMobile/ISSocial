@@ -117,7 +117,7 @@ static const int kMaxRetries = 3;
             [self.autorizationOperation completeWithFailure];
             self.autorizationOperation = nil;
         }
-    }           afterDelay:1];
+    }           afterDelay:2];
 }
 
 

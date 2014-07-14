@@ -32,6 +32,7 @@
 @property(nonatomic, strong) SocialConnectorOperation *authorizationOperation;
 @property(nonatomic, copy) void (^successCallback)(ACAccount *);
 @property(nonatomic, copy) void (^failureCallback)(NSError *);
+@property(nonatomic) BOOL urlHandled;
 @end
 
 @implementation TwitterConnector
@@ -142,6 +143,7 @@
 
                     self.twitterAPI = twitter;
                     self.authorizationOperation = operation;
+                    self.urlHandled = NO;
                     [[UIApplication sharedApplication] openURL:url];
 
                 }           oauthCallback:callback errorBlock:^(NSError *error) {
@@ -165,6 +167,7 @@
 {
     if ([url.absoluteString hasPrefix:self.systemCallbackURL]) {
 
+        self.urlHandled = YES;
         NSDictionary *query = [url.query explodeURLQuery];
 
         if (query[@"oauth_token"]) {
@@ -182,7 +185,8 @@
 - (void)handleDidBecomeActive
 {
     [self iss_performBlock:^(id sender) {
-        if (self.authorizationOperation) {
+        if (self.authorizationOperation && !self.urlHandled) {
+            self.urlHandled = YES;
             [[self authorizationOperation] completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:nil userInfo:nil]];
             self.authorizationOperation = nil;
         }
