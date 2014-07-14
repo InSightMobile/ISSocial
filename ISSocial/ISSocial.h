@@ -24,6 +24,8 @@ static NSString *const ISSocialConnectorIdOdnoklassniki = @"Odnoklassniki";
 
 @property(nonatomic, strong, readonly) CompositeConnector *rootConnectors;
 
++ (BOOL)hasConnectorNamed:(NSString *)name;
+
 @property(nonatomic, strong) NSMutableDictionary *connectorsByCode;
 
 - (void)tryLoginWithCompletion:(void (^)())completion;

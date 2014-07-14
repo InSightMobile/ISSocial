@@ -76,6 +76,13 @@
     }];
 }
 
++ (BOOL)hasConnectorNamed:(NSString *)name
+{
+    Class connectorClass = NSClassFromString([NSString stringWithFormat:@"%@Connector", name]);
+
+    return [connectorClass isSubclassOfClass:[AccessSocialConnector class]];
+}
+
 - (void)tryLoginWithUserUI:(BOOL)userUI completion:(void (^)())completion
 {
     [self loadConnectors];
@@ -163,6 +170,11 @@
     }
 
     if (!_connectorsByCode[connectorName]) {
+
+        if(!connectorClass) {
+            return nil;
+        }
+
         _connectorsByCode[connectorName] = (id)[[connectorClass alloc] init];
     }
     return _connectorsByCode[connectorName];

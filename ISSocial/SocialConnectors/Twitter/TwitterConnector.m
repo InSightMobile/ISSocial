@@ -13,6 +13,7 @@
 #import "ISSocial+Errors.h"
 #import "WebLoginController.h"
 #import "NSString+ValueConvertion.h"
+#import "NSObject+PerformBlockInBackground.h"
 
 
 @interface TwitterConnector () <UIActionSheetDelegate, WebLoginControllerDelegate>
@@ -177,6 +178,17 @@
     }
     return NO;
 }
+
+- (void)handleDidBecomeActive
+{
+    [self iss_performBlock:^(id sender) {
+        if (self.authorizationOperation) {
+            [[self authorizationOperation] completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:nil userInfo:nil]];
+            self.authorizationOperation = nil;
+        }
+    }           afterDelay:1];
+}
+
 
 - (void)setOAuthToken:(NSString *)token oauthVerifier:(NSString *)verifier
 {
@@ -349,7 +361,7 @@
 
         [self readUserFriends:operation.object completion:^(SObject *result) {
 
-            if(!result.isSuccessful) {
+            if (!result.isSuccessful) {
                 [operation completeWithError:result.error];
                 return;
             }
@@ -358,13 +370,13 @@
 
             [self.twitterAPI getFollowersIDsForScreenName:self.screenName successBlock:^(NSArray *users) {
 
-                NSSet* followers = [NSSet setWithArray:users];
+                NSSet *followers = [NSSet setWithArray:users];
 
                 SObject *mutualFriends = [SObject objectCollectionWithHandler:self];
 
                 for (SUserData *sUserData in friends) {
 
-                    if([followers containsObject:sUserData.objectId]) {
+                    if ([followers containsObject:sUserData.objectId]) {
                         [mutualFriends addSubObject:sUserData];
                     }
 
@@ -373,10 +385,10 @@
 
                 [operation complete:mutualFriends];
 
-            }            errorBlock:^(NSError *error) {
+            }                                  errorBlock:^(NSError *error) {
 
-            [operation completeWithError:[self errorWithError:error]];
-        }];
+                [operation completeWithError:[self errorWithError:error]];
+            }];
 
         }];
 
