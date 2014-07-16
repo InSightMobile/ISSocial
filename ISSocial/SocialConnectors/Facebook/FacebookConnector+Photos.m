@@ -11,6 +11,9 @@
 #import "MultiImage.h"
 #import "SCommentData.h"
 #import "NSArray+AsyncBlocks.h"
+#import "SReadAlbumsParameters.h"
+
+static NSString *const kAlbumCoverPhotoKey = @"fb_cover_photo";
 
 @implementation FacebookConnector (Photos)
 
@@ -238,7 +241,6 @@
                 album.objectId = albumData[@"id"];
                 album.title = albumData[@"name"];
                 album.photoAlbumDescription = albumData[@"description"];
-                //album.photoAlbumSize = @([albumData[@"size"] integerValue]);
 
                 [operation complete:album];
             }];
@@ -284,13 +286,17 @@
     album.title = albumData[@"name"];
     album.sortGroup = @1;
     album.photoAlbumDescription = albumData[@"description"];
-    album.totalCount = albumData[@"count"];
+    album.photoCount = albumData[@"count"];
     album.canUpload = albumData[@"can_upload"];
     album.type = albumData[@"type"];
+    album.imageID = [albumData[@"cover_photo"] stringValue];
+
+    album.isEmpty = @(album.photoCount.integerValue == 0);
+
     return album;
 }
 
-- (SObject *)readPhotoAlbums:(SObject *)params completion:(SObjectCompletionBlock)completion
+- (SObject *)readPhotoAlbums:(SReadAlbumsParameters *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"me/albums" operation:operation processor:^(NSDictionary *response) {
@@ -301,7 +307,7 @@
             SObject *albums = [SObject objectCollectionWithHandler:self];
 
             SPhotoAlbumData *allObjectsAlbum = [[SPhotoAlbumData alloc] initWithHandler:self];
-            allObjectsAlbum.title = NSLocalizedString(@"All photos album title", @"All photos");
+            allObjectsAlbum.title = NSLocalizedString(@"ISSocial_AllPhotosAlbumTitle", @"All photos");
             allObjectsAlbum.sortGroup = @0;
             [albums addSubObject:allObjectsAlbum];
             allObjectsAlbum.type = @"all";
@@ -314,6 +320,39 @@
                     [albums addSubObject:album];
                 }
             }
+
+            if (params.loadImage.boolValue) {
+
+                [albums.subObjects asyncEach:^(SPhotoAlbumData *album, ISArrayAsyncEachResultBlock next) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+
+                        NSObject *coverPhoto = album.imageID;
+                        if(coverPhoto) {
+                            [self simpleMethod:[NSString stringWithFormat:@"%@/", coverPhoto]
+                                     operation:operation processor:^(id response) {
+                                NSLog(@"response = %@", response);
+
+                                SPhotoData *photo = [self parsePhoto:response];
+                                album.multiImage = photo.multiImage;
+                                next(nil);
+                            }];
+                        }
+                        else {
+                            next(nil);
+                        }
+
+                    });
+
+                }                comletition:^(NSError *errorOrNil) {
+
+                    [operation complete:albums];
+
+                }                  concurent:4];
+            }
+            else {
+                [operation complete:albums];
+            }
+
             [operation complete:albums];
         }];
     }];

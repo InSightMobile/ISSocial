@@ -12,6 +12,7 @@
 #import "ISSAuthorisationInfo.h"
 #import "SInvitation.h"
 #import "SShareItem.h"
+#import "SReadAlbumsParameters.h"
 
 NSString *const kNewMessagesNotification = @"NewMessageNotification";
 NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChanged";

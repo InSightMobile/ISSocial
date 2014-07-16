@@ -27,6 +27,7 @@
 @class ISSAuthorisationInfo;
 @class SInvitation;
 @class SShareItem;
+@class SReadAlbumsParameters;
 
 
 FOUNDATION_EXPORT NSString *const kNewMessagesNotification;
@@ -166,7 +167,7 @@ FOUNDATION_EXPORT NSString *const kNewMessagesUnreadStatusChanged;
 
 - (SObject *)addPhotoToAlbum:(SPhotoData *)params completion:(SObjectCompletionBlock)completion;
 
-- (SObject *)readPhotoAlbums:(SObject *)params completion:(SObjectCompletionBlock)completion;
+- (SObject *)readPhotoAlbums:(SReadAlbumsParameters *)params completion:(SObjectCompletionBlock)completion;
 
 - (SObject *)cachedReadPhotoAlbums:(SObject *)params completion:(SObjectCompletionBlock)completion;
 

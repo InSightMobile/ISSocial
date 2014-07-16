@@ -2,7 +2,6 @@
 //
 
 
-#import <ISAppearance/NSObject+ISAppearance.h>
 #import "VkontakteConnector.h"
 #import "VkontakteConnector+Photos.h"
 #import "SPhotoData.h"
@@ -13,6 +12,7 @@
 #import "SCommentData.h"
 #import "VkontakteConnector+Feed.h"
 #import "SUserData.h"
+#import "SPagingData.h"
 
 
 static const int kPageSize = 20;
@@ -38,10 +38,10 @@ static const int kPageSize = 20;
         SObject *photos = [self parsePhotos:items];
 
         if (photos.subObjects.count < totalCount) {
-            SObject *pagingData = [SObject objectWithHandler:self];
+            SPagingData *pagingData = [SPagingData objectWithHandler:self];
 
-            pagingData[@"getMethod"] = method;
-            pagingData[@"getParameters"] = parameters;
+            pagingData.method = method;
+            pagingData.params = parameters;
 
             photos.pagingData = pagingData;
             photos.isPagable = @YES;
@@ -57,10 +57,10 @@ static const int kPageSize = 20;
 
     return [self operationWithObject:pagePhotos completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        SObject *pagingData = [pagePhotos.pagingData copy];
+        SPagingData *pagingData = pagePhotos.pagingData;
 
-        NSString *method = pagingData[@"getMethod"];
-        NSMutableDictionary *parameters = [pagingData[@"getParameters"] mutableCopy];
+        NSString *method = pagingData.method;
+        NSMutableDictionary *parameters = [pagingData.params mutableCopy];
         parameters[@"offset"] = @(pagePhotos.count);
 
         [self simpleMethod:method parameters:parameters
@@ -211,7 +211,7 @@ static const int kPageSize = 20;
             SPhotoAlbumData *album = [[SPhotoAlbumData alloc] initWithHandler:self];
             album.objectId = albumData[@"aid"];
             album.title = albumData[@"title"];
-            album.photoAlbumSize = @([albumData[@"size"] integerValue]);
+            album.photoCount = @([albumData[@"size"] integerValue]);
             [operation complete:album];
         }];
     }];
@@ -221,29 +221,37 @@ static const int kPageSize = 20;
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        [self simpleMethod:@"photos.getAlbums" parameters:nil operation:operation processor:^(NSArray *response) {
+        [self simpleMethod:@"photos.getAlbums" parameters:@{@"need_covers" : @1, @"need_system" : @1} operation:operation processor:^(NSDictionary *response) {
+
+
+            NSArray *items = response[@"items"];
 
             SObject *albums = [SObject objectCollectionWithHandler:self];
 
             SPhotoAlbumData *allObjectsAlbum = [[SPhotoAlbumData alloc] initWithHandler:self];
-            allObjectsAlbum.title = NSLocalizedString(@"All photos album title", @"All photos");
+            allObjectsAlbum.title = NSLocalizedString(@"ISSocial_AllPhotosAlbumTitle", @"All photos");
             allObjectsAlbum.sortGroup = @0;
             allObjectsAlbum.type = @"all";
             [albums addSubObject:allObjectsAlbum];
 
-            for (NSDictionary *albumData in response) {
+            for (NSDictionary *albumData in items) {
 
                 NSString *objectId = [albumData[@"aid"] stringValue];
 
                 SPhotoAlbumData *album = [self mediaObjectForId:objectId type:@"album"];
                 album.title = albumData[@"title"];
                 album.sortGroup = @1;
-                album.photoAlbumSize = @([albumData[@"size"] integerValue]);
+                album.photoCount = @([albumData[@"size"] integerValue]);
                 album.date = [NSDate dateWithTimeIntervalSince1970:[albumData[@"updated"] doubleValue]];
-                album.totalCount = album.photoAlbumSize;
+                album.totalCount = album.photoCount;
                 album.canUpload = @YES;
-
+                if (albumData[@"thumb_src"]) {
+                    album.multiImage = [[MultiImage alloc] initWithURL:[albumData[@"thumb_src"] URLValue]];
+                }
+                album.imageID = [albumData[@"thumb_id"] stringValue];
                 [albums addSubObject:album];
+
+                album.isEmpty = @(album.photoCount.integerValue == 0);
             }
             [operation complete:albums];
         }];
@@ -282,7 +290,7 @@ static const int kPageSize = 20;
                 SPhotoAlbumData *album = [[SPhotoAlbumData alloc] initWithHandler:self];
                 album.objectId = albumData[@"aid"];
                 album.title = albumData[@"title"];
-                album.photoAlbumSize = @([albumData[@"size"] integerValue]);
+                album.photoCount = @([albumData[@"size"] integerValue]);
                 [operation complete:album];
             }
             else { // create new album

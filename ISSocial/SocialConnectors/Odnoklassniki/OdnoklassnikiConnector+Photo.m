@@ -10,12 +10,16 @@
 #import "MultiImage.h"
 #import "SPhotoAlbumData.h"
 #import "NSDate+Odnoklassniki.h"
-#import "AFHTTPRequestOperation.h"
 #import "NSString+TypeSafety.h"
+#import "SPagingData.h"
+#import "SReadAlbumsParameters.h"
+#import "NSArray+AsyncBlocks.h"
+
+static const int kPhotoPageSize = 20;
 
 @implementation OdnoklassnikiConnector (Photo)
 
-- (SObject *)parsePhotos:(id)responce
+- (SObject *)parsePhotos:(NSDictionary *)responce forMethod:(NSString *)method params:(NSDictionary *)params
 {
     SObject *photos = [SObject objectCollectionWithHandler:self];
 
@@ -50,16 +54,47 @@
 
         [photos addSubObject:photo];
     }
+
+    if ([responce[@"hasMore"] boolValue]) {
+
+        SPagingData *pagingData = [SPagingData objectWithHandler:self];
+        pagingData.method = method;
+        pagingData.params = params ?: @{};
+        pagingData.anchor = responce[@"anchor"];
+
+        photos.pagingData = pagingData;
+        photos.pagingSelector = @selector(pagePhotos:completion:);
+        photos.isPagable = @YES;
+    }
+
     return photos;
 }
 
-- (SObject *)parseAlbums:(id)responce
+- (SObject *)pagePhotos:(SObject *)params completion:(SObjectCompletionBlock)completion
+{
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+
+        SPagingData *pagingData = params.pagingData;
+        NSMutableDictionary *parameters = [pagingData.params mutableCopy];
+        parameters[@"anchor"] = pagingData.anchor;
+        parameters[@"direction"] = @"forward";
+
+        [self simpleMethod:pagingData.method parameters:parameters operation:operation processor:^(id response) {
+            NSLog(@"response = %@", response);
+            SObject *photos = [self parsePhotos:response forMethod:pagingData.method params:pagingData.params];
+
+            [operation complete:[self addPagingData:photos to:params]];
+        }];
+    }];
+}
+
+- (void)parseAlbums:(id)responce params:(SReadAlbumsParameters *)params operation:(SocialConnectorOperation *)operation
 {
     SObject *albums = [SObject objectCollectionWithHandler:self];
 
-    if (0) {
+    if (params.loadAllPhotosMetaAlbum.boolValue) {
         SPhotoAlbumData *allObjectsAlbum = [[SPhotoAlbumData alloc] initWithHandler:self];
-        allObjectsAlbum.title = NSLocalizedString(@"All photos album title", @"All photos");
+        allObjectsAlbum.title = [[NSBundle mainBundle] localizedStringForKey:@"ISSocial_AllPhotosAlbumTitle" value:@"All photos" table:nil];
         allObjectsAlbum.sortGroup = @0;
         [albums addSubObject:allObjectsAlbum];
     }
@@ -70,7 +105,36 @@
         album.sortGroup = @1;
         [albums addSubObject:album];
     }
-    return albums;
+
+    if (params.loadImage.boolValue) {
+
+        [albums.subObjects asyncEach:^(SPhotoAlbumData *album, ISArrayAsyncEachResultBlock next) {
+
+            dispatch_async(dispatch_get_main_queue(), ^{
+
+                [self simpleMethod:@"photos.getPhotos" parameters:@{@"aid" : album.objectId, @"count" : @1} operation:operation processor:^(id response) {
+                    NSLog(@"response = %@", response);
+
+                    NSArray *photos = [self parsePhotos:response forMethod:nil params:nil].subObjects;
+                    if (photos.count) {
+                        SPhotoData *photo = photos[0];
+                        album.multiImage = photo.multiImage;
+                    }
+                    next(nil);
+                }];
+
+
+            });
+
+        }                comletition:^(NSError *errorOrNil) {
+
+            [operation complete:albums];
+
+        }                  concurent:4];
+    }
+    else {
+        [operation complete:albums];
+    }
 }
 
 - (SPhotoAlbumData *)parseAlbum:(NSDictionary *)data
@@ -83,16 +147,27 @@
     album.userLikes = @([data[@"liked_it"] boolValue]);
     album.date = [NSDate dateWithOdnoklassnikiString:data[@"created"]];
     album.canUpload = @YES;
+    album.photoCount = data[@"photos_count"];
+    album.isEmpty = @(album.photoCount.integerValue == 0);
+
     return album;
 }
 
 - (SObject *)readPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
-        [self simpleMethod:@"photos.getPhotos" parameters:@{@"detectTotalCount" : @1} operation:operation processor:^(id response) {
-            NSLog(@"response = %@", response);
-            [operation complete:[self parsePhotos:response]];
-        }];
+        [self loadPhotoWithMethod:@"photos.getPhotos" parameters:nil operation:operation];
+    }];
+}
+
+- (void)loadPhotoWithMethod:(NSString *)method parameters:(NSDictionary *)parameters operation:(SocialConnectorOperation *)operation
+{
+    NSMutableDictionary *params = parameters ? [parameters mutableCopy] : [NSMutableDictionary dictionaryWithCapacity:1];
+    params[@"detectTotalCount"] = @1;
+
+    [self simpleMethod:method parameters:params operation:operation processor:^(id response) {
+        NSLog(@"response = %@", response);
+        [operation complete:[self parsePhotos:response forMethod:method params:parameters]];
     }];
 }
 
@@ -104,22 +179,19 @@
 
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        [self simpleMethod:@"photos.getPhotos" parameters:@{@"detectTotalCount" : @1, @"aid" : params.objectId} operation:operation processor:^(id response) {
-            NSLog(@"response = %@", response);
-            [operation complete:[self parsePhotos:response]];
-        }];
+        [self loadPhotoWithMethod:@"photos.getPhotos" parameters:@{@"aid" : params.objectId} operation:operation];
     }];
 }
 
-- (SObject *)readPhotoAlbums:(SObject *)params completion:(SObjectCompletionBlock)completion
+- (SObject *)readPhotoAlbums:(SReadAlbumsParameters *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        [self simpleMethod:@"photos.getAlbums" parameters:@{} operation:operation processor:^(id response) {
+        NSDictionary *parameters = @{@"fields" : @"album.aid,album.title,album.description,album.created,album.type,album.types,album.type_change_enabled,album.comments_count,album.photos_count,photo.id,photo.pic50x50,photo.pic128x128,photo.pic640x480"};
 
+        [self simpleMethod:@"photos.getAlbums" parameters:parameters operation:operation processor:^(id response) {
             NSLog(@"response = %@", response);
-
-            [operation complete:[self parseAlbums:response]];
+            [self parseAlbums:response params:params operation:operation];
         }];
     }];
 }
@@ -200,44 +272,44 @@
 
 
         AFHTTPRequestOperation *op = [self.client POST:uploadURL
-          parameters:nil constructingBodyWithBlock:^(id <AFMultipartFormData> formData) {
-                            [formData appendPartWithFileData:params.sourceData name:@"pic1" fileName:@"pic1.jpg" mimeType:@"image/jpeg"];
+                                            parameters:nil constructingBodyWithBlock:^(id <AFMultipartFormData> formData) {
+                    [formData appendPartWithFileData:params.sourceData name:@"pic1" fileName:@"pic1.jpg" mimeType:@"image/jpeg"];
+                }
+                                               success:
+                                                       ^(AFHTTPRequestOperation *op, id responseObject) {
+
+                    NSLog(@"responseObject = %@", responseObject);
+
+                    //NSString *data = [[NSString alloc] initWithBytes:[responseObject bytes] length:[responseObject length] encoding:NSUTF8StringEncoding];
+                    if ([responseObject[@"photos"] count] == 0) {
+                        completionn([SObject failed]);
+                        return;
+                    }
+                    NSString *token = responseObject[@"photos"][photoId][@"token"];
+
+                    if (!token) {
+                        completionn([SObject failed]);
+                        return;
+                    }
+
+                    [self simpleMethod:@"photosV2.commit" parameters:@{@"photo_id" : photoId, @"token" : token} operation:operation processor:^(id response) {
+
+                        NSLog(@"responseObject = %@", response);
+                        SPhotoData *result = [params copyWithHandler:self];
+
+                        if ([responseObject[@"photos"] count] == 0) {
+                            completionn([SObject failed]);
+                            return;
                         }
-             success:
-                     ^(AFHTTPRequestOperation *op,id responseObject) {
 
-                         NSLog(@"responseObject = %@", responseObject);
+                        completionn(result);
+                    }];
 
-                         //NSString *data = [[NSString alloc] initWithBytes:[responseObject bytes] length:[responseObject length] encoding:NSUTF8StringEncoding];
-                         if ([responseObject[@"photos"] count] == 0) {
-                             completionn([SObject failed]);
-                             return;
-                         }
-                         NSString *token = responseObject[@"photos"][photoId][@"token"];
-
-                         if (!token) {
-                             completionn([SObject failed]);
-                             return;
-                         }
-
-                         [self simpleMethod:@"photosV2.commit" parameters:@{@"photo_id" : photoId, @"token" : token} operation:operation processor:^(id response) {
-
-                             NSLog(@"responseObject = %@", response);
-                             SPhotoData *result = [params copyWithHandler:self];
-
-                             if ([responseObject[@"photos"] count] == 0) {
-                                 completionn([SObject failed]);
-                                 return;
-                             }
-
-                             completionn(result);
-                         }];
-
-                     }
-             failure:
-                     ^(AFHTTPRequestOperation *op, NSError *error) {
-                         completionn([SObject error:error]);
-                     }];
+                }
+                                               failure:
+                                                       ^(AFHTTPRequestOperation *op, NSError *error) {
+                    completionn([SObject error:error]);
+                }];
     }];
 }
 
