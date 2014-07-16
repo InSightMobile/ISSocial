@@ -206,7 +206,6 @@ static const int kPageSize = 20;
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"photos.createAlbum" parameters:@{@"title" : params.title} operation:operation processor:^(NSArray *response) {
 
-            //NSLog(@"response = %@", response);
             NSDictionary *albumData = (id) response;
             SPhotoAlbumData *album = [[SPhotoAlbumData alloc] initWithHandler:self];
             album.objectId = albumData[@"aid"];
@@ -236,7 +235,7 @@ static const int kPageSize = 20;
 
             for (NSDictionary *albumData in items) {
 
-                NSString *objectId = [albumData[@"aid"] stringValue];
+                NSString *objectId = [albumData[@"id"] stringValue];
 
                 SPhotoAlbumData *album = [self mediaObjectForId:objectId type:@"album"];
                 album.title = albumData[@"title"];
@@ -268,8 +267,8 @@ static const int kPageSize = 20;
 
         [self readPhotosWithMethod:@"photos.get"
                         parameters:@{
-                                @"aid" : params.objectId,
-                                @"uid" : self.userId,
+                                @"album_id" : params.objectId,
+                                @"owner_id" : self.userId,
                                 @"photo_sizes" : @1,
                                 @"extended" : @1,
                                 @"count" : @(kPageSize)}
@@ -288,7 +287,7 @@ static const int kPageSize = 20;
             if ([response count]) {
                 NSDictionary *albumData = [response objectAtIndex:0];
                 SPhotoAlbumData *album = [[SPhotoAlbumData alloc] initWithHandler:self];
-                album.objectId = albumData[@"aid"];
+                album.objectId = albumData[@"id"];
                 album.title = albumData[@"title"];
                 album.photoCount = @([albumData[@"size"] integerValue]);
                 [operation complete:album];
@@ -331,6 +330,8 @@ static const int kPageSize = 20;
 
     data.author = [self dataForUserId:[response[@"owner_id"] stringValue]];
     data.owner = data.author;
+
+    data.title = response[@"text"];
 
     MultiImage *images = [MultiImage new];
 

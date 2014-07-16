@@ -12,8 +12,12 @@
 #import "SCommentData.h"
 #import "NSArray+AsyncBlocks.h"
 #import "SReadAlbumsParameters.h"
+#import "SPagingData.h"
+
 
 static NSString *const kAlbumCoverPhotoKey = @"fb_cover_photo";
+
+static const int kPageSize = 20;
 
 @implementation FacebookConnector (Photos)
 
@@ -152,19 +156,62 @@ static NSString *const kAlbumCoverPhotoKey = @"fb_cover_photo";
         return [self readUploadedPhotos:params completion:completion];
     }
 
+    NSString *method = [NSString stringWithFormat:@"%@/photos", params.objectId];
+    NSDictionary *parameters = @{@"limit" : [@(kPageSize) stringValue]};
+
+    return [self fetchDataWithPath:method parameters:parameters params:params completion:completion processor:^(NSDictionary *response, SocialConnectorOperation *operation) {
+
+        NSLog(@"response = %@", response);
+        SObject *result = [[SObject alloc] initWithHandler:self];
+
+        for (id photoData in response[@"data"]) {
+            [result addSubObject:[self parsePhoto:photoData]];
+        }
+
+        [operation complete:result];
+
+    }];
+}
+
+- (SObject *)parsePhotosWithResponse:(NSDictionary *)response method:(NSString *)method parameters:(NSDictionary *)parameters
+{
+    SObject *result = [[SObject alloc] initWithHandler:self];
+
+    for (id photoData in response[@"data"]) {
+        [result addSubObject:[self parsePhoto:photoData]];
+    }
+
+    SPagingData *paging = [SPagingData objectWithHandler:self];
+    paging.anchor = response[@"paging"][@"cursors"][@"after"];
+    paging.method = method;
+    paging.params = parameters;
+
+    result.pagingObject = paging;
+    result.isPagable = @(response[@"paging"][@"next"] != nil);
+    result.pagingSelector = @selector(pagePhotos:completion:);
+    return result;
+}
+
+- (SObject *)pagePhotos:(SObject *)params completion:(SObjectCompletionBlock)completion
+{
+    SPagingData *paging = params.pagingObject;
+    NSMutableDictionary *parameters = [paging.params mutableCopy];
+
+    parameters[@"after"] = paging.anchor;
+
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        [self simpleQuery:[NSString stringWithFormat:@"SELECT like_info,comment_info,images, modified,object_id from photo where album_object_id = %@", params.objectId] operation:operation processor:^(id response) {
+        NSString *method = paging.method;
+        [self simpleMethod:method params:parameters operation:operation processor:^(NSDictionary *response) {
 
             NSLog(@"response = %@", response);
-            SObject *result = [[SObject alloc] initWithHandler:self];
+            SObject *result = [self parsePhotosWithResponse:response method:method parameters:nil];
 
-            for (id photoData in response[@"data"]) {
-                [result addSubObject:[self parsePhoto:photoData]];
-            }
-            [operation complete:result];
+            [operation complete:[self addPagingData:result to:params]];
         }];
     }];
+
+
 }
 
 /*
@@ -296,69 +343,75 @@ static NSString *const kAlbumCoverPhotoKey = @"fb_cover_photo";
     return album;
 }
 
-- (SObject *)readPhotoAlbums:(SReadAlbumsParameters *)params completion:(SObjectCompletionBlock)completion
+
+- (SObject *)readPhotoAlbums:(SReadAlbumsParameters *)params
+                  completion:
+                          (SObjectCompletionBlock)completion
 {
-    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
-        [self simpleMethod:@"me/albums" operation:operation processor:^(NSDictionary *response) {
+    NSString *fields = @"id,name,description,count,can_upload,type,cover_photo";
 
-            NSLog(@"response = %@", response);
-            NSArray *data = response[@"data"];
+    return [self fetchDataWithPath:@"me/albums" parameters:@{@"fields" : fields} params:params completion:completion processor:^(NSDictionary *response, SocialConnectorOperation *operation) {
 
-            SObject *albums = [SObject objectCollectionWithHandler:self];
 
-            SPhotoAlbumData *allObjectsAlbum = [[SPhotoAlbumData alloc] initWithHandler:self];
-            allObjectsAlbum.title = NSLocalizedString(@"ISSocial_AllPhotosAlbumTitle", @"All photos");
-            allObjectsAlbum.sortGroup = @0;
-            [albums addSubObject:allObjectsAlbum];
-            allObjectsAlbum.type = @"all";
+        NSLog(@"response = %@", response);
+        NSArray *data = response[@"data"];
 
-            for (NSDictionary *albumData in data) {
+        SObject *albums = [SObject objectCollectionWithHandler:self];
 
-                SPhotoAlbumData *album = [self parseAlbumData:albumData];
+        SPhotoAlbumData *allObjectsAlbum = [[SPhotoAlbumData alloc] initWithHandler:self];
+        allObjectsAlbum.title = NSLocalizedString(@"ISSocial_AllPhotosAlbumTitle", @"All photos");
+        allObjectsAlbum.sortGroup = @0;
+        [albums addSubObject:allObjectsAlbum];
+        allObjectsAlbum.type = @"all";
 
-                if (![albumData[@"type"] isEqualToString:@"wall"]) {
-                    [albums addSubObject:album];
-                }
+        for (NSDictionary *albumData in data) {
+
+            SPhotoAlbumData *album = [self parseAlbumData:albumData];
+
+            if (![albumData[@"type"] isEqualToString:@"wall"]) {
+                [albums addSubObject:album];
             }
+        }
 
-            if (params.loadImage.boolValue) {
+        if (params.loadImage.boolValue) {
 
-                [albums.subObjects asyncEach:^(SPhotoAlbumData *album, ISArrayAsyncEachResultBlock next) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
+            [albums.subObjects asyncEach:^(SPhotoAlbumData *album, ISArrayAsyncEachResultBlock next) {
+                dispatch_async(dispatch_get_main_queue(), ^{
 
-                        NSObject *coverPhoto = album.imageID;
-                        if(coverPhoto) {
-                            [self simpleMethod:[NSString stringWithFormat:@"%@/", coverPhoto]
-                                     operation:operation processor:^(id response) {
-                                NSLog(@"response = %@", response);
+                    NSObject *coverPhoto = album.imageID;
+                    if (coverPhoto) {
+                        [self simpleMethod:[NSString stringWithFormat:@"%@/", coverPhoto]
+                                 operation:operation processor:^(id response) {
+                            NSLog(@"response = %@", response);
 
-                                SPhotoData *photo = [self parsePhoto:response];
-                                album.multiImage = photo.multiImage;
-                                next(nil);
-                            }];
-                        }
-                        else {
+                            SPhotoData *photo = [self parsePhoto:response];
+                            album.multiImage = photo.multiImage;
                             next(nil);
-                        }
+                        }];
+                    }
+                    else {
+                        next(nil);
+                    }
 
-                    });
+                });
 
-                }                comletition:^(NSError *errorOrNil) {
+            }                comletition:^(NSError *errorOrNil) {
 
-                    [operation complete:albums];
-
-                }                  concurent:4];
-            }
-            else {
                 [operation complete:albums];
-            }
 
+            }                  concurent:4];
+        }
+        else {
             [operation complete:albums];
-        }];
+        }
+
+        [operation complete:albums];
     }];
 }
 
-- (SObject *)getDefaultPhotoAlbum:(SObject *)params completion:(SObjectCompletionBlock)completion
+- (SObject *)getDefaultPhotoAlbum:(SObject *)params
+                       completion:
+                               (SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"me/albums" operation:operation processor:^(NSDictionary *response) {
@@ -382,12 +435,16 @@ static NSString *const kAlbumCoverPhotoKey = @"fb_cover_photo";
     }];
 }
 
-- (SObject *)addPhotoToAlbum:(SPhotoData *)params completion:(SObjectCompletionBlock)completionn
+- (SObject *)addPhotoToAlbum:(SPhotoData *)params
+                  completion:
+                          (SObjectCompletionBlock)completionn
 {
     return [self addPhotoWithParams:params completion:completionn];
 }
 
-- (SObject *)addPhoto:(SPhotoData *)srcParams completion:(SObjectCompletionBlock)completion
+- (SObject *)addPhoto:(SPhotoData *)srcParams
+           completion:
+                   (SObjectCompletionBlock)completion
 {
     SPhotoData *params = [srcParams copy];
     params.album = nil;
@@ -395,7 +452,9 @@ static NSString *const kAlbumCoverPhotoKey = @"fb_cover_photo";
     return [self addPhotoWithParams:params completion:completion];
 }
 
-- (SObject *)addPhotoWithParams:(SPhotoData *)params completion:(SObjectCompletionBlock)completion
+- (SObject *)addPhotoWithParams:(SPhotoData *)params
+                     completion:
+                             (SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -431,7 +490,13 @@ static NSString *const kAlbumCoverPhotoKey = @"fb_cover_photo";
     }];
 }
 
-- (void)uploadPhoto:(SPhotoData *)photo toPath:(NSString *)path operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
+- (void)uploadPhoto:(SPhotoData *)photo
+             toPath:
+                     (NSString *)path
+          operation:
+                  (SocialConnectorOperation *)operation
+         completion:
+                 (SObjectCompletionBlock)completion
 {
     [self checkAuthorizationFor:@[@"publish_stream", @"photo_upload"] operation:operation processor:^(id obj) {
 
@@ -463,22 +528,30 @@ static NSString *const kAlbumCoverPhotoKey = @"fb_cover_photo";
     }];
 }
 
-- (SObject *)addPhotoLike:(SPhotoData *)feed completion:(SObjectCompletionBlock)completion
+- (SObject *)addPhotoLike:(SPhotoData *)feed
+               completion:
+                       (SObjectCompletionBlock)completion
 {
     return [self addFeedLike:(id) feed completion:completion];
 }
 
-- (SObject *)removePhotoLike:(SPhotoData *)feed completion:(SObjectCompletionBlock)completion
+- (SObject *)removePhotoLike:(SPhotoData *)feed
+                  completion:
+                          (SObjectCompletionBlock)completion
 {
     return [self removeFeedLike:(id) feed completion:completion];
 }
 
-- (SObject *)addPhotoComment:(SPhotoData *)comments completion:(SObjectCompletionBlock)completion
+- (SObject *)addPhotoComment:(SPhotoData *)comments
+                  completion:
+                          (SObjectCompletionBlock)completion
 {
     return [self addFeedComment:(id) comments completion:completion];
 }
 
-- (SObject *)readPhotoComments:(SPhotoData *)feed completion:(SObjectCompletionBlock)completion
+- (SObject *)readPhotoComments:(SPhotoData *)feed
+                    completion:
+                            (SObjectCompletionBlock)completion
 {
     return [self readFeedComments:(id) feed completion:completion];
 }

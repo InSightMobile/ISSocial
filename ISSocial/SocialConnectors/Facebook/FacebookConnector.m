@@ -10,6 +10,7 @@
 #import "ISSocial+Errors.h"
 #import "NSObject+PerformBlockInBackground.h"
 #import "ISSAuthorisationInfo.h"
+#import "SPagingData.h"
 
 @interface FacebookConnector ()
 @property(nonatomic) BOOL loggedIn;
@@ -56,7 +57,6 @@
 {
     return ISSocialConnectorIdFacebook;
 }
-
 
 
 - (void)simpleMethodWithURL:(NSString *)urlString operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
@@ -147,15 +147,15 @@
                                          HTTPMethod:httpMethod]
                         startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
 
-                            [operation removeConnection:connection];
-                            if (error) {
-                                NSLog(@"Facebook error on method: %@ error:%@", path, error.userInfo);
-                                [self processFacebookError:error operation:operation processor:processor];
-                            }
-                            else {
-                                processor(result);
-                            }
-                        }];
+                    [operation removeConnection:connection];
+                    if (error) {
+                        NSLog(@"Facebook error on method: %@ error:%@", path, error.userInfo);
+                        [self processFacebookError:error operation:operation processor:processor];
+                    }
+                    else {
+                        processor(result);
+                    }
+                }];
         [operation addConnection:connection];
     }
     else {
@@ -179,7 +179,7 @@
 
 - (void)processFacebookError:(NSError *)error operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
 {
-    if(error.code == FBErrorHTTPError) {
+    if (error.code == FBErrorHTTPError) {
         [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorNetwork sourseError:error.userInfo[FBErrorInnerErrorKey] userInfo:nil]];
         return;
     }
@@ -392,6 +392,77 @@
     token.accessToken = [FBSession activeSession].accessTokenData.accessToken;
     token.userId = self.currentUserData.objectId;
     return token;
+}
+
+
+- (SObject *)fetchDataWithPath:(NSString *)path parameters:(NSDictionary *)parameters params:(SObject *)params completion:(SObjectCompletionBlock)completion processor:(PagingProcessor)processor
+{
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+
+        [self simpleMethod:path params:parameters operation:operation processor:^(NSDictionary *response) {
+
+            SocialConnectorOperation *processOperstion = [[SocialConnectorOperation alloc] initWithHandler:self parent:operation];
+
+            processOperstion.completionHandler = ^(SObject *result) {
+
+                if (!result.isSuccessful) {
+                    [operation completeWithError:result.error];
+                    return;
+                }
+
+                [self fillPagingDataFor:result withpath:path response:response processor:processor parameters:parameters];
+
+                [operation complete:result];
+
+            };
+            processor(response, processOperstion);
+        }];
+    }];
+}
+
+- (SObject *)pageObject:(SObject *)params completion:(SObjectCompletionBlock)completion
+{
+    SPagingData *paging = params.pagingObject;
+    NSMutableDictionary *parameters = [paging.params mutableCopy];
+    NSString *path = paging.method;
+    parameters[@"after"] = paging.anchor;
+    PagingProcessor processor = paging.pagingData;
+
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+
+        [self simpleMethod:path params:parameters operation:operation processor:^(NSDictionary *response) {
+
+            SocialConnectorOperation *processOperstion = [[SocialConnectorOperation alloc] initWithHandler:self parent:operation];
+
+            [processOperstion setCompletionHandler:^(SObject *result) {
+
+                if (!result.isSuccessful) {
+                    [operation completeWithError:result.error];
+                    return;
+                }
+
+                [self fillPagingDataFor:result withpath:path response:response processor:processor parameters:paging.params];
+
+                [operation complete:[self addPagingData:result to:params]];
+
+            }];
+            processor(response, processOperstion);
+
+        }];
+    }];
+}
+
+- (void)fillPagingDataFor:(SObject *)result withpath:(NSString *)path response:(NSDictionary *)response processor:(PagingProcessor)processor parameters:(NSDictionary *)parameters
+{
+    SPagingData *paging = [SPagingData objectWithHandler:self];
+    paging.anchor = response[@"paging"][@"cursors"][@"after"];
+    paging.method = path;
+    paging.params = parameters;
+    paging.pagingData = [processor copy];
+
+    result.pagingObject = paging;
+    result.isPagable = @(response[@"paging"][@"next"] != nil);
+    result.pagingSelector = @selector(pageObject:completion:);
 }
 
 @end

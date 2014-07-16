@@ -11,6 +11,7 @@
 @class VkontakteConnector;
 @class SocialConnectorOperation;
 @class SocialConnector;
+@class SPagingData;
 
 static NSString *const kSObjectDidUpdated = @"SObjectDidUpdated";
 typedef enum
@@ -43,7 +44,7 @@ typedef void (^SObjectCompletionBlock)(SObject *result);
 
 @optional
 
-@property(strong, nonatomic) SObject *pagingObject;
+@property(strong, nonatomic) SPagingData *pagingObject;
 @property(strong, nonatomic) id pagingData;
 @property(nonatomic, strong) NSNumber *isPagable;
 @property(nonatomic, strong) NSNumber *noCache;

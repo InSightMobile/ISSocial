@@ -10,6 +10,7 @@
 #import "SObject.h"
 #import "SocialConnectorOperation.h"
 #import "SocialConnector.h"
+#import "SPagingData.h"
 
 
 @interface SObject ()

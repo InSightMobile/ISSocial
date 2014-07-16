@@ -9,6 +9,7 @@
 @class SUserData;
 @class SPhotoAlbumData;
 
+typedef void (^PagingProcessor)(id, SocialConnectorOperation *);
 
 @interface FacebookConnector : AccessSocialConnector
 
@@ -35,6 +36,8 @@
 
 - (void)authorizeWithPublishPermissions:(NSArray *)permissions completion:(SObjectCompletionBlock)completion;
 
+
+- (SObject *)fetchDataWithPath:(NSString *)path parameters:(NSDictionary *)parameters params:(SObject *)params completion:(SObjectCompletionBlock)completion processor:(PagingProcessor)processor;
 
 - (SObject *)operationWithObject:(SObject *)object;
 
