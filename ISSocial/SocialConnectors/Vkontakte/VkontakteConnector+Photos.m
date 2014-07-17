@@ -61,7 +61,7 @@ static const int kPageSize = 20;
 
         NSString *method = pagingData.method;
         NSMutableDictionary *parameters = [pagingData.params mutableCopy];
-        parameters[@"offset"] = @(pagePhotos.count);
+        parameters[@"offset"] = @(pagePhotos.subObjects.count);
 
         [self simpleMethod:method parameters:parameters
                  operation:operation processor:^(id response) {
@@ -271,7 +271,8 @@ static const int kPageSize = 20;
                                 @"owner_id" : self.userId,
                                 @"photo_sizes" : @1,
                                 @"extended" : @1,
-                                @"count" : @(kPageSize)}
+                                @"count" : @(kPageSize),
+                                @"rev" : @1}
                          operation:operation];
 
     }];
