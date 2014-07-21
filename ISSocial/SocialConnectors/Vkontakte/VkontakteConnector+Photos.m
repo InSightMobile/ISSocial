@@ -13,6 +13,7 @@
 #import "VkontakteConnector+Feed.h"
 #import "SUserData.h"
 #import "SPagingData.h"
+#import "VKUploadImage.h"
 
 
 static const int kPageSize = 20;
@@ -498,7 +499,7 @@ static const int kPageSize = 20;
         }
     }
 
-    VKUploadImage *photo = [VKUploadImage objectWithData:params.sourceData andParams:[VKImageParameters jpegImageWithQuality:0.5]];
+    VKUploadImage *photo = [VKUploadImage uploadImageWithData:params.sourceData andParams:[VKImageParameters jpegImageWithQuality:0.5]];
 
     VKRequest *reqest = [VKRequest photoRequestWithPostUrl:URL withPhotos:@[photo]];
 
