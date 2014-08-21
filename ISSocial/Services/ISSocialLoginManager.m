@@ -26,8 +26,7 @@ typedef void (^BlockCompletionBlock)();
 {
     static ISSocialLoginManager *_instance = nil;
     static dispatch_once_t pred;
-    dispatch_once(&pred, ^
-    {
+    dispatch_once(&pred, ^{
         _instance = [[self alloc] init];
     });
     return _instance;
@@ -63,15 +62,14 @@ typedef void (^BlockCompletionBlock)();
 - (void)loginWithParams:(SObject *)options connector:(SocialConnector *)connector completion:(void (^)())completion
 {
     __weak ISSocialLoginManager *wself = self;
-    
-    [[NetworkCheck instance] checkConnectionWithCompletion:^(BOOL connected)
-    {
+
+    void (^connectedBlock)(BOOL) = ^(BOOL connected) {
         if (!connected) {
             if (options[kAllowUserUIKey] && ![options[kAllowUserUIKey] boolValue]) {
 
                 //[UIAlertView showAlertViewWithTitle:NSLocalizedString(@"No network access", @"No network access") message:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex)
                 //{
-                    completion();
+                completion();
                 //}];
             }
             else {
@@ -113,12 +111,10 @@ typedef void (^BlockCompletionBlock)();
         for (SocialConnector *connector in targetConnectors) {
             AsyncBlockOperation
                     *blockOperation = [AsyncBlockOperation operationWithBlock:^(AsyncBlockOperation *operation,
-                    AsyncBlockOperationCompletionBlock completionBlock)
-            {
+                    AsyncBlockOperationCompletionBlock completionBlock) {
 
                 if (!self.canceled && !connector.isLoggedIn) {
-                    [connector openSession:options completion:^(SObject *result)
-                    {
+                    [connector openSession:options completion:^(SObject *result) {
                         if (result.isSuccessful) {
                             [self.resultConnector activateConnector:connector];
                         }
@@ -136,8 +132,7 @@ typedef void (^BlockCompletionBlock)();
             [_queue addOperation:blockOperation];
         }
 
-        [wself.queue setCompletionHandler:^(NSError *error)
-        {
+        [wself.queue setCompletionHandler:^(NSError *error) {
             [wself applyChanges];
 
             if (!self.canceled) {
@@ -148,8 +143,20 @@ typedef void (^BlockCompletionBlock)();
             }
             self.canceled = NO;
         }];
+    };
 
-    }];
+    Class checkClass = NSClassFromString(@"NetworkCheck");
+    NetworkCheck *check = nil;
+    if (checkClass) {
+        check = [checkClass instance];
+    }
+
+    if (check) {
+        [check checkConnectionWithCompletion:connectedBlock];
+    }
+    else {
+        connectedBlock(true);
+    }
 }
 
 - (void)handleLoginError:(SocialConnector *)connector result:(SObject *)result
@@ -185,21 +192,18 @@ typedef void (^BlockCompletionBlock)();
 
 - (void)logoutAllWithCompletion:(void (^)())completion
 {
-    [self.sourceConnectors.availableConnectors asyncEach:^(id object, ISArrayAsyncEachResultBlock next)
-    {
+    [self.sourceConnectors.availableConnectors asyncEach:^(id object, ISArrayAsyncEachResultBlock next) {
         SocialConnector *connector = object;
 
         if (connector.isLoggedIn) {
-            [connector closeSession:nil completion:^(SObject *result)
-            {
+            [connector closeSession:nil completion:^(SObject *result) {
                 next(nil);
             }];
         }
         else {
             next(nil);
         }
-    }                                        comletition:^(NSError *errorOrNil)
-    {
+    }                                        comletition:^(NSError *errorOrNil) {
         [self.resultConnector deactivateAllConnectors];
         [self applyChanges];
         completion();
@@ -210,8 +214,7 @@ typedef void (^BlockCompletionBlock)();
 - (void)logoutConnector:(SocialConnector *)connector withCompletion:(void (^)())completion
 {
     if (connector.isLoggedIn) {
-        [connector closeSession:nil completion:^(SObject *result)
-        {
+        [connector closeSession:nil completion:^(SObject *result) {
             [self.resultConnector deactivateConnector:connector];
             [self applyChanges];
             completion();
