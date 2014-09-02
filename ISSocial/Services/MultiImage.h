@@ -16,6 +16,9 @@
 
 - (id)initWithURL:(NSURL *)url;
 
+- (instancetype)initWithWightHeightURLFormat:(NSString *)imageWightHeightParamURLFormat;
+
+
 - (void)addImageURL:(NSURL *)url quality:(CGFloat)quality;
 
 - (NSUInteger)count;

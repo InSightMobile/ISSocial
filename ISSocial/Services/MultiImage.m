@@ -170,4 +170,14 @@
     _imageWightHeightParamURLFormat = format;
 }
 
+- (instancetype)initWithWightHeightURLFormat:(NSString *)imageWightHeightParamURLFormat
+{
+    self = [super init];
+    if (self) {
+        _imageWightHeightParamURLFormat = imageWightHeightParamURLFormat;
+    }
+
+    return self;
+}
+
 @end
