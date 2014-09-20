@@ -10,7 +10,7 @@
 #define __SCommentedObject_H_
 
 @protocol SCommentedObject <SObject>
-
+@optional
 @property(nonatomic, strong) NSNumber *commentsCount;
 @property(nonatomic, strong) NSNumber *canAddComment;
 @property(nonatomic, strong) NSNumber *likesCount;

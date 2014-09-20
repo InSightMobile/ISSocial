@@ -14,7 +14,7 @@
 @class MultiImage;
 
 @protocol SMultimediaObject <SMediaObject, SImagePreviewObject, SCommentedObject>
-
+@optional
 @property(nonatomic, strong) NSURL *playbackURL;
 @property(copy, nonatomic) NSDate *date;
 @property(copy, nonatomic) NSString *title;
@@ -27,12 +27,9 @@
 @end
 
 @protocol SPhotoData <SMultimediaObject>
-
+@optional
 @property(copy, nonatomic) NSURL *photoURL;
-
-
 @property(strong, nonatomic) SObject *album;
-
 @property(nonatomic, copy) NSString *photoId;
 
 @end
