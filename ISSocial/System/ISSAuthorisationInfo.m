@@ -4,7 +4,6 @@
 
 
 #import "ISSAuthorisationInfo.h"
-#import "TwitterConnector.h"
 #import "ISSocial.h"
 
 @interface ISSAuthorisationInfo ()
