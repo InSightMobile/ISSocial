@@ -275,7 +275,7 @@ static const int kPageSize = 20;
 - (SObject *)createPhotoAlbum:(SPhotoAlbumData *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
-        [self checkAuthorizationFor:@[@"publish_stream"] operation:operation processor:^(id obj) {
+        [self checkAuthorizationFor:@[@"publish_actions"] operation:operation processor:^(id obj) {
 
             NSString *title = params.title;
             NSString *desc = params.title;
@@ -498,7 +498,7 @@ static const int kPageSize = 20;
          completion:
                  (SObjectCompletionBlock)completion
 {
-    [self checkAuthorizationFor:@[@"publish_stream", @"photo_upload"] operation:operation processor:^(id obj) {
+    [self checkAuthorizationFor:@[@"publish_actions", @"photo_upload"] operation:operation processor:^(id obj) {
 
         FBRequest *req = [FBRequest requestWithGraphPath:path
                                               parameters:@{@"source" : photo.sourceImage}

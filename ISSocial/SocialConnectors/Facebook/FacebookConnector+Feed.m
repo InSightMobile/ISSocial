@@ -260,7 +260,7 @@
 
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation)
     {
-        [self checkAuthorizationFor:@[@"publish_stream", @"photo_upload"] operation:operation processor:^(id res)
+        [self checkAuthorizationFor:@[@"publish_actions", @"photo_upload"] operation:operation processor:^(id res)
         {
 
             if (feed.attachments.count) {
@@ -369,7 +369,7 @@
     return [self operationWithObject:comment completion:completion processor:^(SocialConnectorOperation *operation)
     {
 
-        [self checkAuthorizationFor:@[@"publish_stream"] operation:operation processor:^(id res)
+        [self checkAuthorizationFor:@[@"publish_actions"] operation:operation processor:^(id res)
         {
 
             [self simplePost:[NSString stringWithFormat:@"%@/comments", [comment.commentedObject objectId]]
@@ -422,7 +422,7 @@
             return;
         }
 
-        [self checkAuthorizationFor:@[@"publish_stream"] operation:operation processor:^(id res)
+        [self checkAuthorizationFor:@[@"publish_actions"] operation:operation processor:^(id res)
         {
 
             [self simplePost:[NSString stringWithFormat:@"%@/likes", [feed objectId]]
@@ -455,7 +455,7 @@
             return;
         }
 
-        [self checkAuthorizationFor:@[@"publish_stream"] operation:operation processor:^(id res)
+        [self checkAuthorizationFor:@[@"publish_actions"] operation:operation processor:^(id res)
         {
 
             [self simpleRequest:@"DELETE" path:[NSString stringWithFormat:@"%@/likes", [feed objectId]]
@@ -565,7 +565,7 @@
             userId = photo.owner.objectId;
         }
 
-        [self checkAuthorizationFor:@[@"publish_actions",@"publish_stream"] operation:operation processor:^(id res)
+        [self checkAuthorizationFor:@[@"publish_actions"] operation:operation processor:^(id res)
         {
             NSMutableDictionary *params = [NSMutableDictionary dictionary];
             if (photo.title.length) {

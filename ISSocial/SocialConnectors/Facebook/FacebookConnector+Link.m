@@ -250,7 +250,7 @@
             return;
         }
 
-        [self checkAuthorizationFor:@[@"publish_stream"] operation:operation processor:^(id res)
+        [self checkAuthorizationFor:@[@"publish_actions"] operation:operation processor:^(id res)
         {
             NSDictionary *object = @{@"object" : link.linkURL.absoluteString};
 
@@ -282,7 +282,7 @@
             return;
         }
 
-        [self checkAuthorizationFor:@[@"publish_stream"] operation:operation processor:^(id res)
+        [self checkAuthorizationFor:@[@"publish_actions"] operation:operation processor:^(id res)
         {
             NSDictionary *object = @{@"object" : link.linkURL.absoluteString};
 
