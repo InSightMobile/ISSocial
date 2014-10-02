@@ -430,7 +430,7 @@
     BlockOperationQueue *queue = [[BlockOperationQueue alloc] init];
     queue.maxConcurrentOperationCount = 1;
 
-    SObject *result = [SObject objectCollectionWithHandler:self];
+    SObject *resultObject = [SObject objectCollectionWithHandler:self];
     SObject *operations = [SObject objectWithState:SObjectStateProcessing];
 
     for (SocialConnector *connector in connectors) {
@@ -441,12 +441,13 @@
                     SObject *result =
                             [self processConnector:connector operation:selector object:params completion:^(SObject *object)
                             {
-                                [result addSubObject:object];
+                                [resultObject addSubObject:object];
                                 if (processor) {
                                     processor(connector, object);
                                 }
                                 completionBlock(nil);
                             }];
+                    
                     if (result.isProcessing) {
                         [operations addSubObject:result];
                     }
@@ -455,7 +456,7 @@
     }
     [queue setCompletionHandler:^(NSError *error)
     {
-        completion(result);
+        completion(resultObject);
     }];
 
     return [SObject objectWithState:SObjectStateProcessing];

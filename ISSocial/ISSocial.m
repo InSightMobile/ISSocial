@@ -133,7 +133,7 @@
     }];
 }
 
-- (void)useConnectorForCode:(NSString *)connectorCode connector:(AccessSocialConnector *)connector
+- (void)useConnectorForCode:(NSString *)connectorCode connector:(AccessSocialConnector *)connector __attribute__((nonnull))
 {
     if (!self.connectorsByCode) {
         self.connectorsByCode = [NSMutableDictionary new];

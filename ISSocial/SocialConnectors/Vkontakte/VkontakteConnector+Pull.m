@@ -17,7 +17,7 @@ typedef enum _VKUpdatesCodes
 
 } VKUpdatesCodes;
 
-static const BOOL const kVKMessageFlagOutbox = 2;
+static const BOOL kVKMessageFlagOutbox = 2;
 
 @implementation VkontakteConnector (Pull)
 
