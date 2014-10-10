@@ -179,10 +179,6 @@
 
 - (void)processFacebookError:(NSError *)error operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
 {
-    if (error.code == FBErrorHTTPError) {
-        [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorNetwork sourseError:error.userInfo[FBErrorInnerErrorKey] userInfo:nil]];
-        return;
-    }
 
     NSDictionary *errorData = error.userInfo[FBErrorParsedJSONResponseKey];
 
@@ -194,6 +190,13 @@
     }
     if (facebookCode == 3501) {
         code = ISSocialErrorOperationAlreadyDone;
+    }
+
+    if(code == ISSocialErrorUnknown) {
+        if (error.code == FBErrorHTTPError) {
+            [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorNetwork sourseError:error.userInfo[FBErrorInnerErrorKey] userInfo:nil]];
+            return;
+        }
     }
 
     NSError *socialError =
