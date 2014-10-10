@@ -228,7 +228,8 @@
         [SObject successful:completion];
     }
     else {
-        if ([[FBSession activeSession] isOpen]) {
+
+        if ([[FBSession activeSession] isOpen] || [FBSession openActiveSessionWithAllowLoginUI:NO]) {
             [[FBSession activeSession] requestNewPublishPermissions:permissions defaultAudience:FBSessionDefaultAudienceFriends completionHandler:^(FBSession *session, NSError *error) {
 
                 if (!error) {
@@ -297,24 +298,16 @@
             allowLoginUI = [params[kAllowUserUIKey] boolValue];
         }
 
-#if 1
-        BOOL loggedIn =
+        BOOL loggedIn = [[FBSession activeSession] isOpen] || [FBSession openActiveSessionWithAllowLoginUI:NO];
+
+        if(loggedIn) {
+            [self processLoggedInSession:[FBSession activeSession] completion:completion];
+            return;
+        }
+
+
+        loggedIn =
                 [FBSession openActiveSessionWithReadPermissions:permissions allowLoginUI:allowLoginUI completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
-
-#else
-        FBSession *session = [[FBSession alloc] initWithAppID:nil
-                                                   permissions:permissions
-                                               defaultAudience:FBSessionDefaultAudienceFriends
-                                               urlSchemeSuffix:nil
-                                            tokenCacheStrategy:nil];
-
-        [FBSession setActiveSession:session];
-
-        [session openWithBehavior:FBSessionLoginBehaviorWithFallbackToWebView
-                completionHandler:^(FBSession *session,
-                        FBSessionState state, NSError *error)
-                {
-#endif
 
                     switch (state) {
                         case FBSessionStateOpen:
