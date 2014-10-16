@@ -1,11 +1,9 @@
 //
-// Created by yarry on 15.01.13.
-//
-// To change the template use AppCode | Preferences | File Templates.
 //
 
 
 #import "NSArray+Finding.h"
+#import "NSObject+ISAppearance.h"
 
 
 @implementation NSArray (Finding)
@@ -22,6 +20,15 @@
     NSMutableArray *mutableArray = [self mutableCopy];
     [mutableArray removeObjectAtIndex:index];
     return [mutableArray copy];
+}
+
+- (NSArray *)arrayByRemovingObject:(id)object
+{
+    NSUInteger index = [self indexOfObject:object];
+    if(index != NSNotFound) {
+        return [self arrayByRemovingObjectAtIndex:index];
+    }
+    return self;
 }
 
 @end
