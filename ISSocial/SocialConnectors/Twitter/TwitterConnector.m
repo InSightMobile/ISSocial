@@ -14,6 +14,7 @@
 #import "WebLoginController.h"
 #import "NSString+ValueConvertion.h"
 #import "NSObject+PerformBlockInBackground.h"
+#import "RACBacktrace.h"
 
 
 @interface TwitterConnector () <UIActionSheetDelegate, WebLoginControllerDelegate>
@@ -96,11 +97,16 @@
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
+        BOOL allowLoginUI = YES;
+        if (params[kAllowUserUIKey]) {
+            allowLoginUI = [params[kAllowUserUIKey] boolValue];
+        }
+
         STTwitterAPI *twitter = [STTwitterAPI twitterAPIWithOAuthConsumerName:nil
                                                                   consumerKey:self.consumerKey
                                                                consumerSecret:self.consumerSecret];
 
-        [self getSystemAuthWithSuccess:^(ACAccount *account) {
+        [self getSystemAuthWithUI:allowLoginUI success:^(ACAccount *account) {
 
             [twitter postReverseOAuthTokenRequest:^(NSString *authenticationHeader) {
 
@@ -113,18 +119,18 @@
                                                                                 NSString *oAuthTokenSecret,
                                                                                 NSString *userID,
                                                                                 NSString *screenName) {
-                        self.token = oAuthToken;
-                        self.tokenSecret = oAuthTokenSecret;
-                        self.userID = userID;
-                        self.screenName = screenName;
-                        self.twitterAPI = twitterAPIOS;
+                                                                            self.token = oAuthToken;
+                                                                            self.tokenSecret = oAuthTokenSecret;
+                                                                            self.userID = userID;
+                                                                            self.screenName = screenName;
+                                                                            self.twitterAPI = twitterAPIOS;
 
-                        [self updateUserDataWithOperation:operation];
+                                                                            [self updateUserDataWithOperation:operation];
 
 
-                    } errorBlock:^(NSError *error) {
-                        [operation completeWithError:[self errorWithError:error]];
-                    }];
+                                                                        } errorBlock:^(NSError *error) {
+                                [operation completeWithError:[self errorWithError:error]];
+                            }];
 
                 }                                    errorBlock:^(NSError *error) {
                     [operation completeWithError:[self errorWithError:error]];
@@ -133,9 +139,9 @@
             }                          errorBlock:^(NSError *error) {
                 [operation completeWithError:[self errorWithError:error]];
             }];
-        }                      failure:^(NSError *error){
+        }                 failure:^(NSError *error) {
 
-            if (error.code == ISSocialErrorSystemLoginAbsent) {
+            if (error.code == ISSocialErrorSystemLoginAbsent && allowLoginUI) {
 
                 NSString *callback = [self systemCallbackURL];
 
@@ -277,7 +283,7 @@
     return [SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter];
 }
 
-- (void)getSystemAuthWithSuccess:(void (^)(ACAccount *account))onSuccess failure:(void (^)(NSError *error))onError
+- (void)getSystemAuthWithUI:(BOOL)withUI success:(void (^)(ACAccount *account))onSuccess failure:(void (^)(NSError *error))onError
 {
     self.successCallback = onSuccess;
     self.failureCallback = onError;
@@ -292,29 +298,16 @@
     ACAccountStore *accountStore = [ACAccountStore new];
     ACAccountType *twitterType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
 
+    if(!withUI) {
+        [self getSystemAuthForStore:accountStore onSuccess:onSuccess failure:onError withUI:withUI];
+        return;
+    }
+
     __weak __typeof(self) weakSelf = self;
     [accountStore requestAccessToAccountsWithType:twitterType options:NULL completion:^(BOOL granted, NSError *error) {
         __unsafe_unretained __typeof(self) newSelf = weakSelf;
-
         if (granted) {
-            newSelf.accounts = [accountStore accountsWithAccountType:twitterType];
-            if (newSelf.accounts.count == 1) {
-                onSuccess(self.accounts[0]);
-            }
-            else {
-                UIActionSheet *sheet = [[UIActionSheet alloc] init];
-
-                for (ACAccount *acct in self.accounts) {
-                    [sheet addButtonWithTitle:acct.username];
-                }
-
-                sheet.delegate = newSelf;
-                sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedStringWithDefaultValue(@"ISSocial_Cancel", nil, [NSBundle mainBundle], @"Cancel", @"Cancel")];
-
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [sheet showInView:[UIApplication sharedApplication].keyWindow];
-                });
-            }
+            [newSelf getSystemAuthForStore:accountStore onSuccess:onSuccess failure:onError withUI:withUI];
         }
         else {
             if (onError) {
@@ -322,6 +315,36 @@
             }
         }
     }];
+}
+
+- (void)getSystemAuthForStore:(ACAccountStore *)accountStore onSuccess:(void (^)(ACAccount *))onSuccess failure:(void (^)(NSError *error))onError withUI:(BOOL)withUI
+{
+    ACAccountType *twitterType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+
+    self.accounts = [accountStore accountsWithAccountType:twitterType];
+    if (self.accounts.count == 1) {
+        onSuccess(self.accounts[0]);
+    }
+    else if(self.accounts.count > 1 && withUI){
+        UIActionSheet *sheet = [[UIActionSheet alloc] init];
+
+        for (ACAccount *acct in self.accounts) {
+            [sheet addButtonWithTitle:acct.username];
+        }
+
+        sheet.delegate = self;
+        sheet.cancelButtonIndex =
+                [sheet addButtonWithTitle:NSLocalizedStringWithDefaultValue(@"ISSocial_Cancel", nil, [NSBundle mainBundle], @"Cancel", @"Cancel")];
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [sheet showInView:[UIApplication sharedApplication].keyWindow];
+        });
+    }
+    else {
+        if (onError) {
+            onError([ISSocial errorWithCode:ISSocialErrorSystemLoginDisallowed sourseError:nil userInfo:nil]);
+        }
+    }
 }
 
 - (SObject *)sendInvitation:(SInvitation *)invitation completion:(SObjectCompletionBlock)completion
