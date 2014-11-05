@@ -91,6 +91,11 @@
     [self openSessionWithCompletionHandler:handler];
 }
 
+- (void)close
+{
+    [[OKSession activeSession] close];
+}
+
 - (void)openSessionWithCompletionHandler:(ODKSessionStateHandler)handler
 {
 

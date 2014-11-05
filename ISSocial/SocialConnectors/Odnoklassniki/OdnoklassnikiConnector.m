@@ -79,6 +79,16 @@
     return token;
 }
 
+- (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion
+{
+    self.currentUserData = nil;
+    [[ODKSession activeSession] close];
+    _loggedIn = NO;
+    completion([SObject successful]);
+    return [SObject successful];
+}
+
+
 - (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {

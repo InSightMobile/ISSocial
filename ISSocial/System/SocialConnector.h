@@ -201,6 +201,9 @@ FOUNDATION_EXPORT NSString *const kNewMessagesUnreadStatusChanged;
 
 - (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion;
 
+- (SObject *)closeSessionAndClearCredentials:(SObject *)params completion:(SObjectCompletionBlock)completion;
+
+
 @end
 
 #define PROCESS_CONNECTOR_PROTOCOL \

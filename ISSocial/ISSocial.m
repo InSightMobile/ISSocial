@@ -5,6 +5,7 @@
 
 #import "ISSocial.h"
 #import "ISSocialLoginManager.h"
+#import "NSArray+AsyncBlocks.h"
 
 
 @interface ISSocial ()
@@ -246,4 +247,19 @@
         [connector handleDidBecomeActive];
     }
 }
+
+- (void)closeAllSessionsAndClearCredentials:(void (^)(NSError *))completion
+{
+    NSArray *connectors = self.rootConnectors.availableConnectors.allObjects;
+
+    [connectors asyncEach:^(AccessSocialConnector *connector, ISArrayAsyncEachResultBlock next) {
+
+        [connector closeSessionAndClearCredentials:[SObject new] completion:^(SObject *result) {
+            next(result.error);
+        }];
+    } comletition:^(NSError *errorOrNil) {
+        completion(errorOrNil);
+    }];
+}
+
 @end

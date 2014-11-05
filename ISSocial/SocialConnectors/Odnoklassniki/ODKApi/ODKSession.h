@@ -35,6 +35,8 @@ typedef void (^ODKSessionStateHandler)(ODKSession *session,
 - (void)reopenSessionWithCompletionHandler:(ODKSessionStateHandler)handler;
 
 
+- (void)close;
+
 + (void)openActiveSessionWithPermissions:(NSArray *)permissions appId:(NSString *)appId appSecret:(NSString *)appSecret appKey:(NSString *)appKey completionHandler:(ODKSessionStateHandler)handler;
 
 - (BOOL)isLoggedIn;

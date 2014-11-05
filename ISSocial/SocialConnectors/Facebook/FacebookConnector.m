@@ -276,9 +276,18 @@
 
 }
 
+- (SObject *)closeSessionAndClearCredentials:(SObject *)params completion:(SObjectCompletionBlock)completion
+{
+    self.currentUserData = nil;
+    [FBSession.activeSession closeAndClearTokenInformation];
+    _loggedIn = NO;
+    completion([SObject successful]);
+    return [SObject successful];
+}
+
 - (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
-    [FBSession.activeSession closeAndClearTokenInformation];
+    [FBSession.activeSession close];
     _loggedIn = NO;
     completion([SObject successful]);
     return [SObject successful];

@@ -54,4 +54,6 @@ static NSString *const ISSocialConnectorIdOdnoklassniki = @"Odnoklassniki";
 - (void)configure;
 
 - (void)handleDidBecomeActive;
+
+- (void)closeAllSessionsAndClearCredentials:(void (^)(NSError *))pFunction;
 @end
