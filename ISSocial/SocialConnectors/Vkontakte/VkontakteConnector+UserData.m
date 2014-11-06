@@ -9,7 +9,6 @@
 #import "SUserData.h"
 #import "MultiImage.h"
 #import "NSString+TypeSafety.h"
-#import "NSDate+Facebook.h"
 #import "NSDate+Vkontakte.h"
 
 @implementation VkontakteConnector (UserData)
@@ -23,38 +22,38 @@
     NSSet *userIds = [NSSet setWithArray:[usersData valueForKey:@"objectId"]];
     [self updateCountryCodesWithOperation:operation completion:^(SObject *result) {
         [self simpleMethod:@"users.get" parameters:@{@"uids" : [userIds.allObjects componentsJoinedByString:@","],
-                @"fields" : @"first_name,last_name,photo,bdate,city,country,sex,screen_name"}
+                        @"fields" : @"first_name,last_name,photo_50, photo_100, photo_200_orig, photo_200, photo_400_orig, photo_max, photo_max_orig,photo_id,bdate,city,country,sex,screen_name"}
                  operation:operation processor:^(id response) {
 
-            NSLog(@"response = %@", response);
+                    NSLog(@"response = %@", response);
 
-            SObject *result = [self parseUsersData:response];
+                    SObject *result = [self parseUsersData:response];
 
-            [result complete:completion];
-        }];
+                    [result complete:completion];
+                }];
     }];
 }
 
 - (void)updateCountryCodesWithOperation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
 {
     NSArray *countryArray = [NSLocale ISOCountryCodes];
-    if(self.countryCodesById) {
+    if (self.countryCodesById) {
         completion([SObject successful]);
         return;
     }
     self.countryCodesById = [NSMutableDictionary dictionaryWithCapacity:countryArray.count];
 
-    [self simpleMethod:@"database.getCountries" parameters:@{@"count":@(countryArray.count), @"code" : [countryArray componentsJoinedByString:@","]}
-             operation:operation processor:^(NSDictionary * response) {
+    [self simpleMethod:@"database.getCountries" parameters:@{@"count" : @(countryArray.count), @"code" : [countryArray componentsJoinedByString:@","]}
+             operation:operation processor:^(NSDictionary *response) {
 
-        NSArray *countryCodes = response[@"items"];
+                NSArray *countryCodes = response[@"items"];
 
-        for (int i = 0; i < countryCodes.count; i++) {
-            self.countryCodesById[countryCodes[i][@"id"]] = countryArray[i];
-        }
+                for (int i = 0; i < countryCodes.count; i++) {
+                    self.countryCodesById[countryCodes[i][@"id"]] = countryArray[i];
+                }
 
-        completion([SObject successful]);
-    }];
+                completion([SObject successful]);
+            }];
 }
 
 - (SObject *)parseUserData:(NSDictionary *)userInfo
@@ -93,20 +92,38 @@
     }
 
     if (userInfo[@"city"]) {
-        userData.vkontakteCityId =  userInfo[@"city"][@"id"];
+        userData.vkontakteCityId = userInfo[@"city"][@"id"];
 
         userData.cityName = userInfo[@"city"][@"title"];
     }
 
     if (userInfo[@"country"]) {
         NSNumber *countryId = userInfo[@"country"][@"id"];
-        userData.vkontakteCountryId =  countryId;
+        userData.vkontakteCountryId = countryId;
         userData.countryCode = self.countryCodesById[countryId];
         userData.countryName = userInfo[@"country"][@"title"];
     }
 
     MultiImage *image = [MultiImage new];
-    [image addImageURL:[userInfo[@"photo"] URLValue] quality:1];
+
+    if (userInfo[@"photo_50"]) {
+        [image addImageURL:[userInfo[@"photo_50"] URLValue] forSize:50];
+    }
+    if (userInfo[@"photo_100"]) {
+        [image addImageURL:[userInfo[@"photo_100"] URLValue] forSize:100];
+    }
+    if (userInfo[@"photo_200"]) {
+        [image addImageURL:[userInfo[@"photo_200"] URLValue] forSize:200];
+    }
+    if (userInfo[@"photo_400"]) {
+        [image addImageURL:[userInfo[@"photo_400"] URLValue] forSize:400];
+    }
+    if (userInfo[@"photo_max"]) {
+        [image addImageURL:[userInfo[@"photo_max"] URLValue] quality:1];
+    }
+    else if (userInfo[@"photo_max_orig"]) {
+        [image addImageURL:[userInfo[@"photo_max_orig"] URLValue] quality:1];
+    }
 
     userData.userPicture = image;
 
@@ -131,44 +148,44 @@
 {
     NSString *userId = params.objectId;
     if (!userId) {
-            userId = self.userId;
+        userId = self.userId;
     }
 
     [self simpleMethod:@"friends.getOnline" parameters:@{@"uid" : userId, @"online_mobile" : @YES}
              operation:operation processor:^(id response) {
 
-        NSLog(@"response = %@", response);
+                NSLog(@"response = %@", response);
 
-        SObject *result = [SObject objectCollectionWithHandler:self];
+                SObject *result = [SObject objectCollectionWithHandler:self];
 
-        for (SUserData *user in users) {
-            user.isOnline = @NO;
-        }
+                for (SUserData *user in users) {
+                    user.isOnline = @NO;
+                }
 
-        if ([response isKindOfClass:[NSDictionary class]]) {
+                if ([response isKindOfClass:[NSDictionary class]]) {
 
-            for (id uid in response[@"online"]) {
-                SUserData *userData = [self dataForUserId:[uid stringValue]];
-                userData.isOnline = @YES;
-                [result addSubObject:userData];
-            }
+                    for (id uid in response[@"online"]) {
+                        SUserData *userData = [self dataForUserId:[uid stringValue]];
+                        userData.isOnline = @YES;
+                        [result addSubObject:userData];
+                    }
 
-            for (id uid in response[@"online_mobile"]) {
-                SUserData *userData = [self dataForUserId:[uid stringValue]];
-                [result addSubObject:userData];
-                userData.isOnline = @YES;
-            }
-        }
-        else if ([response isKindOfClass:[NSArray class]]) {
-            for (id uid in response) {
-                SUserData *userData = [self dataForUserId:[uid stringValue]];
-                [result addSubObject:userData];
-                userData.isOnline = @YES;
-            }
-        }
+                    for (id uid in response[@"online_mobile"]) {
+                        SUserData *userData = [self dataForUserId:[uid stringValue]];
+                        [result addSubObject:userData];
+                        userData.isOnline = @YES;
+                    }
+                }
+                else if ([response isKindOfClass:[NSArray class]]) {
+                    for (id uid in response) {
+                        SUserData *userData = [self dataForUserId:[uid stringValue]];
+                        [result addSubObject:userData];
+                        userData.isOnline = @YES;
+                    }
+                }
 
-        completion(result);
-    }];
+                completion(result);
+            }];
 }
 
 - (SObject *)readUserFriendsOnline:(SUserData *)params completion:(SObjectCompletionBlock)completion
@@ -187,19 +204,19 @@
 
         NSString *userId = params.objectId;
         if (!userId) {
-                    userId = self.userId;
+            userId = self.userId;
         }
 
         [self simpleMethod:@"friends.get" parameters:@{@"uid" : userId, @"fields" : @"uid,first_name,last_name,photo,bdate"}
                  operation:operation processor:^(id response) {
 
-            NSLog(@"response = %@", response);
-            SObject *result = [self parseUsersData:response[@"items"]];
+                    NSLog(@"response = %@", response);
+                    SObject *result = [self parseUsersData:response[@"items"]];
 
-            [self updateOnlineStatus:params users:result.subObjects operation:operation completion:^(SObject *onlineResult) {
-                [operation complete:result];
-            }];
-        }];
+                    [self updateOnlineStatus:params users:result.subObjects operation:operation completion:^(SObject *onlineResult) {
+                        [operation complete:result];
+                    }];
+                }];
     }];
 }
 
@@ -212,9 +229,9 @@
         [self simpleMethod:@"friends.add" parameters:@{@"uid" : userId}
                  operation:operation processor:^(id response) {
 
-            SUserData *user = [self dataForUserId:userId];
-            [operation complete:user];
-        }];
+                    SUserData *user = [self dataForUserId:userId];
+                    [operation complete:user];
+                }];
     }];
 }
 
@@ -227,9 +244,9 @@
         [self simpleMethod:@"friends.delete" parameters:@{@"uid" : userId}
                  operation:operation processor:^(id response) {
 
-            SUserData *user = [self dataForUserId:userId];
-            [operation complete:user];
-        }];
+                    SUserData *user = [self dataForUserId:userId];
+                    [operation complete:user];
+                }];
     }];
 }
 
@@ -239,27 +256,27 @@
 
         NSString *userId = params.objectId;
         if (!userId) {
-                    userId = self.userId;
+            userId = self.userId;
         }
 
         [self simpleMethod:@"friends.getRequests" parameters:@{
-                @"uid" : userId,
-                @"photo_sizes" : @1,
-                @"fields" : @"uid,first_name,last_name,photo"}
+                        @"uid" : userId,
+                        @"photo_sizes" : @1,
+                        @"fields" : @"uid,first_name,last_name,photo"}
                  operation:operation processor:^(id response) {
 
-            NSLog(@"response = %@", response);
+                    NSLog(@"response = %@", response);
 
-            SObject *result = [SObject objectCollectionWithHandler:self];
-            for (NSNumber *userInfo in response) {
-                SUserData *userData = [self dataForUserId:[userInfo stringValue]];
-                [result addSubObject:userData];
-            }
+                    SObject *result = [SObject objectCollectionWithHandler:self];
+                    for (NSNumber *userInfo in response) {
+                        SUserData *userData = [self dataForUserId:[userInfo stringValue]];
+                        [result addSubObject:userData];
+                    }
 
-            [self updateUserData:result.subObjects operation:operation completion:^(SObject *result) {
-                [operation complete:result];
-            }];
-        }];
+                    [self updateUserData:result.subObjects operation:operation completion:^(SObject *result) {
+                        [operation complete:result];
+                    }];
+                }];
     }];
 }
 
@@ -270,7 +287,7 @@
 
         NSString *userId = params.objectId;
         if (!userId) {
-                    userId = self.userId;
+            userId = self.userId;
         }
 
         if (!userId.length) {
@@ -281,16 +298,16 @@
         [self simpleMethod:@"users.get" parameters:@{@"uids" : userId, @"fields" : @"uid,first_name,last_name,photo"}
                  operation:operation processor:^(id response) {
 
-            SObject *result = [self parseUsersData:response];
+                    SObject *result = [self parseUsersData:response];
 
-            if (!result.subObjects.count) {
-                            [operation completeWithFailure];
-                        }
-            else {
-                            [operation complete:result.subObjects[0]];
-            }
+                    if (!result.subObjects.count) {
+                        [operation completeWithFailure];
+                    }
+                    else {
+                        [operation complete:result.subObjects[0]];
+                    }
 
-        }];
+                }];
 
     }];
 }
