@@ -72,6 +72,10 @@
 
 - (ISSAuthorisationInfo *)authorizatioInfo
 {
+    if(!self.currentUserData.objectId) {
+        return nil;
+    }
+    
     ISSAuthorisationInfo *token = [ISSAuthorisationInfo new];
     token.handler = self;
     token.accessToken = [ODKSession activeSession].accessToken;

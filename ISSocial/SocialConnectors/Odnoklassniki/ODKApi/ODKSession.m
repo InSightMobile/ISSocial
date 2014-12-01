@@ -94,6 +94,7 @@
 - (void)close
 {
     [[OKSession activeSession] close];
+    self.session = nil;
 }
 
 - (void)openSessionWithCompletionHandler:(ODKSessionStateHandler)handler
