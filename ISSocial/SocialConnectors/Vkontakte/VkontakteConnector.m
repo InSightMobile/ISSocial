@@ -62,9 +62,14 @@ static const int kMaxRetries = 3;
 
 #pragma mark Session management
 
+- (SObject *)closeSessionAndClearCredentials:(SObject *)params completion:(SObjectCompletionBlock)completion
+{
+    return [self closeSession:params completion:completion];
+}
 
 - (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
+    self.accessToken = nil;
     self.currentUserData = nil;
     [VKSdk forceLogout];
     _loggedIn = NO;

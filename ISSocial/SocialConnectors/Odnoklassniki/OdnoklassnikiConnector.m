@@ -92,7 +92,6 @@
     return [SObject successful];
 }
 
-
 - (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
