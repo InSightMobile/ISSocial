@@ -1,9 +1,7 @@
 //
 //
 
-
 #import "NSArray+Finding.h"
-#import "NSObject+ISAppearance.h"
 
 
 @implementation NSArray (Finding)
