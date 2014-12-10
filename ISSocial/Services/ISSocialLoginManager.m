@@ -196,7 +196,7 @@ typedef void (^BlockCompletionBlock)();
         SocialConnector *connector = object;
 
         if (connector.isLoggedIn) {
-            [connector closeSession:nil completion:^(SObject *result) {
+            [connector closeSessionAndClearCredentials:nil completion:^(SObject *result) {
                 next(nil);
             }];
         }

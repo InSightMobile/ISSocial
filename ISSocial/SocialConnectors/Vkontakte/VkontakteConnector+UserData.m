@@ -13,6 +13,17 @@
 
 @implementation VkontakteConnector (UserData)
 
+- (NSString *)profileFields
+{
+    return @"first_name,last_name,photo_50,photo_100,photo_200_orig,photo_200,photo_400_orig,photo_max,photo_max_orig,photo_id,bdate,city,country,sex,screen_name";
+}
+
+- (NSString *)userFields
+{
+    return @"uid,first_name,last_name,bdate,photo_50,photo_100,photo_200_orig";
+}
+
+
 - (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
 {
     if (!usersData.count) {
@@ -22,7 +33,7 @@
     NSSet *userIds = [NSSet setWithArray:[usersData valueForKey:@"objectId"]];
     [self updateCountryCodesWithOperation:operation completion:^(SObject *result) {
         [self simpleMethod:@"users.get" parameters:@{@"uids" : [userIds.allObjects componentsJoinedByString:@","],
-                        @"fields" : @"first_name,last_name,photo_50, photo_100, photo_200_orig, photo_200, photo_400_orig, photo_max, photo_max_orig,photo_id,bdate,city,country,sex,screen_name"}
+                        @"fields" : [self profileFields]}
                  operation:operation processor:^(id response) {
 
                     NSLog(@"response = %@", response);
@@ -33,6 +44,7 @@
                 }];
     }];
 }
+
 
 - (void)updateCountryCodesWithOperation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
 {
@@ -118,11 +130,15 @@
     if (userInfo[@"photo_400"]) {
         [image addImageURL:[userInfo[@"photo_400"] URLValue] forSize:400];
     }
+
     if (userInfo[@"photo_max"]) {
         [image addImageURL:[userInfo[@"photo_max"] URLValue] quality:1];
     }
     else if (userInfo[@"photo_max_orig"]) {
         [image addImageURL:[userInfo[@"photo_max_orig"] URLValue] quality:1];
+    }
+    else if (userInfo[@"photo"]) {
+        [image addImageURL:[userInfo[@"photo"] URLValue] quality:1];
     }
 
     userData.userPicture = image;
@@ -207,7 +223,13 @@
             userId = self.userId;
         }
 
-        [self simpleMethod:@"friends.get" parameters:@{@"uid" : userId, @"fields" : @"uid,first_name,last_name,photo,bdate"}
+        NSDictionary *const parameters = @{
+                @"uid" : userId,
+                @"photo_sizes": @1,
+                @"fields" : self.userFields
+        };
+
+        [self simpleMethod:@"friends.get" parameters:parameters
                  operation:operation processor:^(id response) {
 
                     NSLog(@"response = %@", response);
@@ -262,7 +284,7 @@
         [self simpleMethod:@"friends.getRequests" parameters:@{
                         @"uid" : userId,
                         @"photo_sizes" : @1,
-                        @"fields" : @"uid,first_name,last_name,photo"}
+                        @"fields" : [self userFields]}
                  operation:operation processor:^(id response) {
 
                     NSLog(@"response = %@", response);
@@ -295,7 +317,7 @@
             return;
         }
 
-        [self simpleMethod:@"users.get" parameters:@{@"uids" : userId, @"fields" : @"uid,first_name,last_name,photo"}
+        [self simpleMethod:@"users.get" parameters:@{@"uids" : userId, @"fields" : [self userFields]}
                  operation:operation processor:^(id response) {
 
                     SObject *result = [self parseUsersData:response];
@@ -311,6 +333,8 @@
 
     }];
 }
+
+
 
 - (SUserData *)dataForUserId:(NSString *)userId
 {
