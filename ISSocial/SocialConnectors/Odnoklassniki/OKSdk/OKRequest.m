@@ -93,7 +93,7 @@ NSString * const OKApiErrorDomain = @"ru.ok.api";
 
 - (void)handleResponse:(NSMutableData *)data {
     NSError *jsonParsingError = nil;
-    id result = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonParsingError];
+    id result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonParsingError];
 
     NSError *error = [self errorFromResponseDictionary:result];
 	if (error) {

@@ -1,6 +1,6 @@
 //
 //  NSSet+ModificationAdditions.h
-//  socials
+//  ISSocial
 //
 //  Created by yar on 29.12.12.
 //  Copyright (c) 2012 Ярослав. All rights reserved.
