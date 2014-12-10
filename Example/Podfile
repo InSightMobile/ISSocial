@@ -1,0 +1,12 @@
+platform :ios, "7.0"
+
+pod 'ISSocial/Facebook', :path => '../'
+pod 'ISSocial/Vkontakte', :path => '../'
+pod 'ISSocial/Odnoklassniki', :path => '../'
+pod 'ISSocial/Twitter', :path => '../'
+
+#pod 'ISSocial/GooglePlus', :path => '../'
+#pod 'ISSocial/Instagram', :path => '../'
+
+pod 'googleplus-ios-sdk'
+

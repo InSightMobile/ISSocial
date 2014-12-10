@@ -2,7 +2,7 @@
 // 
 
 #import <Foundation/Foundation.h>
-#include "ImageCollectionData.h"
+#include "ISSImageCollectionData.h"
 
 @interface MultiImage : NSObject
 
@@ -27,16 +27,16 @@
 
 - (void)setBaseQuality:(float)d forWitdh:(int)width height:(int)height;
 
-- (ImageCollectionData *)bestImageForWidth:(CGFloat)width height:(CGFloat)height;
+- (ISSImageCollectionData *)bestImageForWidth:(CGFloat)width height:(CGFloat)height;
 
-- (ImageCollectionData *)bestImagexForWidth:(CGFloat)width height:(CGFloat)height;
+- (ISSImageCollectionData *)bestImagexForWidth:(CGFloat)width height:(CGFloat)height;
 
-- (ImageCollectionData *)bestAviableImage;
+- (ISSImageCollectionData *)bestAviableImage;
 
 - (void)addImageURL:(NSURL *)url forSize:(int)size;
 
 - (void)addImage:(UIImage *)image;
-- (void)addImageData:(ImageCollectionData *)imageData;
+- (void)addImageData:(ISSImageCollectionData *)imageData;
 
 - (void)setImageWightHeightURLFormat:(NSString *)format;
 

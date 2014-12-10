@@ -6,11 +6,11 @@
 #import "UIImageView+WebCache.h"
 #import "MultiImage.h"
 
-@interface ImageCollectionData ()
+@interface ISSImageCollectionData ()
 @property(nonatomic, copy) UIImage *(^imageObtainingBlock)();
 @end
 
-@implementation ImageCollectionData
+@implementation ISSImageCollectionData
 {
     NSString *_identificationString;
 }
@@ -72,7 +72,7 @@
 
 + (instancetype)imageDataWithIdentificationString:(NSString *)identificationString obtainingBlock:(UIImage *(^)())obtainingBlock
 {
-    ImageCollectionData *data = [self new];
+    ISSImageCollectionData *data = [self new];
     data->_identificationString = identificationString;
     data.imageObtainingBlock = obtainingBlock;
     return data;

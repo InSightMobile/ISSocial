@@ -2,7 +2,7 @@
 //
 
 #import "GooglePlusConnector.h"
-#import <GooglePlus/GooglePlus.h>
+#import <GooglePlus.h>
 #import <GoogleOpenSource/GoogleOpenSource.h>
 #import "GPSession.h"
 #import "SUserData.h"

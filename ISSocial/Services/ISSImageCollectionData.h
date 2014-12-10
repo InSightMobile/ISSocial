@@ -1,11 +1,7 @@
 //
-// 
+//
 
-
-#ifndef __ImageCollectionData_H_
-#define __ImageCollectionData_H_
-
-@interface ImageCollectionData : NSObject
+@interface ISSImageCollectionData : NSObject
 
 @property(nonatomic) NSUInteger width;
 @property(nonatomic) NSUInteger height;
@@ -26,7 +22,5 @@
 
 + (instancetype)imageDataWithIdentificationString:(NSString *)identificationString obtainingBlock:(UIImage* (^)())obtainingBlock;
 
-
 @end
 
-#endif //__ImageCollectionData_H_

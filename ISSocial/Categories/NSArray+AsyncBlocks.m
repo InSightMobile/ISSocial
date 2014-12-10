@@ -1,15 +1,8 @@
 //
 //  NSArray+AsyncBlocks.m
-//  AZBOTravelGuide
-//
-//  Created by  on 07.06.12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import <ReactiveCocoa/ReactiveCocoa/NSObject+RACPropertySubscribing.h>
-#import <ReactiveCocoa/ReactiveCocoa/RACSignal.h>
-#import <ReactiveCocoa/ReactiveCocoa/RACDisposable.h>
-#import <ReactiveCocoa/ReactiveCocoa/RACSignal+Operations.h>
+#import "ReactiveCocoa/ReactiveCocoa.h"
 #import "NSArray+AsyncBlocks.h"
 #import "AsyncBlockOperation.h"
 

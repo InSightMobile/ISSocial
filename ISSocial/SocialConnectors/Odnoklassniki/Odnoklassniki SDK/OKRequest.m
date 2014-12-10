@@ -117,7 +117,7 @@ static NSString* kUserAgent = @"OdnoklassnikiIOs";
 		NSError *jsonParsingError = nil;
 		result = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonParsingError];
 	}else{
-		SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
+		SBJson4Parser *jsonParser = [[SBJson4Parser alloc] init];
 		result = [jsonParser objectWithData:data];
 	}
     if(!result) {

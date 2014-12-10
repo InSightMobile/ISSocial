@@ -96,6 +96,7 @@
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
+
         [ODKSession openActiveSessionWithPermissions:self.permissions appId:self.appID appSecret:self.appSecret appKey:self.appKey
                                    completionHandler:^(ODKSession *session, ODKSessionState status, NSError *error) {
                                        switch (status) {
@@ -135,9 +136,19 @@
         preparedParameters[key] = [obj stringValue];
     }];
 
+    OKRequest *request = [OKRequest requestWithParams:preparedParameters httpMethod:@"GET" apiMethod:method];
 
-    ODKRequest *requst = [ODKRequest requestMethod:method parameters:preparedParameters];
-    [requst startWithCompletionHandler:^(ODKRequest *connection, id response, NSError *error) {
+    //ODKRequest *requst = [ODKRequest requestMethod:method parameters:preparedParameters];
+
+    [request executeWithCompletionBlock:^(id data) {
+        processor(data);
+    } errorBlock:^(NSError *error) {
+        NSLog(@"error = %@", error);
+        [operation completeWithError:error];
+    }];
+
+    /*
+    [request startWithCompletionHandler:^(ODKRequest *connection, id response, NSError *error) {
 
         [operation removeConnection:connection];
 
@@ -150,6 +161,7 @@
         }
     }];
     [operation addConnection:requst];
+    */
 }
 
 

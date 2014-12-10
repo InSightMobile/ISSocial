@@ -14,7 +14,6 @@
 #import "WebLoginController.h"
 #import "NSString+ValueConvertion.h"
 #import "NSObject+PerformBlockInBackground.h"
-#import "RACBacktrace.h"
 
 
 @interface TwitterConnector () <UIActionSheetDelegate, WebLoginControllerDelegate>

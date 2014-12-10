@@ -7,7 +7,7 @@
 //
 
 #import "SocialConnector.h"
-#import "CacheManager.h"
+#import "ISSCacheManager.h"
 #import "SUserData.h"
 #import "ISSAuthorisationInfo.h"
 #import "SInvitation.h"
@@ -77,7 +77,7 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
 
 - (SObject *)readCached:(SEL)selector params:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
-    return [[CacheManager instance] cashedReadWithConnector:self
+    return [[ISSCacheManager instance] cashedReadWithConnector:self
                                                   operation:selector
                                                      params:params
                                                         ttl:0

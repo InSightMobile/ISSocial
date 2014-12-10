@@ -7,8 +7,8 @@
 #import "SocialConnector.h"
 
 
-@interface CacheManager : NSObject
-+ (CacheManager *)instance;
+@interface ISSCacheManager : NSObject
++ (ISSCacheManager *)instance;
 
 - (SObject *)cashedReadWithConnector:(SocialConnector *)connector
                            operation:(SEL)operation

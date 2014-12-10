@@ -8,8 +8,7 @@
 
 @class SocialConnector;
 
-
-@interface FeedConsolidation : NSObject
+@interface ISSFeedConsolidation : NSObject
 
 @property(nonatomic, strong) SObject *dataSource;
 

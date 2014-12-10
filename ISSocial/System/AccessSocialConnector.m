@@ -7,7 +7,7 @@
 
 #import "SocialConnector.h"
 #import "AccessSocialConnector.h"
-#import "ISSocial.h"
+#import "ISSocial/ISSocial.h"
 
 
 @implementation AccessSocialConnector

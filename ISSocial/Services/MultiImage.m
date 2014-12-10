@@ -40,7 +40,7 @@
         _images = [NSMutableArray arrayWithCapacity:1];
     }
 
-    ImageCollectionData *data = [ImageCollectionData new];
+    ISSImageCollectionData *data = [ISSImageCollectionData new];
 
     data.width = width;
     data.height = height;
@@ -84,7 +84,7 @@
         _images = [NSMutableArray arrayWithCapacity:1];
     }
 
-    ImageCollectionData *data = [ImageCollectionData new];
+    ISSImageCollectionData *data = [ISSImageCollectionData new];
 
     data.width = (NSUInteger) (_baseWidth / self.baseQuality * quality);
     data.height = (NSUInteger) (_baseHeight / self.baseQuality * quality);
@@ -119,10 +119,10 @@
     }
 }
 
-- (ImageCollectionData *)bestImageForWidth:(CGFloat)width height:(CGFloat)height
+- (ISSImageCollectionData *)bestImageForWidth:(CGFloat)width height:(CGFloat)height
 {
     if (_imageWightHeightParamURLFormat) {
-        ImageCollectionData *data = [ImageCollectionData new];
+        ISSImageCollectionData *data = [ISSImageCollectionData new];
         data.width = (NSUInteger) width;
         data.height = (NSUInteger) height;
         data.url = [NSURL URLWithString:[NSString stringWithFormat:_imageWightHeightParamURLFormat, (NSUInteger) width, (NSUInteger) height]];
@@ -131,7 +131,7 @@
 
     [self sortIfNeeded];
 
-    for (ImageCollectionData *image in _images) {
+    for (ISSImageCollectionData *image in _images) {
         if (image.width >= width && image.height >= height) {
             return image;
         }
@@ -139,9 +139,9 @@
 
     CGFloat diagonal = sqrtf(width * width + height * height);
     CGFloat minDiff = CGFLOAT_MAX;
-    ImageCollectionData *data = nil;
+    ISSImageCollectionData *data = nil;
 
-    for (ImageCollectionData *image in _images) {
+    for (ISSImageCollectionData *image in _images) {
         if(image.diagonal >= diagonal) {
             CGFloat diff = fabsf(image.diagonal - diagonal);
             if (diff < minDiff) {
@@ -169,7 +169,7 @@
     _sorted = YES;
 }
 
-- (ImageCollectionData *)bestAviableImage
+- (ISSImageCollectionData *)bestAviableImage
 {
     [self sortIfNeeded];
     return [_images lastObject];
@@ -182,7 +182,7 @@
 
 - (void)addImage:(UIImage *)image
 {
-    ImageCollectionData *data = [ImageCollectionData new];
+    ISSImageCollectionData *data = [ISSImageCollectionData new];
 
     data.width = (NSUInteger) image.size.width;
     data.height = (NSUInteger) image.size.height;
@@ -192,7 +192,7 @@
     [self addImageData:data];
 }
 
-- (void)addImageData:(ImageCollectionData *)imageData
+- (void)addImageData:(ISSImageCollectionData *)imageData
 {
     if (!_images) {
         _images = [NSMutableArray arrayWithCapacity:1];

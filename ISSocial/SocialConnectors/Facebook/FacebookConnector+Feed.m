@@ -6,7 +6,7 @@
 
 #import "SUserData.h"
 #import "SFeedEntry.h"
-#import "FacebookSDK.h"
+#import "Facebook.h"
 #import "FacebookConnector.h"
 #import "FacebookConnector+Feed.h"
 #import "NSDate+Facebook.h"

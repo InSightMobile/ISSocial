@@ -5,7 +5,6 @@
 #import "FacebookSDK.h"
 #import "FacebookConnectorOperation.h"
 #import "SUserData.h"
-#import "FacebookConnector+Messages.h"
 #import "ISSocial.h"
 #import "ISSocial+Errors.h"
 #import "NSObject+PerformBlockInBackground.h"
@@ -365,12 +364,6 @@
         }           afterDelay:0.1];
 
         self.loggedIn = YES;
-        if ([session.permissions indexOfObject:@"xmpp_login"] !=
-                NSNotFound) {
-            if ([self respondsToSelector:@selector(xmppConnect)]) {
-                [self xmppConnect];
-            }
-        }
     }];
 }
 

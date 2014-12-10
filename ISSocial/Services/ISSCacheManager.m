@@ -3,19 +3,19 @@
 
 
 
-#import "CacheManager.h"
+#import "ISSCacheManager.h"
 #import "SMessageThread.h"
 
 
-@interface CacheManager ()
+@interface ISSCacheManager ()
 @property(nonatomic, strong) NSCache *memoryCache;
 @end
 
-@implementation CacheManager
+@implementation ISSCacheManager
 
-+ (CacheManager *)instance
++ (ISSCacheManager *)instance
 {
-    static CacheManager *_instance = nil;
+    static ISSCacheManager *_instance = nil;
     static dispatch_once_t pred;
     dispatch_once(&pred, ^{
         _instance = [[self alloc] init];

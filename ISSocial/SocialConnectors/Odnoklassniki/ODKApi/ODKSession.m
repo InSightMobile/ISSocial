@@ -122,7 +122,8 @@
         self.session.appKey = self.appKey;
         [OKSession setActiveSession:self.session];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didActivated:) name:UIApplicationDidBecomeActiveNotification object:nil];
-        [self.session authorizeWithOKAppAuth:YES safariAuth:YES];
+        //[self.session authorizeWithOKAppAuth:YES safariAuth:YES];
+        [self.session authorizeInApp:NO];
     }
 }
 

@@ -65,10 +65,11 @@
     _selfRetain = nil;
 }
 
+/*
 - (NSURLConnection *)startWithCompletionHandler:(ODKRequestHandler)completion
 {
     self.completion = completion;
-    self.request = [OKRequest getRequestWithParams:_parameters httpMethod:_httpMethod delegate:self apiMethod:_method];
+    self.request = [OKRequest requestWithParams:_parameters httpMethod:_httpMethod delegate:self apiMethod:_method];
 
     _selfRetain = self;
     [_request load];
@@ -79,6 +80,6 @@
 {
     [_request.connection cancel];
 }
-
+*/
 
 @end

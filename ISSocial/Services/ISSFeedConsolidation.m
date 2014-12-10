@@ -1,12 +1,12 @@
 //
 // 
 
-#import "FeedConsolidation.h"
+#import "ISSFeedConsolidation.h"
 #import "SocialConnector.h"
 
 // TODO: Optimization needed
 
-@implementation FeedConsolidation
+@implementation ISSFeedConsolidation
 {
 
     NSMutableArray *_consolidatedContent;
