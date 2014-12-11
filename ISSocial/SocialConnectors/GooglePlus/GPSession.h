@@ -34,11 +34,15 @@ typedef void (^GPSessionStateHandler)(GPSession *session,
 
 + (GPSession *)activeSession;
 
+- (NSString *)idToken;
+
 - (BOOL)handleURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation;
 
 - (void)didActivated;
 
 + (void)openActiveSessionWithClientID:(NSString *)appID permissions:(NSArray *)permissions completionHandler:(GPSessionStateHandler)handler;
+
+- (void)closeSession;
 
 
 @end

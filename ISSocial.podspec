@@ -50,6 +50,7 @@ Pod::Spec.new do |s|
   s.subspec 'GooglePlus' do |ss|
     ss.source_files = 'ISSocial/SocialConnectors/GooglePlus/*.{h,m}'
     ss.dependency 'ISSocial/Core'
+    ss.dependency 'googleplus-ios-sdk', '~> 1.7'
   end
 
   s.subspec 'Instagram' do |ss|

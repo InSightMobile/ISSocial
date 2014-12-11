@@ -2,8 +2,7 @@
 // 
 
 #import "SCommentData.h"
-#import <GoogleOpenSource/GoogleOpenSource.h>
-#import <GooglePlus/GooglePlus.h>
+#import "GooglePlus.h"
 
 #import "SPhotoData.h"
 #import "NSString+TypeSafety.h"
@@ -11,7 +10,12 @@
 #import "SUserData.h"
 #import "GooglePlusConnector.h"
 #import "GooglePlusConnector+Feed.h"
-
+#import "GTLQueryPlus.h"
+#import "GTLPlusCommentFeed.h"
+#import "GTLPlusComment.h"
+#import "GTLPlusConstants.h"
+#import "GTLPlusActivityFeed.h"
+#import "GTLPlusActivity.h"
 
 
 @implementation GooglePlusConnector (Feed)

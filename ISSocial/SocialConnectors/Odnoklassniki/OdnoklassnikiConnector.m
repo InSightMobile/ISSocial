@@ -72,10 +72,10 @@
 
 - (ISSAuthorisationInfo *)authorizatioInfo
 {
-    if(!self.currentUserData.objectId) {
+    if (!self.currentUserData.objectId) {
         return nil;
     }
-    
+
     ISSAuthorisationInfo *token = [ISSAuthorisationInfo new];
     token.handler = self;
     token.accessToken = [ODKSession activeSession].accessToken;
@@ -99,32 +99,32 @@
 
         [ODKSession openActiveSessionWithPermissions:self.permissions appId:self.appID appSecret:self.appSecret appKey:self.appKey
                                    completionHandler:^(ODKSession *session, ODKSessionState status, NSError *error) {
-                                       switch (status) {
-                                           case ODKSessionStateOpen: {
+           switch (status) {
+               case ODKSessionStateOpen: {
 
-                                               [self readUserData:nil completion:^(SObject *result) {
-                                                   if (!result.isFailed) {
-                                                       self.currentUserData = (SUserData *) result;
+                   [self readUserData:nil completion:^(SObject *result) {
+                       if (!result.isFailed) {
+                           self.currentUserData = (SUserData *) result;
 
-                                                       [operation complete:[SObject successful]];
-                                                   }
-                                                   else {
-                                                       [operation completeWithFailure];
-                                                   }
-                                               }];
-                                           }
-                                               break;
-                                           case ODKSessionStateClosed:
-                                           case ODKSessionStateClosedLoginFailed: {
-                                               [operation completeWithFailure];
-                                           }
-                                               break;
-                                           default:
-                                               [operation completeWithFailure];
-                                               break;
-                                       }
+                           [operation complete:[SObject successful]];
+                       }
+                       else {
+                           [operation completeWithFailure];
+                       }
+                   }];
+               }
+                   break;
+               case ODKSessionStateClosed:
+               case ODKSessionStateClosedLoginFailed: {
+                   [operation completeWithFailure];
+               }
+                   break;
+               default:
+                   [operation completeWithFailure];
+                   break;
+           }
 
-                                   }];
+       }];
 
     }];
 }
@@ -138,30 +138,12 @@
 
     OKRequest *request = [OKRequest requestWithParams:preparedParameters httpMethod:@"GET" apiMethod:method];
 
-    //ODKRequest *requst = [ODKRequest requestMethod:method parameters:preparedParameters];
-
     [request executeWithCompletionBlock:^(id data) {
         processor(data);
-    } errorBlock:^(NSError *error) {
+    }                        errorBlock:^(NSError *error) {
         NSLog(@"error = %@", error);
         [operation completeWithError:error];
     }];
-
-    /*
-    [request startWithCompletionHandler:^(ODKRequest *connection, id response, NSError *error) {
-
-        [operation removeConnection:connection];
-
-        if (error) {
-            NSLog(@"error = %@", error);
-            [operation completeWithError:error];
-        }
-        else {
-            processor(response);
-        }
-    }];
-    [operation addConnection:requst];
-    */
 }
 
 

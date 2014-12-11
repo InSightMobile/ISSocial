@@ -1,15 +1,22 @@
 //
 //
 
+#import <ISSocial/SObject.h>
 #import "GooglePlusConnector.h"
-#import <GooglePlus.h>
-#import <GoogleOpenSource/GoogleOpenSource.h>
+#import "GooglePlus.h"
 #import "GPSession.h"
 #import "SUserData.h"
 #import "MultiImage.h"
 #import "NSString+TypeSafety.h"
 #import "ISSocial.h"
 #import "ISSAuthorisationInfo.h"
+#import "GTLService.h"
+#import "GTMLogger.h"
+#import "GTLServicePlus.h"
+#import "GTLQueryPlus.h"
+#import "GTLPlusPerson.h"
+#import "GTLPlusConstants.h"
+#import "GTLPlusPeopleFeed.h"
 
 @interface GooglePlusConnector ()
 @property(nonatomic, strong) GPPSignIn *signIn;
@@ -48,11 +55,28 @@
     self.permissions = settings[@"Permissions"];
 }
 
+- (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion
+{
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+
+        [[GPSession activeSession] closeSession];
+
+        [operation completed];
+    }];
+}
+
+- (ISSAuthorisationInfo *)authorizatioInfo
+{
+    ISSAuthorisationInfo *token = [ISSAuthorisationInfo new];
+    token.handler = self;
+    token.accessToken = [GPSession activeSession].idToken;
+    token.userId = [GPSession activeSession].userID;
+    return token;
+}
 
 - (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
-
 
         [GPSession openActiveSessionWithClientID:self.clientID permissions:self.permissions completionHandler:^(GPSession *session, GPSessionState status, NSError *error) {
 
@@ -80,14 +104,7 @@
 
 }
 
-- (ISSAuthorisationInfo *)authorizatioInfo
-{
-    ISSAuthorisationInfo *token = [ISSAuthorisationInfo new];
-    token.handler = self;
-    token.accessToken = self.session.accessToken;
-    token.userId = self.session.userID;
-    return token;
-}
+
 
 - (BOOL)isLoggedIn
 {

@@ -1,11 +1,13 @@
 //
 // 
 
-#import <GoogleOpenSource/GoogleOpenSource.h>
-#import <GooglePlus/GooglePlus.h>
+#import "GooglePlus.h"
 
 #import "GPSession.h"
 #import "NSObject+PerformBlockInBackground.h"
+#import "GTLPlusConstants.h"
+#import "GTLServicePlus.h"
+#import "GTMOAuth2Authentication.h"
 
 
 @interface GPSession () <GPPSignInDelegate>
@@ -39,7 +41,10 @@
 
 }
 
-
+- (NSString *)idToken
+{
+    return self.signIn.idToken;
+}
 - (void)finishedWithAuth:(GTMOAuth2Authentication *)auth error:(NSError *)error
 {
     if (error) {
@@ -109,6 +114,11 @@ sourceApplication:(NSString *)sourceApplication
 }
 
 
+- (void)closeSession
+{
+    [self.signIn signOut];
+    self.signIn = nil;
+}
 @end
 
 

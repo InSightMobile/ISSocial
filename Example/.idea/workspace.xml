@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="db57ebb8-ab50-475d-81e8-bc0ca29057e8" name="Default" comment="" />
+    <list default="true" id="db57ebb8-ab50-475d-81e8-bc0ca29057e8" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ISSocialDemo/en.lproj/MainStoryboard_iPad.storyboard" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/ISSocialDemo/en.lproj/MainStoryboard_iPhone.storyboard" afterPath="$PROJECT_DIR$/ISSocialDemo/en.lproj/MainStoryboard.storyboard" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/Example.iml" afterPath="$PROJECT_DIR$/.idea/Example.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GPSession.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GPSession.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GPSession.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GPSession.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GooglePlusConnector+Feed.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GooglePlusConnector+Feed.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GooglePlusConnector.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GooglePlusConnector.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial.podspec" afterPath="$PROJECT_DIR$/../ISSocial.podspec" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ISSocialDemo/ISSocialDemo-Info.plist" afterPath="$PROJECT_DIR$/ISSocialDemo/ISSocialDemo-Info.plist" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKRequest.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKRequest.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OdnoklassnikiConnector.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OdnoklassnikiConnector.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Podfile" afterPath="$PROJECT_DIR$/Podfile" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ISSocialDemo.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/ISSocialDemo.xcodeproj/project.pbxproj" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="Example.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -22,113 +38,15 @@
     <option name="hideWarnings" value="true" />
     <option name="HIDE_WARNINGS" value="true" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="iphoneos" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="iphonesimulator_iPhone_4s_8.1_i386_1" />
   <component name="FavoritesManager">
     <favorites_list name="ISSocialDemo" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="OKAuthorizeController.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/UI/OKAuthorizeController.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="195">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OKRequest.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKRequest.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="264" max-vertical-offset="945">
-              <caret line="20" column="11" selection-start-line="20" selection-start-column="11" selection-end-line="20" selection-end-column="11" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OKSession.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKSession.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="810">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OKTokenCache.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKTokenCache.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="315">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ODKRequest.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKRequest.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="465">
-              <caret line="25" column="89" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ODKRequest.m" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKRequest.m">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="398" max-vertical-offset="1335">
-              <caret line="82" column="2" selection-start-line="82" selection-start-column="2" selection-end-line="82" selection-end-column="2" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OdnoklassnikiConnector.m" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OdnoklassnikiConnector.m">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.37566704" vertical-offset="1643" max-vertical-offset="2610">
-              <caret line="139" column="4" selection-start-line="139" selection-start-column="0" selection-end-line="139" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ODKSession.m" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKSession.m">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1393" max-vertical-offset="2550">
-              <caret line="125" column="45" selection-start-line="125" selection-start-column="41" selection-end-line="125" selection-end-column="41" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OKSession.m" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKSession.m">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1513" max-vertical-offset="3675">
-              <caret line="119" column="8" selection-start-line="119" selection-start-column="8" selection-end-line="119" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OKRequest.m" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKRequest.m">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1069" max-vertical-offset="2355">
-              <caret line="90" column="12" selection-start-line="90" selection-start-column="12" selection-end-line="90" selection-end-column="12" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -141,15 +59,17 @@
         <option value="$PROJECT_DIR$/../ISSocial/Services/ISSFeedConsolidation.h" />
         <option value="$PROJECT_DIR$/../ISSocial/System/AccessSocialConnector.m" />
         <option value="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnector+Feed.m" />
-        <option value="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GooglePlusConnector.m" />
         <option value="$PROJECT_DIR$/../ISSocial/SocialConnectors/Twitter/TwitterConnector.m" />
         <option value="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnector.m" />
         <option value="$PROJECT_DIR$/../ISSocial/Categories/NSArray+AsyncBlocks.m" />
-        <option value="$PROJECT_DIR$/Podfile" />
         <option value="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKRequest.m" />
         <option value="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKSession.m" />
-        <option value="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKRequest.m" />
         <option value="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OdnoklassnikiConnector.m" />
+        <option value="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKRequest.m" />
+        <option value="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GooglePlusConnector+Feed.m" />
+        <option value="$PROJECT_DIR$/Podfile" />
+        <option value="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GPSession.m" />
+        <option value="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GooglePlusConnector.m" />
       </list>
     </option>
   </component>
@@ -158,12 +78,12 @@
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="55" />
+    <option name="x" value="42" />
     <option name="y" value="23" />
-    <option name="width" value="1865" />
-    <option name="height" value="1057" />
+    <option name="width" value="1398" />
+    <option name="height" value="877" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
     <OptionsSetting value="true" id="Checkout" />
@@ -186,7 +106,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Cidr.FilesView" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -235,7 +154,7 @@
               <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Odnoklassniki" />
+              <option name="myItemId" value="Facebook" />
               <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -265,6 +184,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Cidr.FilesView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -294,20 +214,13 @@
       <envs />
       <method />
     </configuration>
-    <configuration default="false" name="ISSocialDemo" type="AppleRunConfiguration" factoryName="Application" WORKING_DIR="" PASS_PARENT_ENVS="FALSE" PROJECT_NAME="ISSocialDemo" TARGET_NAME="ISSocialDemo" CONFIG_NAME="Debug" SCHEME_NAME="ISSocialDemo" RUN_TARGET_PROJECT_NAME="ISSocialDemo" RUN_TARGET_NAME="ISSocialDemo" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
+    <configuration default="false" name="Pods-ISSocial" type="AppleRunConfiguration" factoryName="Application" WORKING_DIR="" PASS_PARENT_ENVS="FALSE" PROJECT_NAME="Pods" TARGET_NAME="Pods-ISSocial" CONFIG_NAME="Debug" SCHEME_NAME="Pods-ISSocial" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
       <envs />
       <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
         <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
       </EXTENSION>
       <RunnerSettings RunnerId="AppRunner" />
       <ConfigurationWrapper RunnerId="AppRunner" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Pods-ISSocial" type="AppleRunConfiguration" factoryName="Application" WORKING_DIR="" PASS_PARENT_ENVS="FALSE" PROJECT_NAME="Pods" TARGET_NAME="Pods-ISSocial" CONFIG_NAME="Debug" SCHEME_NAME="Pods-ISSocial" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
-      <envs />
-      <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
-        <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
-      </EXTENSION>
       <method />
     </configuration>
     <configuration default="false" name="Pods" type="AppleRunConfiguration" factoryName="Application" WORKING_DIR="" PASS_PARENT_ENVS="FALSE" PROJECT_NAME="Pods" TARGET_NAME="Pods" CONFIG_NAME="Debug" SCHEME_NAME="Pods" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
@@ -380,19 +293,28 @@
       </EXTENSION>
       <method />
     </configuration>
+    <configuration default="false" name="ISSocialDemo" type="AppleRunConfiguration" factoryName="Application" WORKING_DIR="" PASS_PARENT_ENVS="FALSE" PROJECT_NAME="ISSocialDemo" TARGET_NAME="ISSocialDemo" CONFIG_NAME="Debug" SCHEME_NAME="ISSocialDemo" RUN_TARGET_PROJECT_NAME="ISSocialDemo" RUN_TARGET_NAME="ISSocialDemo" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
+      <envs />
+      <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
+        <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
+      </EXTENSION>
+      <RunnerSettings RunnerId="AppRunner" />
+      <ConfigurationWrapper RunnerId="AppRunner" />
+      <method />
+    </configuration>
     <list size="12">
-      <item index="0" class="java.lang.String" itemvalue="Application.ISSocialDemo" />
-      <item index="1" class="java.lang.String" itemvalue="Application.Pods-ISSocial" />
-      <item index="2" class="java.lang.String" itemvalue="Application.Pods" />
-      <item index="3" class="java.lang.String" itemvalue="Application.Pods-Bolts" />
-      <item index="4" class="java.lang.String" itemvalue="Application.Pods-Facebook-iOS-SDK" />
-      <item index="5" class="java.lang.String" itemvalue="Application.Pods-googleplus-ios-sdk" />
-      <item index="6" class="java.lang.String" itemvalue="Application.Pods-VK-ios-sdk" />
-      <item index="7" class="java.lang.String" itemvalue="Application.Pods-STTwitter" />
-      <item index="8" class="java.lang.String" itemvalue="Application.Pods-SDWebImage" />
-      <item index="9" class="java.lang.String" itemvalue="Application.Pods-ReactiveCocoa" />
-      <item index="10" class="java.lang.String" itemvalue="Application.Pods-RegexKitLite" />
-      <item index="11" class="java.lang.String" itemvalue="Application.Pods-AFNetworking" />
+      <item index="0" class="java.lang.String" itemvalue="Application.Pods-ISSocial" />
+      <item index="1" class="java.lang.String" itemvalue="Application.Pods" />
+      <item index="2" class="java.lang.String" itemvalue="Application.Pods-Bolts" />
+      <item index="3" class="java.lang.String" itemvalue="Application.Pods-Facebook-iOS-SDK" />
+      <item index="4" class="java.lang.String" itemvalue="Application.Pods-googleplus-ios-sdk" />
+      <item index="5" class="java.lang.String" itemvalue="Application.Pods-VK-ios-sdk" />
+      <item index="6" class="java.lang.String" itemvalue="Application.Pods-STTwitter" />
+      <item index="7" class="java.lang.String" itemvalue="Application.Pods-SDWebImage" />
+      <item index="8" class="java.lang.String" itemvalue="Application.Pods-ReactiveCocoa" />
+      <item index="9" class="java.lang.String" itemvalue="Application.Pods-RegexKitLite" />
+      <item index="10" class="java.lang.String" itemvalue="Application.Pods-AFNetworking" />
+      <item index="11" class="java.lang.String" itemvalue="Application.ISSocialDemo" />
     </list>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
@@ -406,29 +328,29 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="55" y="23" width="1865" height="1057" extended-state="6" />
+    <frame x="42" y="23" width="1398" height="877" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32953367" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32866243" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18089172" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.265285" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.54522294" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21366595" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25853303" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -449,67 +371,11 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKRequest.m</url>
-          <line>82</line>
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="1" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnectorOperation.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="937">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/NSDate+Facebook.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="937">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/NSDate+Facebook.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1020">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnector+UserData.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="937">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/Categories/GTMNSString+HTML.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1065">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/Categories/NSString+StripHTML.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="937">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/Categories/NSString+TypeSafety.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="937">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../ISSocial/Categories/NSString+TypeSafety.m">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="937">
@@ -563,7 +429,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="480">
           <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -604,20 +469,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GooglePlusConnector.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.020833334" vertical-offset="435" max-vertical-offset="2820">
-          <caret line="28" column="1" selection-start-line="28" selection-start-column="1" selection-end-line="28" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GooglePlusConnector+Feed.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.29166666" vertical-offset="0" max-vertical-offset="1935">
-          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Twitter/TwitterConnector.h">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="813">
@@ -640,23 +491,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnector.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="7.5833335" vertical-offset="0" max-vertical-offset="7080">
-          <caret line="364" column="0" selection-start-line="364" selection-start-column="0" selection-end-line="364" selection-end-column="0" />
-          <folding>
-            <element signature="e#7#45#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../ISSocial/Services/ISSImageCollectionData.m">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1290">
           <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-          <folding>
-            <element signature="e#10#42#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -664,7 +502,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3090">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -672,9 +509,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1018" max-vertical-offset="1740">
           <caret line="22" column="27" selection-start-line="22" selection-start-column="27" selection-end-line="22" selection-end-column="27" />
-          <folding>
-            <marker date="1418229535000" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -690,15 +524,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1290">
           <caret line="24" column="16" selection-start-line="24" selection-start-column="16" selection-end-line="24" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Podfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="270">
-          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -706,7 +531,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="450">
           <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -714,7 +538,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1095">
           <caret line="14" column="1" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -722,7 +545,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.42143905" vertical-offset="287" max-vertical-offset="1020">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -738,7 +560,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.81497794" vertical-offset="0" max-vertical-offset="3150">
           <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -754,7 +575,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="937">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -778,7 +598,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="937">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -800,8 +619,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKRequest.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="465">
-          <caret line="25" column="89" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="465">
+          <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -814,43 +633,139 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKRequest.m">
+    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKSession.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1069" max-vertical-offset="2355">
-          <caret line="90" column="12" selection-start-line="90" selection-start-column="12" selection-end-line="90" selection-end-column="12" />
+        <state vertical-scroll-proportion="0.06869221" vertical-offset="1823" max-vertical-offset="2580">
+          <caret line="125" column="41" selection-start-line="125" selection-start-column="41" selection-end-line="125" selection-end-column="41" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKSession.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1513" max-vertical-offset="3675">
+        <state vertical-scroll-proportion="-0.05944518" vertical-offset="1785" max-vertical-offset="3675">
           <caret line="119" column="8" selection-start-line="119" selection-start-column="8" selection-end-line="119" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKSession.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1393" max-vertical-offset="2550">
-          <caret line="125" column="45" selection-start-line="125" selection-start-column="41" selection-end-line="125" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKRequest.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="398" max-vertical-offset="1335">
-          <caret line="82" column="2" selection-start-line="82" selection-start-column="2" selection-end-line="82" selection-end-column="2" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OdnoklassnikiConnector.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.37566704" vertical-offset="1643" max-vertical-offset="2610">
-          <caret line="139" column="4" selection-start-line="139" selection-start-column="0" selection-end-line="139" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.22721268" vertical-offset="1673" max-vertical-offset="2430">
+          <caret line="123" column="25" selection-start-line="123" selection-start-column="25" selection-end-line="123" selection-end-column="25" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKRequest.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.03963012" vertical-offset="1350" max-vertical-offset="2355">
+          <caret line="90" column="12" selection-start-line="90" selection-start-column="12" selection-end-line="90" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKRequest.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="480" max-vertical-offset="1110">
+          <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GooglePlusConnector+Feed.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1995">
+          <caret line="63" column="77" selection-start-line="63" selection-start-column="77" selection-end-line="63" selection-end-column="77" />
+          <folding>
+            <element signature="e#8#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Podfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.27966103" vertical-offset="0" max-vertical-offset="590">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pods/googleplus-ios-sdk/google-plus-ios-sdk-1.7.1/GoogleOpenSource.framework/Versions/A/Headers/GTLPlusConstants.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.31707317" vertical-offset="405" max-vertical-offset="1020">
+          <caret line="40" column="28" selection-start-line="40" selection-start-column="28" selection-end-line="40" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnector.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2699187" vertical-offset="5489" max-vertical-offset="6960">
+          <caret line="385" column="0" selection-start-line="385" selection-start-column="0" selection-end-line="393" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.41463414" vertical-offset="255" max-vertical-offset="870">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pods/googleplus-ios-sdk/google-plus-ios-sdk-1.7.1/GoogleOpenSource.framework/Versions/A/Headers/GTMOAuth2Authentication.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.806504" vertical-offset="1619" max-vertical-offset="5520">
+          <caret line="182" column="29" selection-start-line="182" selection-start-column="29" selection-end-line="182" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pods/googleplus-ios-sdk/google-plus-ios-sdk-1.7.1/GooglePlus.framework/Versions/A/Headers/GPPSignIn.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2699187" vertical-offset="689" max-vertical-offset="3015">
+          <caret line="57" column="56" selection-start-line="57" selection-start-column="49" selection-end-line="57" selection-end-column="56" />
+          <folding>
+            <element signature="e#195#228#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GPSession.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.37235773" vertical-offset="416" max-vertical-offset="1950">
+          <caret line="43" column="18" selection-start-line="43" selection-start-column="18" selection-end-line="43" selection-end-column="18" />
+          <folding>
+            <element signature="e#8#30#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3902439" vertical-offset="3795" max-vertical-offset="4410">
+          <caret line="274" column="64" selection-start-line="274" selection-start-column="64" selection-end-line="274" selection-end-column="64" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GPSession.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4878049" vertical-offset="180" max-vertical-offset="795">
+          <caret line="32" column="41" selection-start-line="32" selection-start-column="41" selection-end-line="32" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GooglePlusConnector.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.37235773" vertical-offset="866" max-vertical-offset="3075">
+          <caret line="73" column="25" selection-start-line="73" selection-start-column="17" selection-end-line="73" selection-end-column="17" />
+          <folding>
+            <element signature="e#7#35#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
