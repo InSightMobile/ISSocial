@@ -11,8 +11,8 @@
 
 #import "IGRequest.h"
 #import "IGSession.h"
-#import "AFHTTPClient.h"
 #import "AFHTTPRequestOperation.h"
+#import "AFHTTPRequestOperationManager.h"
 
 @interface IGRequest ()
 @property(nonatomic, copy) NSString *path;
@@ -47,15 +47,19 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:_parameters];
 
     // add default params
-    if (_session.accessToken)
-        [params setObject:_session.accessToken forKey:@"access_token"];
-    if (_session.clientId)
-        [params setObject:_session.clientId forKey:@"client_id"];
+    if (_session.accessToken) {
+        params[@"access_token"] = _session.accessToken;
+    }
+    if (_session.clientId) {
+        params[@"client_id"] = _session.clientId;
+    }
 
-    NSMutableURLRequest *req = [_session.client requestWithMethod:_method path:_path parameters:params];
+    NSMutableURLRequest *request = [_session.client.requestSerializer requestWithMethod:_method
+                                                                              URLString:[[NSURL URLWithString:_path relativeToURL:_session.client.baseURL] absoluteString]
+                                                                             parameters:params error:nil];
 
     AFHTTPRequestOperation *op =
-            [_session.client HTTPRequestOperationWithRequest:req success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            [_session.client HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 id data = [responseObject objectForKey:@"data"];
                 id error = [responseObject objectForKey:@"error"];
 
@@ -71,7 +75,8 @@
             }                                        failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 completion(operation, nil, error);
             }];
-    [_session.client enqueueHTTPRequestOperation:op];
+
+    [_session.client.operationQueue addOperation:op];
 
     return op;
 }

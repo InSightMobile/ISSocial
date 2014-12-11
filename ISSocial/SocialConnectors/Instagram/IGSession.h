@@ -16,7 +16,7 @@ typedef enum
 } IGSessionState;
 
 @class IGSession;
-@class AFHTTPClient;
+@class AFHTTPRequestOperationManager;
 
 
 typedef void (^IGSessionStateHandler)(IGSession *session,
@@ -27,8 +27,9 @@ typedef void (^IGSessionStateHandler)(IGSession *session,
 @interface IGSession : NSObject <WebLoginControllerDelegate>
 
 
-@property(nonatomic, readonly) AFHTTPClient *client;
 @property(nonatomic, readonly, copy) NSString *accessToken;
+
+@property(nonatomic, readwrite) AFHTTPRequestOperationManager *client;
 
 - (NSString *)clientId;
 

@@ -2,16 +2,14 @@
 // 
 
 #import "IGSession.h"
-#import "VKSession.h"
 #import "NSString+ValueConvertion.h"
-#import "AFHTTPClient.h"
-#import "AFJSONRequestOperation.h"
+#import "AFHTTPSessionManager.h"
+#import "AFHTTPRequestOperationManager.h"
 
 @interface IGSession ()
 @property(nonatomic, copy) NSString *clientId;
 @property(nonatomic, copy, readwrite) NSString *accessToken;
 @property(nonatomic, copy) IGSessionStateHandler statusHandler;
-@property(nonatomic, readwrite) AFHTTPClient *client;
 @end
 
 @implementation IGSession
@@ -37,9 +35,11 @@
 {
     self = [super init];
     if (self) {
-        self.client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:@"https://api.instagram.com/v1/"]];
-        [self.client setDefaultHeader:@"Accept" value:@"application/json"];
-        [self.client registerHTTPOperationClass:[AFJSONRequestOperation class]];
+
+        self.client = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"https://api.instagram.com/v1/"]];
+
+        self.client.responseSerializer = [[AFJSONResponseSerializer alloc] init];
+        [self.client.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     }
     return self;
 }
@@ -48,7 +48,7 @@
 - (BOOL)handleURL:(NSURL *)url
 {
     if ([url.absoluteString hasPrefix:self.redirectURI]) {
-        NSDictionary *params = [url.fragment exclodeURLQuery];
+        NSDictionary *params = [url.fragment explodeURLQuery];
         NSString *accessToken = params[@"access_token"];
 
         if (accessToken) {

@@ -9,6 +9,7 @@
 #import "MultiImage.h"
 #import "SCommentData.h"
 #import "NSString+TypeSafety.h"
+#import "SPagingData.h"
 
 @implementation InstagramConnector (Photo)
 
