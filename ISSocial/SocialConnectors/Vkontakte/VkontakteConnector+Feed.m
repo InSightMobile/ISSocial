@@ -4,9 +4,7 @@
 // To change the template use AppCode | Preferences | File Templates.
 //
 
-#import <ReactiveCocoa/ReactiveCocoa/NSArray+RACSequenceAdditions.h>
-#import <ReactiveCocoa/ReactiveCocoa/RACSequence.h>
-//#import "ISSVKRequest.h"
+#import <ReactiveCocoa/ReactiveCocoa.h>
 #import "SUserData.h"
 #import "SFeedEntry.h"
 #import "VkontakteConnector.h"
