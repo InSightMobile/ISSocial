@@ -3,11 +3,11 @@
 //
 
 #import "ReactiveCocoa/ReactiveCocoa.h"
-#import "NSArray+AsyncBlocks.h"
+#import "NSArray+ISSAsyncBlocks.h"
 #import "AsyncBlockOperation.h"
 
 
-@implementation NSArray (ISAsyncBlocks)
+@implementation NSArray (ISSAsyncBlocks)
 
 - (void)nextStep:(NSUInteger)index
            error:(NSError *)errorOrNil

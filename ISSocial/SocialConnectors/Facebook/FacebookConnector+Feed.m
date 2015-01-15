@@ -18,7 +18,7 @@
 #import "SImagePreviewObject.h"
 #import "MultiImage.h"
 #import "SVideoData.h"
-#import "NSArray+AsyncBlocks.h"
+#import "NSArray+ISSAsyncBlocks.h"
 #import "NSString+StripHTML.h"
 #import "NSString+TypeSafety.h"
 #import "SLinkData.h"

@@ -7,7 +7,7 @@
 //
 
 #import "AsyncBlockOperation.h"
-#import "NSArray+AsyncBlocks.h"
+#import "NSArray+ISSAsyncBlocks.h"
 
 @interface AsyncBlockOperation ()
 @property(assign) BOOL isConcurrent;

@@ -5,7 +5,7 @@
 
 #import "ISSocial.h"
 #import "ISSocialLoginManager.h"
-#import "NSArray+AsyncBlocks.h"
+#import "NSArray+ISSAsyncBlocks.h"
 
 
 @interface ISSocial ()

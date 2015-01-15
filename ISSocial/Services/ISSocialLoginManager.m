@@ -6,7 +6,7 @@
 #import "AsyncBlockOperation.h"
 #import "NetworkCheck.h"
 #import "BlockOperationQueue.h"
-#import "NSArray+AsyncBlocks.h"
+#import "NSArray+ISSAsyncBlocks.h"
 
 typedef void (^BlockCompletionBlock)();
 

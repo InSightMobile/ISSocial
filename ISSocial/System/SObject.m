@@ -5,7 +5,7 @@
 //
 
 
-#import "NSArray+AsyncBlocks.h"
+#import "NSArray+ISSAsyncBlocks.h"
 #import <objc/runtime.h>
 #import "SObject.h"
 #import "SocialConnectorOperation.h"
