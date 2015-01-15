@@ -10,7 +10,7 @@
 #import "FacebookConnector+UserData.h"
 #import "MultiImage.h"
 #import "SCommentData.h"
-#import "NSArray+AsyncBlocks.h"
+#import "NSArray+ISSAsyncBlocks.h"
 #import "SReadAlbumsParameters.h"
 #import "SPagingData.h"
 

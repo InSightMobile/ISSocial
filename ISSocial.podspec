@@ -25,6 +25,7 @@ Pod::Spec.new do |s|
 
     ss.subspec 'Categories' do |sss|
       sss.source_files = 'ISSocial/Categories/*.{h,m}'
+      sss.public_header_files = 'ISSocial/Categories/*.h'
     end
 
     ss.subspec 'Services' do |sss|
