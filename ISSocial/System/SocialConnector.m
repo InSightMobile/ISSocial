@@ -49,11 +49,17 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
     NSString *selectorName = NSStringFromSelector(selector);
 
     if (numberOfArguments == 4 && [selectorName hasSuffix:@":completion:"]) {
-        __unsafe_unretained SObject *param;
-        __unsafe_unretained SObjectCompletionBlock block;
+        __unsafe_unretained SObject *invokationParam;
+        __unsafe_unretained SObjectCompletionBlock invokationBlock;
+        
+        SObject *param;
+        SObjectCompletionBlock block;
 
-        [anInvocation getArgument:&param atIndex:2];
-        [anInvocation getArgument:&block atIndex:3];
+        [anInvocation getArgument:&invokationParam atIndex:2];
+        [anInvocation getArgument:&invokationBlock atIndex:3];
+        
+        param = invokationParam;
+        block = [invokationBlock copy];
 
         SObject *result = nil;
 
@@ -70,6 +76,7 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
         }
 
         [anInvocation setReturnValue:&result];
+        [anInvocation retainArguments];
         return;
     }
     [super forwardInvocation:anInvocation];
