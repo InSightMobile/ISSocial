@@ -4,6 +4,8 @@
 #import <Foundation/Foundation.h>
 #import "AccessSocialConnector.h"
 #import "CompositeConnector.h"
+#import "SUserData.h"
+
 
 @class ISSocialLoginManager;
 @class CompositeConnector;
