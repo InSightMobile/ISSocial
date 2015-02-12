@@ -13,7 +13,7 @@
 #import "NSString+TypeSafety.h"
 #import "SPagingData.h"
 #import "SReadAlbumsParameters.h"
-#import "NSArray+AsyncBlocks.h"
+#import "NSArray+ISSAsyncBlocks.h"
 
 static const int kPhotoPageSize = 20;
 

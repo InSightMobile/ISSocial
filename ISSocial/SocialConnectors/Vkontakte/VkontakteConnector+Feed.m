@@ -12,7 +12,7 @@
 #import "VkontakteConnector+UserData.h"
 #import "SCommentData.h"
 #import "SPhotoData.h"
-#import "NSArray+AsyncBlocks.h"
+#import "NSArray+ISSAsyncBlocks.h"
 #import "VkontakteConnector+Photos.h"
 #import "SAudioData.h"
 #import "VkontakteConnector+Audio.h"
