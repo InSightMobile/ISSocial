@@ -123,8 +123,13 @@
 
 - (void)simplePost:(NSString *)method object:(NSDictionary *)object operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
 {
+    NSMutableDictionary<FBGraphObject> *graphObject = [FBGraphObject graphObject];
+
+    [graphObject setDictionary:object];
+
+
     FBRequestConnection *connection =
-            [[FBRequest requestForPostWithGraphPath:method graphObject:object] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+            [[FBRequest requestForPostWithGraphPath:method graphObject:graphObject] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
                 [operation removeConnection:connection];
                 if (error) {
                     NSLog(@"Facebook error on method: %@ params: %@ error: %@", method, object, error.userInfo);
@@ -219,6 +224,7 @@
 {
     bool ok = YES;
     for (NSString *permission in permissions) {
+        NSLog(@"permissions = %@", [[FBSession activeSession] permissions]);
         if (![[[FBSession activeSession] permissions] containsObject:permission]) {
             ok = NO;
             break;

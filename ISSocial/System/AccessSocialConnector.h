@@ -23,7 +23,7 @@ static NSString *const kAllowUserUIKey = @"allowUserUI";
 
 - (SObject *)addPagingData:(SObject *)result to:(SObject *)data;
 
-- (NSString *)defaultAlbumName;
+@property (nonatomic) NSString * defaultAlbumName;
 
 - (void)setupSettings:(NSDictionary *)settings;
 

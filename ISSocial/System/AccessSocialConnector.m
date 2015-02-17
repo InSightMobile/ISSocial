@@ -78,7 +78,7 @@
 }
 
 - (NSString *)defaultAlbumName {
-    return @"SocNetsBox";
+    return _defaultAlbumName ?: @"Album";
 }
 
 - (NSInteger)connectorPriority
@@ -96,6 +96,9 @@
 {
     if(settings[@"Priority"]) {
         [self setConnectorPriority:[settings[@"Priority"] integerValue] ];
+    }
+    if(settings[@"DefaultAlbum"]) {
+        [self setDefaultAlbumName:settings[@"DefaultAlbum"]];
     }
 }
 

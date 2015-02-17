@@ -410,8 +410,7 @@ static const int kPageSize = 20;
 }
 
 - (SObject *)getDefaultPhotoAlbum:(SObject *)params
-                       completion:
-                               (SObjectCompletionBlock)completion
+                       completion: (SObjectCompletionBlock)completion
 {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"me/albums" operation:operation processor:^(NSDictionary *response) {
@@ -419,18 +418,23 @@ static const int kPageSize = 20;
             NSLog(@"response = %@", response);
             NSArray *data = response[@"data"];
             if (data.count) {
-                NSDictionary *albumData = [data objectAtIndex:0];
-                SPhotoAlbumData *album = [[SPhotoAlbumData alloc] initWithHandler:self];
-                album.objectId = albumData[@"id"];
-                album.title = albumData[@"name"];
-                album.photoAlbumDescription = albumData[@"description"];
-                [operation complete:album];
+                for(NSDictionary *albumData in data) {
+                    SPhotoAlbumData *album = [self parseAlbumData:albumData];
+                    if(album.canUpload.boolValue) {
+                        if([album.title isEqualToString:self.defaultAlbumName]) {
+                            [operation complete:album];
+                            return;
+                        }
+                        if([album.title isEqualToString:[NSString stringWithFormat:@"%@ Photos",self.defaultAlbumName]]) {
+                            [operation complete:album];
+                            return;
+                        }
+                    }
+                }
             }
-            else { // create new album
-                SPhotoAlbumData *album = [[SPhotoAlbumData alloc] initWithHandler:self];
-                album.title = self.defaultAlbumName;
-                [self createPhotoAlbum:album completion:completion];
-            }
+            SPhotoAlbumData *album = [[SPhotoAlbumData alloc] initWithHandler:self];
+            album.title = self.defaultAlbumName;
+            [self createPhotoAlbum:album completion:completion];
         }];
     }];
 }
@@ -491,14 +495,12 @@ static const int kPageSize = 20;
 }
 
 - (void)uploadPhoto:(SPhotoData *)photo
-             toPath:
-                     (NSString *)path
-          operation:
-                  (SocialConnectorOperation *)operation
-         completion:
-                 (SObjectCompletionBlock)completion
+             toPath:(NSString *)path
+          operation:(SocialConnectorOperation *)operation
+         completion:(SObjectCompletionBlock)completion
 {
-    [self checkAuthorizationFor:@[@"publish_actions", @"photo_upload"] operation:operation processor:^(id obj) {
+
+    [self checkAuthorizationFor:@[@"publish_actions"] operation:operation processor:^(id obj) {
 
         FBRequest *req = [FBRequest requestWithGraphPath:path
                                               parameters:@{@"source" : photo.sourceImage}
