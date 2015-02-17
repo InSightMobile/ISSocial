@@ -296,7 +296,6 @@
                     else {
                         next(nil);
                     }
-
                 }               comletition:^(NSError *errorOrNil)
                 {
 
@@ -586,26 +585,19 @@
 
 - (SObject *)share:(SShareItem *)params completion:(SObjectCompletionBlock)completion;
 {
-    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
-
         if (params.text.length) {
 
             SFeedEntry *feed = [SFeedEntry new];
             feed.message = params.text;
-            feed.operation = operation;
             if (params.photo) {
                 feed.attachments = @[params.photo];
             }
 
-            [self postToFeed:feed completion:operation.completion];
+            return [self postToFeed:feed completion:completion];
         }
         else if(params.photo) {
-            [self publishPhoto:params.photo completion:^(SObject *result) {
-                [operation complete:[SObject successful]];
-            }];
+            return [self publishPhoto:params.photo completion:completion];
         }
-
-    }];
 }
 
 

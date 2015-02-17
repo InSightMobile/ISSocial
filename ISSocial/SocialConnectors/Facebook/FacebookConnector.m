@@ -14,6 +14,7 @@
 @interface FacebookConnector ()
 @property(nonatomic) BOOL loggedIn;
 @property(nonatomic, strong) id defaultReadPermissions;
+@property(nonatomic, strong) id defaultPublishPermissions;
 @end
 
 @implementation FacebookConnector
@@ -272,7 +273,9 @@
     if (settings[@"ReadPermissions"]) {
         self.defaultReadPermissions = settings[@"ReadPermissions"];
     }
-
+    if (settings[@"PublishPermissions"]) {
+        self.defaultPublishPermissions = settings[@"PublishPermissions"];
+    }
 }
 
 - (SObject *)closeSessionAndClearCredentials:(SObject *)params completion:(SObjectCompletionBlock)completion
