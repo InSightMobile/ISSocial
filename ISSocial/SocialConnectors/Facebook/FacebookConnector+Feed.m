@@ -22,6 +22,7 @@
 #import "NSString+StripHTML.h"
 #import "NSString+TypeSafety.h"
 #import "SLinkData.h"
+#import "SShareItem.h"
 
 @implementation FacebookConnector (Feed)
 
@@ -583,6 +584,29 @@
     }];
 }
 
+- (SObject *)share:(SShareItem *)params completion:(SObjectCompletionBlock)completion;
+{
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+
+        if (params.text.length) {
+
+            SFeedEntry *feed = [SFeedEntry new];
+            feed.message = params.text;
+            feed.operation = operation;
+            if (params.photo) {
+                feed.attachments = @[params.photo];
+            }
+
+            [self postToFeed:feed completion:operation.completion];
+        }
+        else if(params.photo) {
+            [self publishPhoto:params.photo completion:^(SObject *result) {
+                [operation complete:[SObject successful]];
+            }];
+        }
+
+    }];
+}
 
 
 
