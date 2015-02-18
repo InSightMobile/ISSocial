@@ -502,8 +502,15 @@ static const int kPageSize = 20;
 
     [self checkAuthorizationFor:@[@"publish_actions"] operation:operation processor:^(id obj) {
 
+        NSMutableDictionary *params= [NSMutableDictionary new];
+
+        params[@"source"] = photo.sourceImage;
+        if(photo.title.length) {
+            params[@"message"] = photo.title;
+        }
+
         FBRequest *req = [FBRequest requestWithGraphPath:path
-                                              parameters:@{@"source" : photo.sourceImage}
+                                              parameters:params
                                               HTTPMethod:@"POST"];
 
         FBRequestConnection *connection = [[FBRequestConnection alloc] initWithTimeout:60];

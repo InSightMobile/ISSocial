@@ -547,7 +547,18 @@
 
 - (SObject *)share:(SShareItem *)params completion:(SObjectCompletionBlock)completion;
 {
-    if (params.text.length) {
+    if (params.photo) {
+        SPhotoData *photo = [params.photo copyWithHandler:self];
+        photo.title = params.text;
+
+        if (params.photo.photoURL) {
+            return [self publishPhoto:photo completion:completion];
+        }
+        else {
+            return [self uploadPhotoToWall:photo completion:completion];
+        }
+    }
+    else if (params.text.length) {
 
         SFeedEntry *feed = [SFeedEntry new];
         feed.message = params.text;
@@ -557,14 +568,7 @@
 
         return [self postToFeed:feed completion:completion];
     }
-    else if (params.photo) {
-        if (params.photo.photoURL) {
-            return [self publishPhoto:params.photo completion:completion];
-        }
-        else {
-            return [self uploadPhotoToWall:params.photo completion:completion];
-        }
-    }
+
     else {
         completion([SObject failed]);
         return [SObject failed];
