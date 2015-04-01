@@ -30,7 +30,7 @@
     self = [super init];
     if (self) {
 
-        self.manager = [AFNetworkReachabilityManager managerForDomain:@"vk.com"];
+        self.manager = [AFNetworkReachabilityManager sharedManager];
         [_manager startMonitoring];
     }
 

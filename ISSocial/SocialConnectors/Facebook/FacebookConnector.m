@@ -73,7 +73,7 @@
 
 - (void)simpleQuery:(NSString *)query operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
     FBRequest *fql = [FBRequest requestForGraphPath:@"fql"];
-    [fql.parameters setObject:query forKey:@"q"];
+    fql.parameters[@"q"] = query;
 
     FBRequestConnection *connection =
             [fql startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
