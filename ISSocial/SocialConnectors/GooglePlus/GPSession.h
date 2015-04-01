@@ -3,8 +3,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum
-{
+typedef enum {
     GPSessionStateOpen,
     GPSessionStateClosedLoginFailed,
     GPSessionStateClosed

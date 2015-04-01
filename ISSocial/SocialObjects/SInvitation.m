@@ -2,11 +2,9 @@
 //
 
 #import "SInvitation.h"
-#import "SUserData.h"
 
 
-@implementation SInvitation
-{
+@implementation SInvitation {
 
 }
 @end

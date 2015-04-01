@@ -4,24 +4,22 @@
 //
 
 
-#import "OKSession.h"
-#import "OKUtils.h"
-#import "OKTokenCache.h"
-
-NSString* const kLoginURL = @"http://www.odnoklassniki.ru/oauth/authorize";
-NSString* const kRedirectURL = @"odnoklassniki://";
-NSString* const kAccessTokenURL = @"http://api.odnoklassniki.ru/oauth/token.do";
-NSString* const kAPIBaseURL = @"http://api.odnoklassniki.ru/api/";
+NSString *const kLoginURL = @"http://www.odnoklassniki.ru/oauth/authorize";
+NSString *const kRedirectURL = @"odnoklassniki://";
+NSString *const kAccessTokenURL = @"http://api.odnoklassniki.ru/oauth/token.do";
+NSString *const kAPIBaseURL = @"http://api.odnoklassniki.ru/api/";
 
 static NSString *const OKAuthURLScheme = @"okauth";
 static NSString *const OKAuthURLPath = @"authorize";
 
 static OKSession *_activeSession = nil;
 
-@interface OKSession()
--(void)didNotLogin:(BOOL)canceled;
--(void)didNotExtendToken:(NSError *)error;
--(void)cacheTokenCahceWithPermissions:(NSDictionary *)tokenInfo;
+@interface OKSession ()
+- (void)didNotLogin:(BOOL)canceled;
+
+- (void)didNotExtendToken:(NSError *)error;
+
+- (void)cacheTokenCahceWithPermissions:(NSDictionary *)tokenInfo;
 @end
 
 @implementation OKSession
@@ -38,218 +36,218 @@ static OKSession *_activeSession = nil;
 
 
 + (OKSession *)activeSession {
-	if (!_activeSession) {
-		OKSession *session = [[OKSession alloc] init];
-		[OKSession setActiveSession:session];
-	}
-	return _activeSession ;
+    if (!_activeSession) {
+        OKSession *session = [[OKSession alloc] init];
+        [OKSession setActiveSession:session];
+    }
+    return _activeSession;
 }
 
 + (OKSession *)setActiveSession:(OKSession *)session {
-	if (!_activeSession){
-		_activeSession = session ;
-	}else if (session != _activeSession) {
-		OKSession *toRelease = _activeSession;
-		[toRelease close];
-		_activeSession = session ;
-	}
-	return session;
+    if (!_activeSession) {
+        _activeSession = session;
+    } else if (session != _activeSession) {
+        OKSession *toRelease = _activeSession;
+        [toRelease close];
+        _activeSession = session;
+    }
+    return session;
 }
 
-+ (BOOL)openActiveSessionWithPermissions:(NSArray *)permissions appId:(NSString *)appID appSecret:(NSString*)secret{
-	BOOL result = NO;
-	OKSession *session = [[OKSession alloc] initWithAppID:appID permissions:permissions appSecret:secret];
-	if (session.accessToken != nil) {
-		[self setActiveSession:session];
-		result = YES;
-	}
-	return result;
++ (BOOL)openActiveSessionWithPermissions:(NSArray *)permissions appId:(NSString *)appID appSecret:(NSString *)secret {
+    BOOL result = NO;
+    OKSession *session = [[OKSession alloc] initWithAppID:appID permissions:permissions appSecret:secret];
+    if (session.accessToken != nil) {
+        [self setActiveSession:session];
+        result = YES;
+    }
+    return result;
 }
 
 - (BOOL)handleOpenURL:(NSURL *)url {
-	if (![[url absoluteString] hasPrefix:self.getAppBaseUrl]) {
-		//NSLog(@"wrong prefix = %@, %@", [url absoluteString], self.getAppBaseUrl);
-		return NO;
-	}
+    if (![[url absoluteString] hasPrefix:self.getAppBaseUrl]) {
+        //NSLog(@"wrong prefix = %@, %@", [url absoluteString], self.getAppBaseUrl);
+        return NO;
+    }
     NSLog(@"handle url %@", [url absoluteString]);
 
-	NSString *query = [url query];
-	NSDictionary *params = [OKUtils dictionaryByParsingURLQueryPart:query];
-	if([params valueForKey:@"error"] != nil){
-		if ([[params valueForKey:@"error"] isEqualToString:@"access_denied"]){
-			[self didNotLogin:YES];
-		}else if (_delegate && [_delegate respondsToSelector:@selector(okDidNotLoginWithError:)])
-			[_delegate okDidNotLoginWithError:[NSError errorWithDomain:@"Odnoklassniki.ru" code:511 userInfo:params]];
-		return YES;
-	}
+    NSString *query = [url query];
+    NSDictionary *params = [OKUtils dictionaryByParsingURLQueryPart:query];
+    if ([params valueForKey:@"error"] != nil) {
+        if ([[params valueForKey:@"error"] isEqualToString:@"access_denied"]) {
+            [self didNotLogin:YES];
+        } else if (_delegate && [_delegate respondsToSelector:@selector(okDidNotLoginWithError:)])
+            [_delegate okDidNotLoginWithError:[NSError errorWithDomain:@"Odnoklassniki.ru" code:511 userInfo:params]];
+        return YES;
+    }
 
-	NSString *code = [params objectForKey:@"code"];
+    NSString *code = [params objectForKey:@"code"];
 
-	NSMutableDictionary *newParams = [NSMutableDictionary dictionary];
-	[newParams setValue:code forKey:@"code"];
-	[newParams setValue:[self.permissions componentsJoinedByString:@","] forKey:@"permissions"];
-	[newParams setValue:self.getAppBaseUrl forKey:@"redirect_uri"];
-	[newParams setValue:@"authorization_code" forKey:@"grant_type"];
-	[newParams setValue:self.appId forKey:@"client_id"];
-	[newParams setValue:self.appSecret forKey:@"client_secret"];
+    NSMutableDictionary *newParams = [NSMutableDictionary dictionary];
+    [newParams setValue:code forKey:@"code"];
+    [newParams setValue:[self.permissions componentsJoinedByString:@","] forKey:@"permissions"];
+    [newParams setValue:self.getAppBaseUrl forKey:@"redirect_uri"];
+    [newParams setValue:@"authorization_code" forKey:@"grant_type"];
+    [newParams setValue:self.appId forKey:@"client_id"];
+    [newParams setValue:self.appSecret forKey:@"client_secret"];
 
-	self.tokenRequest = [[OKRequest alloc] init] ;
-	_tokenRequest.url = [OKRequest serializeURL:kAccessTokenURL params:newParams httpMethod:@"POST"];
-	_tokenRequest.delegate = self;
-	_tokenRequest.params = newParams;
-	_tokenRequest.httpMethod = @"POST";
-	[self.tokenRequest load];
+    self.tokenRequest = [[OKRequest alloc] init];
+    _tokenRequest.url = [OKRequest serializeURL:kAccessTokenURL params:newParams httpMethod:@"POST"];
+    _tokenRequest.delegate = self;
+    _tokenRequest.params = newParams;
+    _tokenRequest.httpMethod = @"POST";
+    [self.tokenRequest load];
 
-	return YES;
+    return YES;
 }
 
 - (void)close {
-	[[OKTokenCache sharedCache] clearToken];
+    [[OKTokenCache sharedCache] clearToken];
 }
 
-- (id)initWithAppID:(NSString *)appID permissions:(NSArray *)permissions appSecret:(NSString*)secret {
-	self = [super init];
-	if (self){
-		self.appId = appID;
-		self.permissions = permissions;
-		self.appSecret = secret;
+- (id)initWithAppID:(NSString *)appID permissions:(NSArray *)permissions appSecret:(NSString *)secret {
+    self = [super init];
+    if (self) {
+        self.appId = appID;
+        self.permissions = permissions;
+        self.appSecret = secret;
 
-		//[[OKTokenCache sharedCache] clearToken];
+        //[[OKTokenCache sharedCache] clearToken];
 
-		NSDictionary *cachedToken = [[OKTokenCache sharedCache] getTokenInformation];
-		if(cachedToken){
-			self.accessToken = [cachedToken valueForKey:okAccessTokenKey];
-			self.refreshToken = [NSString stringWithFormat:@"%@", [cachedToken valueForKey:kRefreshTokenKey]];
-			NSArray *aPermissions = [cachedToken valueForKey:kPermissionsKey];
+        NSDictionary *cachedToken = [[OKTokenCache sharedCache] getTokenInformation];
+        if (cachedToken) {
+            self.accessToken = [cachedToken valueForKey:okAccessTokenKey];
+            self.refreshToken = [NSString stringWithFormat:@"%@", [cachedToken valueForKey:kRefreshTokenKey]];
+            NSArray *aPermissions = [cachedToken valueForKey:kPermissionsKey];
 
-			if (_permissions == nil) self.permissions = aPermissions;
+            if (_permissions == nil) self.permissions = aPermissions;
 
-			if (![self.permissions isEqualToArray:aPermissions]){
-				self.accessToken = nil;
-				self.refreshToken = nil;
-			}
-		}
-	}
+            if (![self.permissions isEqualToArray:aPermissions]) {
+                self.accessToken = nil;
+                self.refreshToken = nil;
+            }
+        }
+    }
     return self;
 }
 
 - (void)authorizeWithOKAppAuth:(BOOL)tryOKAppAuth
-					safariAuth:(BOOL)trySafariAuth {
+                    safariAuth:(BOOL)trySafariAuth {
 
-	if(_accessToken){
-		if (_delegate && [_delegate respondsToSelector:@selector(okDidLogin)])
-			[_delegate okDidLogin];
-		return;
-	}
+    if (_accessToken) {
+        if (_delegate && [_delegate respondsToSelector:@selector(okDidLogin)])
+            [_delegate okDidLogin];
+        return;
+    }
 
-	NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-			_appId, @"client_id",
-			[self getAppBaseUrl], @"redirect_uri",
-			@"code", @"response_type",
-			nil];
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+            _appId, @"client_id",
+            [self getAppBaseUrl], @"redirect_uri",
+            @"code", @"response_type",
+                    nil];
 
-	NSString *loginURL = kLoginURL;
+    NSString *loginURL = kLoginURL;
 
-	if (_permissions){
-		NSString *scope = [_permissions componentsJoinedByString:@";"];
-		[params setValue:scope forKey:@"scope"];
-	}
+    if (_permissions) {
+        NSString *scope = [_permissions componentsJoinedByString:@";"];
+        [params setValue:scope forKey:@"scope"];
+    }
 
-	BOOL didAuthNWithOKApp = NO;
+    BOOL didAuthNWithOKApp = NO;
 
-	if (tryOKAppAuth){
-		NSString *urlPrefix = [NSString stringWithFormat:@"%@://%@", OKAuthURLScheme, OKAuthURLPath];
-		NSString *okAppUrl = [OKRequest serializeURL:urlPrefix params:params];
-		didAuthNWithOKApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:okAppUrl]];
-	}
-	if (trySafariAuth && !didAuthNWithOKApp) {
+    if (tryOKAppAuth) {
+        NSString *urlPrefix = [NSString stringWithFormat:@"%@://%@", OKAuthURLScheme, OKAuthURLPath];
+        NSString *okAppUrl = [OKRequest serializeURL:urlPrefix params:params];
+        didAuthNWithOKApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:okAppUrl]];
+    }
+    if (trySafariAuth && !didAuthNWithOKApp) {
         [params setValue:@"m" forKey:@"layout"];
-		NSString *okAppUrl = [OKRequest serializeURL:loginURL params:params];
-		NSLog(@"OK app url = %@", okAppUrl);
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:okAppUrl]];
-	}
+        NSString *okAppUrl = [OKRequest serializeURL:loginURL params:params];
+        NSLog(@"OK app url = %@", okAppUrl);
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:okAppUrl]];
+    }
 }
 
 - (NSString *)getAppBaseUrl {
-	return [NSString stringWithFormat:@"ok%@%@://authorize",
-									  _appId,
-									  @""];
+    return [NSString stringWithFormat:@"ok%@%@://authorize",
+                                      _appId,
+                                      @""];
 }
 
--(void)refreshAuthToken {
-	NSMutableDictionary *newParams = [NSMutableDictionary dictionary];
-	[newParams setValue:self.refreshToken forKey:@"refresh_token"];
-	[newParams setValue:@"refresh_token" forKey:@"grant_type"];
-	[newParams setValue:self.appId forKey:@"client_id"];
-	[newParams setValue:self.appSecret forKey:@"client_secret"];
+- (void)refreshAuthToken {
+    NSMutableDictionary *newParams = [NSMutableDictionary dictionary];
+    [newParams setValue:self.refreshToken forKey:@"refresh_token"];
+    [newParams setValue:@"refresh_token" forKey:@"grant_type"];
+    [newParams setValue:self.appId forKey:@"client_id"];
+    [newParams setValue:self.appSecret forKey:@"client_secret"];
 
-	self.refreshTokenRequest = [[OKRequest alloc] init];
-	_refreshTokenRequest.url = [OKRequest serializeURL:kAccessTokenURL params:newParams httpMethod:@"POST"];
-	_refreshTokenRequest.delegate = self;
-	_refreshTokenRequest.params = newParams;
-	_refreshTokenRequest.httpMethod = @"POST";
-	[self.refreshTokenRequest load];
+    self.refreshTokenRequest = [[OKRequest alloc] init];
+    _refreshTokenRequest.url = [OKRequest serializeURL:kAccessTokenURL params:newParams httpMethod:@"POST"];
+    _refreshTokenRequest.delegate = self;
+    _refreshTokenRequest.params = newParams;
+    _refreshTokenRequest.httpMethod = @"POST";
+    [self.refreshTokenRequest load];
 }
 
--(void)cacheTokenCahceWithPermissions:(NSDictionary *)tokenInfo {
-	NSMutableDictionary *dct = [NSMutableDictionary dictionaryWithDictionary:tokenInfo];
-	[dct setValue:self.permissions forKey:kPermissionsKey];
-	[[OKTokenCache sharedCache] cacheTokenInformation:dct];
+- (void)cacheTokenCahceWithPermissions:(NSDictionary *)tokenInfo {
+    NSMutableDictionary *dct = [NSMutableDictionary dictionaryWithDictionary:tokenInfo];
+    [dct setValue:self.permissions forKey:kPermissionsKey];
+    [[OKTokenCache sharedCache] cacheTokenInformation:dct];
 }
 
--(void)didNotLogin:(BOOL)canceled {
-	if (_delegate && [_delegate respondsToSelector:@selector(okDidNotLogin:)])
-		[_delegate okDidNotLogin:canceled];
+- (void)didNotLogin:(BOOL)canceled {
+    if (_delegate && [_delegate respondsToSelector:@selector(okDidNotLogin:)])
+        [_delegate okDidNotLogin:canceled];
 }
 
--(void)didNotExtendToken:(NSError *)error {
-	if(_delegate && [_delegate respondsToSelector:@selector(okDidNotExtendToken:)])
-		[_delegate okDidNotExtendToken:error];
+- (void)didNotExtendToken:(NSError *)error {
+    if (_delegate && [_delegate respondsToSelector:@selector(okDidNotExtendToken:)])
+        [_delegate okDidNotExtendToken:error];
 }
 
 /*** OKAPIRequest delegate only for authorization ***/
--(void)request:(OKRequest *)request didLoad:(id)result {
-	if (request == self.tokenRequest){
-		if (request.hasError){
-			[self didNotLogin:NO];
-			return;
-		}
-		[self cacheTokenCahceWithPermissions:result];
-		self.accessToken = [(NSDictionary *)result valueForKey:okAccessTokenKey];
-		self.refreshToken = [(NSDictionary *)result valueForKey:kRefreshTokenKey];
+- (void)request:(OKRequest *)request didLoad:(id)result {
+    if (request == self.tokenRequest) {
+        if (request.hasError) {
+            [self didNotLogin:NO];
+            return;
+        }
+        [self cacheTokenCahceWithPermissions:result];
+        self.accessToken = [(NSDictionary *) result valueForKey:okAccessTokenKey];
+        self.refreshToken = [(NSDictionary *) result valueForKey:kRefreshTokenKey];
 
-		if (_delegate && [_delegate respondsToSelector:@selector(okDidLogin)])
-			[_delegate okDidLogin];
+        if (_delegate && [_delegate respondsToSelector:@selector(okDidLogin)])
+            [_delegate okDidLogin];
 
-	}else if(request == self.refreshTokenRequest){
-		if (self.refreshTokenRequest.hasError){
-			[self didNotExtendToken:nil];
-			return;
-		}
+    } else if (request == self.refreshTokenRequest) {
+        if (self.refreshTokenRequest.hasError) {
+            [self didNotExtendToken:nil];
+            return;
+        }
 
-		NSMutableDictionary *dct = [NSMutableDictionary dictionaryWithDictionary:[[OKTokenCache sharedCache] getTokenInformation]];
-		self.accessToken = [(NSDictionary *)result valueForKey:okAccessTokenKey];
-		[dct setValue:self.accessToken forKey:okAccessTokenKey];
-		[self cacheTokenCahceWithPermissions:dct];
-		if (_delegate && [_delegate respondsToSelector:@selector(okDidExtendToken:)])
-			[_delegate okDidExtendToken:self.accessToken];
-	}
+        NSMutableDictionary *dct = [NSMutableDictionary dictionaryWithDictionary:[[OKTokenCache sharedCache] getTokenInformation]];
+        self.accessToken = [(NSDictionary *) result valueForKey:okAccessTokenKey];
+        [dct setValue:self.accessToken forKey:okAccessTokenKey];
+        [self cacheTokenCahceWithPermissions:dct];
+        if (_delegate && [_delegate respondsToSelector:@selector(okDidExtendToken:)])
+            [_delegate okDidExtendToken:self.accessToken];
+    }
 }
 
--(void)request:(OKRequest *)request didFailWithError:(NSError *)error {
-	if (request == self.tokenRequest){
-		if (request.sessionExpired){
-			[self refreshAuthToken];
-		}else
-			[self didNotLogin:NO];
-	} else if(request == self.refreshTokenRequest){
-		[self didNotExtendToken:error];
-	}
+- (void)request:(OKRequest *)request didFailWithError:(NSError *)error {
+    if (request == self.tokenRequest) {
+        if (request.sessionExpired) {
+            [self refreshAuthToken];
+        } else
+            [self didNotLogin:NO];
+    } else if (request == self.refreshTokenRequest) {
+        [self didNotExtendToken:error];
+    }
 }
 
 - (void)dealloc {
-	_tokenRequest.delegate = nil;
-	_refreshTokenRequest.delegate = nil;
+    _tokenRequest.delegate = nil;
+    _refreshTokenRequest.delegate = nil;
 }
 
 

@@ -38,8 +38,7 @@
 }
 
 
-+ (BOOL) connectionAviable
-{
++ (BOOL)connectionAviable {
     return [[self instance] connectionAviable];
 }
 
@@ -49,9 +48,9 @@
 
 - (void)checkConnectionWithCompletion:(void (^)(BOOL aviable))completion {
 
-    __weak NetworkCheck* wself = self;
-    
-    if([_manager networkReachabilityStatus] == AFNetworkReachabilityStatusUnknown) {
+    __weak NetworkCheck *wself = self;
+
+    if ([_manager networkReachabilityStatus] == AFNetworkReachabilityStatusUnknown) {
 
         [_manager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
 

@@ -24,16 +24,14 @@
 @property(nonatomic) BOOL loggedIn;
 @property(nonatomic, strong) GPSession *session;
 @property(nonatomic, strong) NSString *clientID;
-@property(nonatomic, strong) NSArray * permissions;
+@property(nonatomic, strong) NSArray *permissions;
 @end
 
-@implementation GooglePlusConnector
-{
+@implementation GooglePlusConnector {
     SUserData *_currentUserData;
 }
 
-+ (GooglePlusConnector *)instance
-{
++ (GooglePlusConnector *)instance {
     static GooglePlusConnector *_instance = nil;
     static dispatch_once_t pred;
     dispatch_once(&pred, ^{
@@ -42,21 +40,18 @@
     return _instance;
 }
 
-+ (NSString *)connectorCode
-{
++ (NSString *)connectorCode {
     return ISSocialConnectorIdGooglePlus;
 }
 
-- (void)setupSettings:(NSDictionary *)settings
-{
+- (void)setupSettings:(NSDictionary *)settings {
     [super setupSettings:settings];
 
     self.clientID = settings[@"ClientID"];
     self.permissions = settings[@"Permissions"];
 }
 
-- (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [[GPSession activeSession] closeSession];
@@ -65,8 +60,7 @@
     }];
 }
 
-- (ISSAuthorisationInfo *)authorizatioInfo
-{
+- (ISSAuthorisationInfo *)authorizatioInfo {
     ISSAuthorisationInfo *token = [ISSAuthorisationInfo new];
     token.handler = self;
     token.accessToken = [GPSession activeSession].idToken;
@@ -74,8 +68,7 @@
     return token;
 }
 
-- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [GPSession openActiveSessionWithClientID:self.clientID permissions:self.permissions completionHandler:^(GPSession *session, GPSessionState status, NSError *error) {
@@ -84,7 +77,7 @@
                 case GPSessionStateOpen: {
                     self.loggedIn = YES;
                     self.session = session;
-                    [self updateProfile:operation.object completion:^(id result){
+                    [self updateProfile:operation.object completion:^(id result) {
                         [operation complete:[SObject successful]];
                     }];
                 }
@@ -105,15 +98,12 @@
 }
 
 
-
-- (BOOL)isLoggedIn
-{
+- (BOOL)isLoggedIn {
     return _loggedIn;
 }
 
 - (void)executeQuery:(id <GTLQueryProtocol>)query operation:(SocialConnectorOperation *)operation
-           processor:(void (^)(id object))handler
-{
+           processor:(void (^)(id object))handler {
     [[GPSession activeSession].plusService executeQuery:query completionHandler:^(GTLServiceTicket *ticket,
             id object,
             NSError *error) {
@@ -128,8 +118,7 @@
     }];
 }
 
-- (SObject *)updateProfile:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)updateProfile:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         GTLQueryPlus *query = [GTLQueryPlus queryForPeopleGetWithUserId:@"me"];
         [self executeQuery:query operation:operation processor:^(GTLPlusPerson *person) {
@@ -151,13 +140,11 @@
 
 }
 
-- (SUserData *)currentUserData
-{
+- (SUserData *)currentUserData {
     return _currentUserData;
 }
 
-- (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         GTLQueryPlus *query =
                 [GTLQueryPlus queryForPeopleListWithUserId:@"me"
@@ -183,14 +170,12 @@
     }];
 }
 
-- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation {
     return [[GPSession activeSession] handleURL:url sourceApplication:sourceApplication annotation:annotation];
 }
 
 
-- (void)handleDidBecomeActive
-{
+- (void)handleDidBecomeActive {
     [super handleDidBecomeActive];
     [[GPSession activeSession] didActivated];
 }

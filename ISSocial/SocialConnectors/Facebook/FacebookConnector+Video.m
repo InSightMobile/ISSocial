@@ -15,8 +15,7 @@
 
 @implementation FacebookConnector (Video)
 
-- (SVideoData *)parseVideoResponse:(NSDictionary *)data
-{
+- (SVideoData *)parseVideoResponse:(NSDictionary *)data {
 
     SVideoData *video = (SVideoData *) [self mediaObjectForId:[data[@"id"] stringValue] type:@"video"];
 
@@ -34,8 +33,7 @@
     return video;
 }
 
-- (SObject *)readVideo:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readVideo:(SObject *)params completion:(SObjectCompletionBlock)completion {
 
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -57,8 +55,7 @@
     }];
 }
 
-- (SObject *)addVideo:(SVideoData *)video completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)addVideo:(SVideoData *)video completion:(SObjectCompletionBlock)completion {
 
     return [self operationWithObject:video completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -103,23 +100,19 @@
     }];
 }
 
-- (SObject *)addVideoLike:(SVideoData *)feed completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)addVideoLike:(SVideoData *)feed completion:(SObjectCompletionBlock)completion {
     return [self addFeedLike:(id) feed completion:completion];
 }
 
-- (SObject *)removeVideoLike:(SVideoData *)feed completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)removeVideoLike:(SVideoData *)feed completion:(SObjectCompletionBlock)completion {
     return [self removeFeedLike:(id) feed completion:completion];
 }
 
-- (SObject *)addVideoComment:(SVideoData *)comments completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)addVideoComment:(SVideoData *)comments completion:(SObjectCompletionBlock)completion {
     return [self addFeedComment:(id) comments completion:completion];
 }
 
-- (SObject *)readVideoComments:(SVideoData *)feed completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readVideoComments:(SVideoData *)feed completion:(SObjectCompletionBlock)completion {
     return [self readFeedComments:(id) feed completion:completion];
 }
 

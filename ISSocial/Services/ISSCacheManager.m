@@ -13,8 +13,7 @@
 
 @implementation ISSCacheManager
 
-+ (ISSCacheManager *)instance
-{
++ (ISSCacheManager *)instance {
     static ISSCacheManager *_instance = nil;
     static dispatch_once_t pred;
     dispatch_once(&pred, ^{
@@ -23,8 +22,7 @@
     return _instance;
 }
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         self.memoryCache = [[NSCache alloc] init];
@@ -39,8 +37,7 @@
     return self;
 }
 
-- (void)clearMemory
-{
+- (void)clearMemory {
     NSLog(@"Clearing memory cache");
     [self.memoryCache removeAllObjects];
 }
@@ -49,8 +46,7 @@
                            operation:(SEL)operation
                               params:(SObject *)params
                                  ttl:(float)ttl
-                          completion:(SObjectCompletionBlock)completion
-{
+                          completion:(SObjectCompletionBlock)completion {
     // create key
     NSString *key =
             [NSString stringWithFormat:@"%@%@%@", connector.connectorCode, NSStringFromSelector(operation), [(id) params objectId]];

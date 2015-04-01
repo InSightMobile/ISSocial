@@ -12,9 +12,10 @@ static NSString *const kAllowUserUIKey = @"allowUserUI";
 
 @class AccessSocialConnector;
 
-@protocol AccessSocialConnector<SocialConnector>
+@protocol AccessSocialConnector <SocialConnector>
 @optional
 + (id)instance;
+
 + (NSString *)connectorCode;
 @end
 
@@ -23,7 +24,7 @@ static NSString *const kAllowUserUIKey = @"allowUserUI";
 
 - (SObject *)addPagingData:(SObject *)result to:(SObject *)data;
 
-@property (nonatomic) NSString * defaultAlbumName;
+@property(nonatomic) NSString *defaultAlbumName;
 
 - (void)setupSettings:(NSDictionary *)settings;
 

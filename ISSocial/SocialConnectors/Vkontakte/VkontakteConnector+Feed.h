@@ -11,7 +11,7 @@
 static NSString *const kNoResultObjectKey = @"NoResultObject";
 
 @interface VkontakteConnector (Feed)
-- (SObject *)parsePagingResponce:(id)response paging:(SObject *)paging processor:(SObject * (^)(id))processor;
+- (SObject *)parsePagingResponce:(id)response paging:(SObject *)paging processor:(SObject *(^)(id))processor;
 
 - (NSArray *)parseAttachments:(NSArray *)attachmentsResponse;
 

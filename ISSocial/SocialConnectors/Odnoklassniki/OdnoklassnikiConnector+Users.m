@@ -12,13 +12,11 @@
 
 
 @implementation OdnoklassnikiConnector (Users)
-- (SUserData *)dataForUserId:(NSString *)userId
-{
+- (SUserData *)dataForUserId:(NSString *)userId {
     return (SUserData *) [self mediaObjectForId:userId type:@"user"];
 }
 
-- (SObject *)parseUser:(id)response
-{
+- (SObject *)parseUser:(id)response {
     NSString *objectId = [response[@"uid"] stringValue];
 
     if (!objectId) {
@@ -32,13 +30,13 @@
     user.lastName = response[@"last_name"];
     user.birthday = [NSDate dateWithOdnoklassnikiBirthdayString:response[@"birthday"]];
 
-    if([response[@"gender"] isKindOfClass:[NSString class]]) {
+    if ([response[@"gender"] isKindOfClass:[NSString class]]) {
         NSString *genderString = response[@"gender"];
 
-        if([genderString isEqualToString:@"male"]) {
+        if ([genderString isEqualToString:@"male"]) {
             user.userGender = @(ISSMaleUserGender);
         }
-        else if([genderString isEqualToString:@"female"]) {
+        else if ([genderString isEqualToString:@"female"]) {
             user.userGender = @(ISSFemaleUserGender);
         }
         else {
@@ -46,7 +44,7 @@
         }
     }
 
-    if([response[@"location"] isKindOfClass:[NSDictionary class]]) {
+    if ([response[@"location"] isKindOfClass:[NSDictionary class]]) {
         NSDictionary *location = response[@"location"];
 
         user.countryCode = location[@"countryCode"];
@@ -61,7 +59,7 @@
     [image addImageURL:[response[@"pic_3"] URLValue] quality:0.75];
     [image addImageURL:[response[@"pic_4"] URLValue] quality:1];
 
-    if(!response[@"photo_id"]) {
+    if (!response[@"photo_id"]) {
         image.defaultImage = YES;
     }
 
@@ -69,8 +67,7 @@
     return user;
 }
 
-- (SObject *)readUserData:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUserData:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"users.getLoggedInUser" parameters:@{} operation:operation processor:^(id response) {
@@ -78,7 +75,7 @@
             SObject *user = [self dataForUserId:response];
 
             [self updateUserData:@[user] operation:operation completion:^(SObject *result) {
-                if(result.isSuccessful) {
+                if (result.isSuccessful) {
                     self.currentUserData = result.subObjects[0];
                 }
                 [operation complete:user];
@@ -87,8 +84,7 @@
     }];
 }
 
-- (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation  completion:(SObjectCompletionBlock)completion
-{
+- (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion {
     if (!usersData.count) {
         completion(nil);
         return;
@@ -112,8 +108,7 @@
     }];
 }
 
-- (SObject *)readUserFriendsOnline:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUserFriendsOnline:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"friends.getOnline" parameters:@{} operation:operation processor:^(NSArray *response) {
@@ -132,8 +127,7 @@
     }];
 }
 
-- (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"friends.get" parameters:@{} operation:operation processor:^(NSArray *response) {
@@ -158,8 +152,7 @@
     }];
 }
 
-- (SObject *)readUserMutualFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUserMutualFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self readUserFriends:params completion:completion];
 }
 

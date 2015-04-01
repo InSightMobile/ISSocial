@@ -10,6 +10,7 @@
 
 @interface NSDate (Vkontakte)
 + (NSDate *)dateWithVkontakteBirthdayString:(id)data;
+
 + (NSDate *)dateWithVkontakteBirthdayNoYearString:(id)data;
 
 @end

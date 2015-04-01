@@ -1,4 +1,3 @@
-
 #import "OKRequest.h"
 #import "OKSession.h"
 #import "NSString+OKUtils.h"
@@ -6,21 +5,21 @@
 static const NSTimeInterval kRequestTimeoutInterval = 180.0;
 static NSString *kUserAgent = @"OdnoklassnikiIOs";
 
-NSString * const OKApiErrorDomain = @"ru.ok.api";
+NSString *const OKApiErrorDomain = @"ru.ok.api";
 
-@interface OKRequest()<NSURLConnectionDataDelegate>
-@property (nonatomic, strong) NSURLConnection *connection;
+@interface OKRequest () <NSURLConnectionDataDelegate>
+@property(nonatomic, strong) NSURLConnection *connection;
 @end
 
 @implementation OKRequest
 
 + (NSString *)serializeURL:(NSString *)baseUrl
-				   params:(NSDictionary *)params
-			   httpMethod:(NSString *)__unused httpMethod {
+                    params:(NSDictionary *)params
+                httpMethod:(NSString *)__unused httpMethod {
     return [self serializeURL:baseUrl params:params];
 }
 
-+ (NSString *)serializeURL:(NSString *)baseUrl params:(NSDictionary *)params{
++ (NSString *)serializeURL:(NSString *)baseUrl params:(NSDictionary *)params {
     NSURL *parsedURL = [NSURL URLWithString:baseUrl];
     NSString *queryPrefix = parsedURL.query ? @"&" : @"?";
 
@@ -36,22 +35,22 @@ NSString * const OKApiErrorDomain = @"ru.ok.api";
 + (NSString *)makeSignatureWithParams:(NSDictionary *)params accessToken:(NSString *)accessToken secret:(NSString *)secret {
     NSMutableString *signatureString = [NSMutableString string];
 
-    NSArray *sortedKeys = [[params allKeys] sortedArrayUsingSelector: @selector(compare:)];
-	for (NSString *key in sortedKeys) {
-		[signatureString appendString:[NSString stringWithFormat:@"%@=%@", key, [params valueForKey:key]]];
-	}
+    NSArray *sortedKeys = [[params allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    for (NSString *key in sortedKeys) {
+        [signatureString appendString:[NSString stringWithFormat:@"%@=%@", key, [params valueForKey:key]]];
+    }
 
-	[signatureString appendString:[[NSString stringWithFormat:@"%@%@", accessToken, secret] md5]];
-	return [[signatureString md5] lowercaseString];
+    [signatureString appendString:[[NSString stringWithFormat:@"%@%@", accessToken, secret] md5]];
+    return [[signatureString md5] lowercaseString];
 }
 
 + (OKRequest *)requestWithParams:(NSDictionary *)params
                       httpMethod:(NSString *)httpMethod
                         delegate:(id <OKRequestDelegate>)delegate
                        apiMethod:(NSString *)apiMethod {
-	OKRequest *request = [self requestWithParams:params httpMethod:httpMethod apiMethod:apiMethod];
-	request.delegate = delegate;
-	return request;
+    OKRequest *request = [self requestWithParams:params httpMethod:httpMethod apiMethod:apiMethod];
+    request.delegate = delegate;
+    return request;
 }
 
 + (OKRequest *)requestWithParams:(NSDictionary *)params
@@ -75,14 +74,14 @@ NSString * const OKApiErrorDomain = @"ru.ok.api";
 }
 
 - (void)load {
-	self.responseData = [[NSMutableData alloc] init];
+    self.responseData = [[NSMutableData alloc] init];
 
-	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:self.url]
-														   cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
-													   timeoutInterval:kRequestTimeoutInterval];
-	request.HTTPMethod = self.httpMethod ? : @"GET";
-	[request setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
-	self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:self.url]
+                                                           cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
+                                                       timeoutInterval:kRequestTimeoutInterval];
+    request.HTTPMethod = self.httpMethod ?: @"GET";
+    [request setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
+    self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
 - (void)executeWithCompletionBlock:(OKResultBlock)completionBlock errorBlock:(OKErrorBlock)errorBlock {
@@ -96,10 +95,10 @@ NSString * const OKApiErrorDomain = @"ru.ok.api";
     id result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&jsonParsingError];
 
     NSError *error = [self errorFromResponseDictionary:result];
-	if (error) {
+    if (error) {
         self.sessionExpired = (error.code == OKApiErrorCodeSessionExpired);
-		[self failWithError:error];
-	} else {
+        [self failWithError:error];
+    } else {
         if ([self.delegate respondsToSelector:@selector(request:didLoad:)]) {
             [self.delegate request:self didLoad:result];
         } else if (self.completionBlock) {
@@ -109,7 +108,7 @@ NSString * const OKApiErrorDomain = @"ru.ok.api";
 }
 
 - (void)failWithError:(NSError *)error {
-	if ([self.delegate respondsToSelector:@selector(request:didFailWithError:)]) {
+    if ([self.delegate respondsToSelector:@selector(request:didFailWithError:)]) {
         [self.delegate request:self didFailWithError:error];
     } else if (self.errorBlock) {
         self.errorBlock(error);
@@ -117,38 +116,38 @@ NSString * const OKApiErrorDomain = @"ru.ok.api";
 }
 
 - (NSError *)errorFromResponseDictionary:(NSDictionary *)data {
-	if ([data isKindOfClass:[NSDictionary class]]) {
+    if ([data isKindOfClass:[NSDictionary class]]) {
         NSNumber *error = data[@"error_code"];
         if (error) {
             return [NSError errorWithDomain:OKApiErrorDomain code:[error intValue] userInfo:data];
         }
     }
-	return nil;
+    return nil;
 }
 
 #pragma mark - NSURLConnection Delegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-	[self.responseData appendData:data];
+    [self.responseData appendData:data];
 }
 
 - (NSCachedURLResponse *)connection:(NSURLConnection *)connection
-				  willCacheResponse:(NSCachedURLResponse *)cachedResponse {
-	return nil;
+                  willCacheResponse:(NSCachedURLResponse *)cachedResponse {
+    return nil;
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     [self handleResponse:self.responseData];
 
-	self.responseData = nil;
-	self.connection = nil;
+    self.responseData = nil;
+    self.connection = nil;
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-	[self failWithError:error];
+    [self failWithError:error];
 
-	self.responseData = nil;
-	self.connection = nil;
+    self.responseData = nil;
+    self.connection = nil;
 }
 
 @end

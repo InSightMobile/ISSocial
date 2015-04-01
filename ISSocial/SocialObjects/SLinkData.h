@@ -18,13 +18,12 @@
 @property(copy, nonatomic) NSString *message;
 @property(copy, nonatomic) NSString *title;
 @property(nonatomic, strong) SPhotoData *photo;
-@property(nonatomic, strong) SUserData* owner;
+@property(nonatomic, strong) SUserData *owner;
 @property(nonatomic, copy) NSString *desc;
-@property(nonatomic, strong) NSString * name;
+@property(nonatomic, strong) NSString *name;
 @end
 
 @interface SLinkData : SMediaObject <SLinkData>
-
 
 
 @end

@@ -14,13 +14,11 @@ typedef void (^BlockOperationCompletionHandler)(NSError *);
 @property(nonatomic) BOOL didCompleted;
 @end
 
-@implementation BlockOperationQueue
-{
+@implementation BlockOperationQueue {
     //__strong BlockOperationQueue *_retained_self;
 }
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
 
@@ -30,8 +28,7 @@ typedef void (^BlockOperationCompletionHandler)(NSError *);
     return self;
 }
 
-- (void)setCompletionHandler:(void (^)(NSError *errorOrNil))completion
-{
+- (void)setCompletionHandler:(void (^)(NSError *errorOrNil))completion {
     if (!completion) {
         _completion = nil;
         return;
@@ -48,8 +45,7 @@ typedef void (^BlockOperationCompletionHandler)(NSError *);
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
-                        change:(NSDictionary *)change context:(void *)context
-{
+                        change:(NSDictionary *)change context:(void *)context {
     if (object == self && [keyPath isEqualToString:@"operationCount"]) {
         if (self.operationCount == 0) {
             // Do something here when your queue has completed
@@ -59,8 +55,7 @@ typedef void (^BlockOperationCompletionHandler)(NSError *);
                 _completion = nil;
                 NSError *error = _error;
                 _error = nil;
-                dispatch_async(dispatch_get_main_queue(), ^
-                {
+                dispatch_async(dispatch_get_main_queue(), ^{
                     op(error);
                 });
             }
@@ -75,8 +70,7 @@ typedef void (^BlockOperationCompletionHandler)(NSError *);
     }
 }
 
-- (void)cancelAllOperations
-{
+- (void)cancelAllOperations {
     BlockOperationCompletionHandler handler = [self.completion copy];
     //__autoreleasing id arself = self;
     [self setCompletionHandler:nil];
@@ -86,15 +80,13 @@ typedef void (^BlockOperationCompletionHandler)(NSError *);
     }
 }
 
-- (void)addOperation:(NSOperation *)op
-{
+- (void)addOperation:(NSOperation *)op {
     _didCompleted = NO;
     [super addOperation:op];
 }
 
 
-- (void)failWithError:(NSError *)error
-{
+- (void)failWithError:(NSError *)error {
     self.error = error;
     [self cancelAllOperations];
     if (_completion) {

@@ -9,13 +9,11 @@
 
 @end
 
-@implementation ISSPresentingViewController
-{
+@implementation ISSPresentingViewController {
 
 }
 
-- (UIViewController *)topMostController
-{
+- (UIViewController *)topMostController {
     UIViewController *topController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
 
     while (topController.presentedViewController) {
@@ -27,20 +25,17 @@
     return topController;
 }
 
-- (void)present
-{
+- (void)present {
     if (!self.view.superview) {
         [self presentFromWithController:[self topMostController] superview:[[self topMostController] view]];
     }
 }
 
-+ (ISSPresentingViewController *)presentingController
-{
++ (ISSPresentingViewController *)presentingController {
     return [ISSPresentingViewController instance];
 }
 
-+ (ISSPresentingViewController *)instance
-{
++ (ISSPresentingViewController *)instance {
     static ISSPresentingViewController *_instance = nil;
     static dispatch_once_t pred;
     dispatch_once(&pred, ^{
@@ -50,8 +45,7 @@
 }
 
 
-- (void)presentFromWithController:(UIViewController *)controller superview:(UIView *)superview
-{
+- (void)presentFromWithController:(UIViewController *)controller superview:(UIView *)superview {
     [controller addChildViewController:self];
 
     CGRect frame = superview.bounds;
@@ -66,8 +60,7 @@
 }
 
 
-- (void)presentController:(UIViewController *)controller
-{
+- (void)presentController:(UIViewController *)controller {
     [self present];
 
     [self addChildViewController:controller];
@@ -76,8 +69,7 @@
     [controller didMoveToParentViewController:self];
 }
 
-- (void)dismissController:(UIViewController *)controller
-{
+- (void)dismissController:(UIViewController *)controller {
     [controller.view removeFromSuperview];
     [controller removeFromParentViewController];
 }

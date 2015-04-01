@@ -6,8 +6,7 @@
 #import "FacebookConnectorOperation.h"
 
 
-@implementation FacebookConnectorOperation
-{
+@implementation FacebookConnectorOperation {
 
 }
 @end

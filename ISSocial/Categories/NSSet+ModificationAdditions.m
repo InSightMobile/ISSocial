@@ -10,32 +10,28 @@
 
 @implementation NSSet (ModificationAdditions)
 
-- (NSSet *)setByUnioningSet:(NSSet *)aSet
-{
+- (NSSet *)setByUnioningSet:(NSSet *)aSet {
     id ret = [self mutableCopy];
     [ret unionSet:aSet];
     return ret;
 
 }
 
-- (NSSet *)setByMinusingSet:(NSSet *)aSet
-{
+- (NSSet *)setByMinusingSet:(NSSet *)aSet {
     id ret = [self mutableCopy];
     [ret minusSet:aSet];
     return ret;
 
 }
 
-- (NSSet *)setByIntersectingSet:(NSSet *)aSet
-{
+- (NSSet *)setByIntersectingSet:(NSSet *)aSet {
     id ret = [self mutableCopy];
     [ret intersectSet:aSet];
     return ret;
 
 }
 
-- (NSSet *)setByComplementingIntersectionWithSet:(NSSet *)aSet
-{
+- (NSSet *)setByComplementingIntersectionWithSet:(NSSet *)aSet {
     id ret = [self mutableCopy];
     [ret unionSet:aSet];
     [ret minusSet:[self setByIntersectingSet:aSet]];
@@ -43,24 +39,21 @@
 
 }
 
-- (NSSet *)setByAddingObject:(id)anObject
-{
+- (NSSet *)setByAddingObject:(id)anObject {
     id ret = [self mutableCopy];
     [ret addObject:anObject];
     return ret;
 
 }
 
-- (NSSet *)setByAddingObjectsFromArray:(NSArray *)anArray
-{
+- (NSSet *)setByAddingObjectsFromArray:(NSArray *)anArray {
     id ret = [self mutableCopy];
     [ret addObjectsFromArray:anArray];
     return ret;
 
 }
 
-- (NSSet *)setByRemovingObject:(id)anObject
-{
+- (NSSet *)setByRemovingObject:(id)anObject {
     id ret = [self mutableCopy];
     [ret removeObject:anObject];
     return ret;

@@ -10,8 +10,7 @@
 
 @implementation VkontakteConnector (Audio)
 
-- (SAudioData *)parseAudioResponse:(NSDictionary *)info
-{
+- (SAudioData *)parseAudioResponse:(NSDictionary *)info {
     SUserData *owner = [self dataForUserId:[info[@"owner_id"] stringValue]];
     NSString *aid = [info[@"aid"] stringValue];
     NSString *objectId = [NSString stringWithFormat:@"%@_%@", owner.objectId, aid];
@@ -34,8 +33,7 @@
     return audio;
 }
 
-- (SObject *)readAudio:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readAudio:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"audio.get" parameters:@{@"uid" : self.userId} operation:operation processor:^(id response) {
@@ -47,8 +45,7 @@
     }];
 }
 
-- (SObject *)searchAudio:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)searchAudio:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"audio.search"
@@ -59,14 +56,13 @@
                         @"sort" : @2}
                  operation:operation processor:^(id response) {
 
-            SObject *result = [self parseAudiosResponce:response];
-            [operation complete:result];
-        }];
+                    SObject *result = [self parseAudiosResponce:response];
+                    [operation complete:result];
+                }];
     }];
 }
 
-- (SObject *)parseAudiosResponce:(id)response
-{
+- (SObject *)parseAudiosResponce:(id)response {
     SObject *result = [SObject objectCollectionWithHandler:self];
     NSLog(@"response = %@", response);
 

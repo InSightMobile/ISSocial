@@ -8,8 +8,7 @@
 #import "SMessageThread.h"
 
 
-@implementation SMessageThread
-{
+@implementation SMessageThread {
 
 }
 @end

@@ -39,8 +39,7 @@
 #pragma mark Instance Methods
 
 // Strip HTML tags
-- (NSString *)stringByConvertingHTMLToPlainText
-{
+- (NSString *)stringByConvertingHTMLToPlainText {
 
     __strong NSString *retString;
     // Pool
@@ -145,22 +144,19 @@
 }
 
 // Decode all HTML entities using GTM
-- (NSString *)stringByDecodingHTMLEntities
-{
+- (NSString *)stringByDecodingHTMLEntities {
     // gtm_stringByUnescapingFromHTML can return self so create new string ;)
     return [NSString stringWithString:[self gtm_stringByUnescapingFromHTML]];
 }
 
 // Encode all HTML entities using GTM
-- (NSString *)stringByEncodingHTMLEntities
-{
+- (NSString *)stringByEncodingHTMLEntities {
     // gtm_stringByUnescapingFromHTML can return self so create new string ;)
     return [NSString stringWithString:[self gtm_stringByEscapingForAsciiHTML]];
 }
 
 // Replace newlines with <br /> tags
-- (NSString *)stringWithNewLinesAsBRs
-{
+- (NSString *)stringWithNewLinesAsBRs {
 
     __strong NSString *retString;
 
@@ -218,8 +214,7 @@
 }
 
 // Remove newlines and white space from strong
-- (NSString *)stringByRemovingNewLinesAndWhitespace
-{
+- (NSString *)stringByRemovingNewLinesAndWhitespace {
 
     __strong NSString *retString;
     @autoreleasepool {
@@ -268,8 +263,7 @@
 //  - Only works in iOS 4+ as we use NSRegularExpression (returns self if not supported so be careful with NSMutableStrings)
 //  - Expression: (?<!=")\b((http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)
 //  - Adapted from http://regexlib.com/REDetails.aspx?regexp_id=96
-- (NSString *)stringByLinkifyingURLs
-{
+- (NSString *)stringByLinkifyingURLs {
     if (!NSClassFromString(@"NSRegularExpression")) return self;
     __strong NSString *modifiedString;
     @autoreleasepool {
@@ -284,8 +278,7 @@
 
 // Strip HTML tags
 // DEPRECIATED - Please use NSString stringByConvertingHTMLToPlainText
-- (NSString *)stringByStrippingTags
-{
+- (NSString *)stringByStrippingTags {
 
     __strong NSString *finalString;
 

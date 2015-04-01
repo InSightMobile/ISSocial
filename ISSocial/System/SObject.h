@@ -14,8 +14,7 @@
 @class SPagingData;
 
 static NSString *const kSObjectDidUpdated = @"SObjectDidUpdated";
-typedef enum
-{
+typedef enum {
 
     SObjectStateSuccess = 0,
     SObjectStateFailed,
@@ -60,7 +59,7 @@ typedef void (^SObjectCompletionBlock)(SObject *result);
 
 @end
 
-@interface SObject : NSObject <SObject,NSFastEnumeration>
+@interface SObject : NSObject <SObject, NSFastEnumeration>
 
 @property(nonatomic, readonly) NSUInteger count;
 

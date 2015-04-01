@@ -8,8 +8,7 @@
 
 @implementation NSDate (Odnoklassniki)
 
-+ (NSDate *)dateWithOdnoklassnikiString:(id)data
-{
++ (NSDate *)dateWithOdnoklassnikiString:(id)data {
     if ([data isKindOfClass:[NSNumber class]]) {
         return [NSDate dateWithTimeIntervalSince1970:[data doubleValue]];
     }

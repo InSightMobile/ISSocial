@@ -9,8 +9,7 @@
 #import "SocialConnector.h"
 #import "ISSocial.h"
 
-typedef enum
-{
+typedef enum {
 
     CompositeConnectorUseActiveConnectors = 0,
     CompositeConnectorUseAviableConnectors = 1,

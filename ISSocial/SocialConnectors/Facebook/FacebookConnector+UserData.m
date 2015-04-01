@@ -16,8 +16,7 @@ static NSMutableDictionary *_usersById;
 
 @implementation FacebookConnector (UserData)
 
-- (SObject *)readUserData:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUserData:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         bool myself = NO;
@@ -46,8 +45,7 @@ static NSMutableDictionary *_usersById;
 }
 
 
-- (SObject *)readUserFriendRequests:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUserFriendRequests:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"me/friendrequests/" operation:operation processor:^(id response) {
@@ -69,8 +67,7 @@ static NSMutableDictionary *_usersById;
     }];
 }
 
-- (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSString *fql =
@@ -88,8 +85,7 @@ static NSMutableDictionary *_usersById;
     }];
 }
 
-- (SUserData *)dataForUserId:(NSString *)userId name:(NSString *)name
-{
+- (SUserData *)dataForUserId:(NSString *)userId name:(NSString *)name {
     if (!userId) {
         return nil;
     }
@@ -109,13 +105,11 @@ static NSMutableDictionary *_usersById;
     return data;
 }
 
-- (SUserData *)dataForUserId:(NSString *)userId
-{
+- (SUserData *)dataForUserId:(NSString *)userId {
     return [self dataForUserId:userId name:nil];
 }
 
-- (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
-{
+- (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion {
     if (!usersData.count) {
         completion(nil);
         return;
@@ -125,16 +119,15 @@ static NSMutableDictionary *_usersById;
     [self simpleQuery:[NSString stringWithFormat:@"select name,id FROM profile WHERE id in (%@)", [userIds.allObjects componentsJoinedByString:@","]]
             operation:operation processor:^(id response) {
 
-        NSLog(@"response = %@", response);
+                NSLog(@"response = %@", response);
 
-        SObject *users = [self parseUsers:response[@"data"]];
+                SObject *users = [self parseUsers:response[@"data"]];
 
-        completion(users);
-    }];
+                completion(users);
+            }];
 }
 
-- (SObject *)parseUsers:(NSArray *)usersData
-{
+- (SObject *)parseUsers:(NSArray *)usersData {
     SObject *users = [SObject objectCollectionWithHandler:self];
 
     for (NSDictionary *userData in usersData) {
@@ -145,8 +138,7 @@ static NSMutableDictionary *_usersById;
     return users;
 }
 
-- (SUserData *)parseUserData:(NSDictionary *)userData
-{
+- (SUserData *)parseUserData:(NSDictionary *)userData {
     NSString *objectId = [userData[@"id"] stringValue];
     if (userData[@"uid"]) {
         objectId = [userData[@"uid"] stringValue];
@@ -224,11 +216,9 @@ static NSMutableDictionary *_usersById;
     return data;
 }
 
-- (SObject *)readUserMutualFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUserMutualFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self readUserFriends:params completion:completion];
 }
-
 
 
 @end

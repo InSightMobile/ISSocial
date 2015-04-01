@@ -5,6 +5,7 @@
 #import "SObject.h"
 
 @class SUserData;
+
 @protocol SInvitation
 
 @optional

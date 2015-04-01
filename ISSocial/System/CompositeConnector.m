@@ -23,8 +23,7 @@
 
 @implementation CompositeConnector
 
-+ (CompositeConnector *)globalConnectors
-{
++ (CompositeConnector *)globalConnectors {
     static CompositeConnector *_instance = nil;
 
     @synchronized (self) {
@@ -36,8 +35,7 @@
     return _instance;
 }
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         [self commonInit];
@@ -45,8 +43,7 @@
     return self;
 }
 
-- (id)initWithRestorationId:(NSString *)restorationId
-{
+- (id)initWithRestorationId:(NSString *)restorationId {
     self = [super init];
     if (self) {
         self.restorationId = restorationId;
@@ -55,14 +52,12 @@
     return self;
 }
 
-+ (id)connectorWithRestorationId:(NSString *)restorationId
-{
++ (id)connectorWithRestorationId:(NSString *)restorationId {
     return [[self alloc] initWithRestorationId:restorationId];
 }
 
 - (id)initWithConnectorSpecifications:(NSArray *)specifications superConnector:(CompositeConnector *)superConnector
-                        restorationId:(NSString *)restorationId options:(CompositeConnectorOptions)options
-{
+                        restorationId:(NSString *)restorationId options:(CompositeConnectorOptions)options {
     self = [super init];
     if (self) {
         self.superConnector = superConnector;
@@ -74,56 +69,47 @@
     return self;
 }
 
-- (id <CompositeConnectorDelegate>)delegate
-{
+- (id <CompositeConnectorDelegate>)delegate {
     return _delegate;
 }
 
 
-- (id)initWithConnectorSpecifications:(NSArray *)specifications restorationId:(NSString *)restorationId
-{
-    return [self initWithConnectorSpecifications:specifications superConnector:[CompositeConnector globalConnectors] restorationId:restorationId options:NULL ];
+- (id)initWithConnectorSpecifications:(NSArray *)specifications restorationId:(NSString *)restorationId {
+    return [self initWithConnectorSpecifications:specifications superConnector:[CompositeConnector globalConnectors] restorationId:restorationId options:NULL];
 }
 
-- (id)initWithConnectorSpecifications:(NSArray *)specifications
-{
-    return [self initWithConnectorSpecifications:specifications superConnector:[CompositeConnector globalConnectors] restorationId:nil options:NULL ];
+- (id)initWithConnectorSpecifications:(NSArray *)specifications {
+    return [self initWithConnectorSpecifications:specifications superConnector:[CompositeConnector globalConnectors] restorationId:nil options:NULL];
 }
 
-- (id)initWithSuperConnector:(CompositeConnector *)superConnector
-{
-    return [self initWithConnectorSpecifications:nil superConnector:superConnector restorationId:nil options:NULL ];
+- (id)initWithSuperConnector:(CompositeConnector *)superConnector {
+    return [self initWithConnectorSpecifications:nil superConnector:superConnector restorationId:nil options:NULL];
 }
 
-- (void)commonInit
-{
+- (void)commonInit {
     self.handleCache = NO;
     [self updateConnectors];
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [self saveActiveStates];
     self.superConnector = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)connectorsDidChanged:(NSNotification *)nf
-{
+- (void)connectorsDidChanged:(NSNotification *)nf {
     if (nf.object == self) {
         return;
     }
     [self updateConnectors];
 }
 
-- (void)setSpecifications:(NSArray *)specifications
-{
+- (void)setSpecifications:(NSArray *)specifications {
     _specifications = specifications;
     [self updateConnectors];
 }
 
-- (void)setConnectors:(NSArray *)connectors asActive:(BOOL)active
-{
+- (void)setConnectors:(NSArray *)connectors asActive:(BOOL)active {
     NSSet *activeConnectors;
     if (active) {
         activeConnectors = [NSSet setWithArray:connectors];
@@ -138,8 +124,7 @@
 
 }
 
-- (void)addConnector:(SocialConnector *)connector
-{
+- (void)addConnector:(SocialConnector *)connector {
     if (!_availableConnectors) {
         self.availableConnectors = [NSSet setWithObject:connector];
     }
@@ -148,8 +133,7 @@
     }
 }
 
-- (void)addConnector:(SocialConnector *)connector asActive:(BOOL)active
-{
+- (void)addConnector:(SocialConnector *)connector asActive:(BOOL)active {
     if (!_availableConnectors) {
         self.availableConnectors = [NSSet setWithObject:connector];
     }
@@ -165,15 +149,13 @@
 }
 
 
-- (void)setAvailableConnectors:(NSSet *)aviableConnectors activeConnectors:(NSSet *)activeConnectors
-{
+- (void)setAvailableConnectors:(NSSet *)aviableConnectors activeConnectors:(NSSet *)activeConnectors {
     self.availableConnectors = aviableConnectors;
     [self updateActiveConnectors:activeConnectors];
     self.availableConnectors = aviableConnectors;
 }
 
-- (void)setSuperConnector:(CompositeConnector *)superConnector
-{
+- (void)setSuperConnector:(CompositeConnector *)superConnector {
     if (_superConnector) {
         [_superConnector removeObserver:self forKeyPath:@"activeConnectors"];
         [_superConnector removeObserver:self forKeyPath:@"availableConnectors"];
@@ -183,8 +165,7 @@
     [_superConnector addObserver:self forKeyPath:@"availableConnectors" options:NSKeyValueObservingOptionNew context:nil];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (object == self) {
         return;
     }
@@ -196,8 +177,7 @@
     }
 }
 
-+ (NSMutableSet *)connectorsSupportingSpecification:(NSArray *)spec fromSet:(id <NSFastEnumeration, NSCopying, NSObject>)connectors
-{
++ (NSMutableSet *)connectorsSupportingSpecification:(NSArray *)spec fromSet:(id <NSFastEnumeration, NSCopying, NSObject>)connectors {
     NSMutableSet *candidateConnectors = [NSMutableSet set];
 
     if (!connectors) {
@@ -216,8 +196,7 @@
     return candidateConnectors;
 }
 
-- (void)updateConnectors
-{
+- (void)updateConnectors {
     NSMutableSet *candidateConnectors;
 
     NSSet *baseConnectors;
@@ -257,8 +236,7 @@
     return;
 }
 
-- (NSMutableSet *)restoreAvailableConnectors
-{
+- (NSMutableSet *)restoreAvailableConnectors {
     if (self.restorationId) {
 
         NSArray *mod =
@@ -277,8 +255,7 @@
     return nil;
 }
 
-- (void)activateConnector:(SocialConnector *)connector
-{
+- (void)activateConnector:(SocialConnector *)connector {
     NSSet *activeConnectors = self.activeConnectors;
 
     if (![_availableConnectors containsObject:connector]) {
@@ -304,8 +281,7 @@
     [self updateActiveConnectors:activeConnectors];
 }
 
-- (void)updateActiveConnectors:(NSSet *)activeConnectors
-{
+- (void)updateActiveConnectors:(NSSet *)activeConnectors {
     if (!activeConnectors.count) {
         if (self.activeConnectors.count) {
             self.activeConnectors = [NSSet set];
@@ -316,8 +292,7 @@
     }
 }
 
-- (void)deactivateConnector:(SocialConnector *)connector
-{
+- (void)deactivateConnector:(SocialConnector *)connector {
     if (!_deactivatedConnectors.count) {
         self.deactivatedConnectors = [NSSet setWithObject:connector];
     }
@@ -330,18 +305,15 @@
     }
 }
 
-- (BOOL)isConnectorActive:(SocialConnector *)connector
-{
+- (BOOL)isConnectorActive:(SocialConnector *)connector {
     return [_activeConnectors containsObject:connector];
 }
 
-- (void)activateConnectors:(id <NSFastEnumeration>)connectors
-{
+- (void)activateConnectors:(id <NSFastEnumeration>)connectors {
     [self activateConnectors:connectors exclusive:NO];
 }
 
-- (void)activateConnectors:(id <NSFastEnumeration>)connectors exclusive:(BOOL)exclusive
-{
+- (void)activateConnectors:(id <NSFastEnumeration>)connectors exclusive:(BOOL)exclusive {
     NSMutableSet *activeConnectors;
     if (!exclusive) {
         activeConnectors = [self.activeConnectors mutableCopy];
@@ -370,8 +342,7 @@
     [self updateActiveConnectors:connectors];
 }
 
-- (void)addAndActivateConnectors:(NSSet *)connectors exclusive:(BOOL)exclusive
-{
+- (void)addAndActivateConnectors:(NSSet *)connectors exclusive:(BOOL)exclusive {
     NSSet *connectorsToAdd = [connectors setByMinusingSet:self.availableConnectors];
     if (connectorsToAdd.count) {
         if (_availableConnectors) {
@@ -389,13 +360,11 @@
 }
 
 
-- (void)activateAllConnectors
-{
+- (void)activateAllConnectors {
     [self activateConnectors:[_availableConnectors copy]];
 }
 
-- (void)deactivateConnectors:(id <NSFastEnumeration>)connectors
-{
+- (void)deactivateConnectors:(id <NSFastEnumeration>)connectors {
     for (SocialConnector *connector in connectors) {
         [self deactivateConnector:connector];
     }
@@ -404,8 +373,7 @@
 - (SObject *)processOperation:(SEL)selector
                        params:(SObject *)params
                 withProcessor:(CompositeConnectorProcessorBlock)processor
-                   completion:(SObjectCompletionBlock)completion
-{
+                   completion:(SObjectCompletionBlock)completion {
     if (!_activeConnectors.count) {
         return [SObject failed:completion];
     }
@@ -415,8 +383,7 @@
 - (SObject *)processConnector:(SocialConnector *)connector
                     operation:(SEL)operation
                        object:(SObject *)params
-                   completion:(SObjectCompletionBlock)completion
-{
+                   completion:(SObjectCompletionBlock)completion {
 
     return [connector performSelector:operation withObject:params withObject:completion];
 }
@@ -425,8 +392,7 @@
                      operation:(SEL)selector
                         params:(SObject *)params
                  withProcessor:(CompositeConnectorProcessorBlock)processor
-                    completion:(SObjectCompletionBlock)completion
-{
+                    completion:(SObjectCompletionBlock)completion {
     BlockOperationQueue *queue = [[BlockOperationQueue alloc] init];
     queue.maxConcurrentOperationCount = 1;
 
@@ -435,40 +401,35 @@
 
     for (SocialConnector *connector in connectors) {
         AsyncBlockOperation *op =
-                [AsyncBlockOperation operationWithBlock:^(AsyncBlockOperation *operation, AsyncBlockOperationCompletionBlock completionBlock)
-                {
+                [AsyncBlockOperation operationWithBlock:^(AsyncBlockOperation *operation, AsyncBlockOperationCompletionBlock completionBlock) {
 
                     SObject *result =
-                            [self processConnector:connector operation:selector object:params completion:^(SObject *object)
-                            {
+                            [self processConnector:connector operation:selector object:params completion:^(SObject *object) {
                                 [resultObject addSubObject:object];
                                 if (processor) {
                                     processor(connector, object);
                                 }
                                 completionBlock(nil);
                             }];
-                    
+
                     if (result.isProcessing) {
                         [operations addSubObject:result];
                     }
                 }];
         [queue addOperation:op];
     }
-    [queue setCompletionHandler:^(NSError *error)
-    {
+    [queue setCompletionHandler:^(NSError *error) {
         completion(resultObject);
     }];
 
     return [SObject objectWithState:SObjectStateProcessing];
 }
 
-- (SObject *)processSocialConnectorProtocol:(SObject *)params completion:(SObjectCompletionBlock)completion operation:(SEL)selector
-{
+- (SObject *)processSocialConnectorProtocol:(SObject *)params completion:(SObjectCompletionBlock)completion operation:(SEL)selector {
     __block SObject *componoundResult = [SObject objectCollectionWithHandler:self];
 
     SObject *result =
-            [self processOperation:selector params:params withProcessor:^(SocialConnector *connector, SObject *result)
-            {
+            [self processOperation:selector params:params withProcessor:^(SocialConnector *connector, SObject *result) {
 
                 [componoundResult addSubObject:result];
 
@@ -486,8 +447,7 @@
                 }
                 */
 
-            }           completion:^(SObject *result)
-            {
+            }           completion:^(SObject *result) {
 
                 [componoundResult complete:completion];
                 componoundResult = nil;
@@ -495,8 +455,7 @@
     return result;
 }
 
-- (void)selectDefaultConnector
-{
+- (void)selectDefaultConnector {
     NSArray *array = [self.activeConnectors sortedArrayUsingDescriptors:@[
             [NSSortDescriptor sortDescriptorWithKey:@"connectorPriority" ascending:NO],
             [NSSortDescriptor sortDescriptorWithKey:@"connectorCode" ascending:YES]]];
@@ -506,36 +465,31 @@
     }
 }
 
-- (NSArray *)sortedConnectors:(NSSet *)connectors
-{
+- (NSArray *)sortedConnectors:(NSSet *)connectors {
     return [connectors sortedArrayUsingDescriptors:@[
             [NSSortDescriptor sortDescriptorWithKey:@"connectorDisplayPriority" ascending:NO],
             [NSSortDescriptor sortDescriptorWithKey:@"connectorCode" ascending:YES]]];
 }
 
-- (NSArray *)sortedActiveConnectors
-{
+- (NSArray *)sortedActiveConnectors {
     return [self sortedConnectors:self.activeConnectors];
 }
 
-- (NSArray *)sortedAvailableConnectors
-{
+- (NSArray *)sortedAvailableConnectors {
     return [self sortedConnectors:self.availableConnectors];
 }
 
-- (SUserData *)currentUserData
-{
+- (SUserData *)currentUserData {
     return _defaultConnector.currentUserData;
 }
 
-- (void)saveActiveStates
-{
+- (void)saveActiveStates {
     if (self.restorationId) {
 
         NSArray *mod = @[
-                [[_activeConnectors valueForKey:@"connectorCode"] allObjects] ? : @[],
-                [[_deactivatedConnectors valueForKey:@"connectorCode"] allObjects] ? : @[],
-                [[_availableConnectors valueForKey:@"connectorCode"] allObjects] ? : @[]
+                [[_activeConnectors valueForKey:@"connectorCode"] allObjects] ?: @[],
+                [[_deactivatedConnectors valueForKey:@"connectorCode"] allObjects] ?: @[],
+                [[_availableConnectors valueForKey:@"connectorCode"] allObjects] ?: @[]
         ];
 
         [[NSUserDefaults standardUserDefaults] setObject:mod forKey:[self.restorationId stringByAppendingString:@"v2"]];
@@ -543,8 +497,7 @@
     }
 }
 
-- (NSSet *)restoreActiveStates:(NSSet *)baseConnectors aviableConnectors:(NSSet *)aviable
-{
+- (NSSet *)restoreActiveStates:(NSSet *)baseConnectors aviableConnectors:(NSSet *)aviable {
     if (self.restorationId) {
 
         if (!aviable) {
@@ -561,15 +514,13 @@
 
         if (activated) {
             NSSet *activeCodes = [NSSet setWithArray:activated];
-            activatedConnectors = [aviable objectsPassingTest:^BOOL(SocialConnector *obj, BOOL *stop)
-            {
+            activatedConnectors = [aviable objectsPassingTest:^BOOL(SocialConnector *obj, BOOL *stop) {
                 return [activeCodes containsObject:obj.connectorCode];
             }];
         }
         if (deactivated) {
             NSSet *activeCodes = [NSSet setWithArray:deactivated];
-            deactivatedConnectors = [aviable objectsPassingTest:^BOOL(SocialConnector *obj, BOOL *stop)
-            {
+            deactivatedConnectors = [aviable objectsPassingTest:^BOOL(SocialConnector *obj, BOOL *stop) {
                 return [activeCodes containsObject:obj.connectorCode];
             }];
         }
@@ -586,14 +537,12 @@
     return baseConnectors;
 }
 
-- (void)setActiveConnectors:(NSSet *)activeConnectors
-{
+- (void)setActiveConnectors:(NSSet *)activeConnectors {
     _activeConnectors = activeConnectors;
     [self saveActiveStates];
 }
 
-- (void)setAvailableConnectors:(NSSet *)availableConnectors
-{
+- (void)setAvailableConnectors:(NSSet *)availableConnectors {
     if (![_availableConnectors isEqualToSet:availableConnectors]) {
         _availableConnectors = availableConnectors;
         if (_activeConnectors) {
@@ -605,8 +554,7 @@
     }
 }
 
-- (void)setSingleSelection:(BOOL)singleSelection
-{
+- (void)setSingleSelection:(BOOL)singleSelection {
     _singleSelection = singleSelection;
     if (self.activeConnectors.count > 1) {
         self.activeConnectors = [NSSet setWithObject:[self.sortedActiveConnectors objectAtIndex:0]];
@@ -614,8 +562,7 @@
 }
 
 
-- (void)deactivateAllConnectors
-{
+- (void)deactivateAllConnectors {
     [self deactivateConnectors:[self.availableConnectors copy]];
 }
 @end

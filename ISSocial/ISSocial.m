@@ -14,13 +14,11 @@
 @property(nonatomic, strong) CompositeConnector *currentConnectors;
 @end
 
-@implementation ISSocial
-{
+@implementation ISSocial {
 
 }
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
 
@@ -29,8 +27,7 @@
     return self;
 }
 
-- (void)loadConnectors
-{
+- (void)loadConnectors {
     if (self.rootConnectors) {
         return;
     }
@@ -38,7 +35,7 @@
     self.currentConnectors =
             [[CompositeConnector alloc] initWithConnectorSpecifications:nil superConnector:self.rootConnectors
                                                           restorationId:nil options:
-                    CompositeConnectorUseAviableConnectors | CompositeConnectorDefaultDeactivated];
+                            CompositeConnectorUseAviableConnectors | CompositeConnectorDefaultDeactivated];
 
     self.loginManager = [ISSocialLoginManager new];
     self.loginManager.sourceConnectors = self.rootConnectors;
@@ -47,8 +44,7 @@
     [self.currentConnectors addObserver:self forKeyPath:@"activeConnectors" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (object == self.currentConnectors) {
         [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:ISSocialLoggedInUpdatedNotification object:self]];
     }
@@ -58,8 +54,7 @@
 }
 
 
-+ (ISSocial *)defaultInstance
-{
++ (ISSocial *)defaultInstance {
     static ISSocial *_instance = nil;
     static dispatch_once_t pred;
     dispatch_once(&pred, ^{
@@ -69,23 +64,20 @@
 }
 
 
-- (void)tryLoginWithCompletion:(void (^)())completion
-{
+- (void)tryLoginWithCompletion:(void (^)())completion {
     [self loadConnectors];
     [self.loginManager loginWithCompletion:^{
         completion();
     }];
 }
 
-+ (BOOL)hasConnectorNamed:(NSString *)name
-{
++ (BOOL)hasConnectorNamed:(NSString *)name {
     Class connectorClass = NSClassFromString([NSString stringWithFormat:@"%@Connector", name]);
 
     return [connectorClass isSubclassOfClass:[AccessSocialConnector class]];
 }
 
-- (void)tryLoginWithUserUI:(BOOL)userUI completion:(void (^)())completion
-{
+- (void)tryLoginWithUserUI:(BOOL)userUI completion:(void (^)())completion {
     [self loadConnectors];
     SObject *params = [SObject new];
     params[kAllowUserUIKey] = @(userUI);
@@ -94,23 +86,20 @@
     }];
 }
 
-- (void)logoutWithCompletion:(void (^)())completion
-{
+- (void)logoutWithCompletion:(void (^)())completion {
 
-    [self.loginManager logoutAllWithCompletion:^ {
+    [self.loginManager logoutAllWithCompletion:^{
         completion();
     }];
 }
 
-- (void)logoutConnector:(SocialConnector *)connector completion:(void (^)())completion
-{
-    [self.loginManager logoutConnector:connector withCompletion:^ {
+- (void)logoutConnector:(SocialConnector *)connector completion:(void (^)())completion {
+    [self.loginManager logoutConnector:connector withCompletion:^{
         completion();
     }];
 }
 
-- (void)loginWithConnectorName:(NSString *)connectorName completion:(void (^)(SocialConnector *connector, NSError *error))completion
-{
+- (void)loginWithConnectorName:(NSString *)connectorName completion:(void (^)(SocialConnector *connector, NSError *error))completion {
     SocialConnector *connector = [self connectorNamed:connectorName];
 
     [self.rootConnectors addConnector:connector asActive:YES];
@@ -134,8 +123,7 @@
     }];
 }
 
-- (void)useConnectorForCode:(NSString *)connectorCode connector:(AccessSocialConnector *)connector __attribute__((nonnull))
-{
+- (void)useConnectorForCode:(NSString *)connectorCode connector:(AccessSocialConnector *)connector __attribute__((nonnull)) {
     if (!self.connectorsByCode) {
         self.connectorsByCode = [NSMutableDictionary new];
     }
@@ -143,27 +131,22 @@
     _connectorsByCode[connectorCode] = connector;
 }
 
-- (void)useConnector:(AccessSocialConnector *)connector
-{
+- (void)useConnector:(AccessSocialConnector *)connector {
     [self useConnectorForCode:connector.connectorCode connector:connector];
 }
 
-- (void)useConnectorsNamed:(NSArray *)names
-{
+- (void)useConnectorsNamed:(NSArray *)names {
     for (NSString *name in names) {
         [self useConnectorNamed:name];
     }
 }
 
-- (void)useConnectorNamed:(NSString *)name
-{
-   [self useConnector:[self connectorNamed:name]];
+- (void)useConnectorNamed:(NSString *)name {
+    [self useConnector:[self connectorNamed:name]];
 }
 
 
-
-- (AccessSocialConnector *)connectorNamed:(NSString *)connectorName
-{
+- (AccessSocialConnector *)connectorNamed:(NSString *)connectorName {
     Class connectorClass = NSClassFromString([NSString stringWithFormat:@"%@Connector", connectorName]);
 
     if (!self.connectorsByCode) {
@@ -172,17 +155,16 @@
 
     if (!_connectorsByCode[connectorName]) {
 
-        if(!connectorClass) {
+        if (!connectorClass) {
             return nil;
         }
 
-        _connectorsByCode[connectorName] = (id)[[connectorClass alloc] init];
+        _connectorsByCode[connectorName] = (id) [[connectorClass alloc] init];
     }
     return _connectorsByCode[connectorName];
 }
 
-- (NSSet *)loggedInConnectors
-{
+- (NSSet *)loggedInConnectors {
     NSMutableSet *set = [NSMutableSet set];
     for (AccessSocialConnector *connector in self.currentConnectors.availableConnectors) {
 
@@ -193,8 +175,7 @@
     return set;
 }
 
-- (NSArray *)connectorsMeetSpecifications:(NSArray *)specifications
-{
+- (NSArray *)connectorsMeetSpecifications:(NSArray *)specifications {
     NSMutableArray *selection = [NSMutableArray new];
 
     NSMutableSet *set = [NSMutableSet set];
@@ -204,14 +185,13 @@
             [selection addObject:connector];
         }
     }
-   return [selection sortedArrayUsingDescriptors:@[
+    return [selection sortedArrayUsingDescriptors:@[
             [NSSortDescriptor sortDescriptorWithKey:@"connectorPriority" ascending:NO],
             [NSSortDescriptor sortDescriptorWithKey:@"connectorCode" ascending:YES]]];
 }
 
 
-- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation {
     for (AccessSocialConnector *connector in self.rootConnectors.availableConnectors) {
         if ([connector handleOpenURL:url fromApplication:sourceApplication annotation:annotation]) {
             return YES;
@@ -220,8 +200,7 @@
     return NO;
 }
 
-- (void)configure
-{
+- (void)configure {
     [self loadConnectors];
     NSString *path = [[NSBundle mainBundle] pathForResource:@"ISSocial" ofType:@"plist"];
     if (path) {
@@ -232,24 +211,20 @@
     }
 }
 
-- (void)configureWithOptions:(NSDictionary *)dictionary
-{
-    [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop)
-            {
-                AccessSocialConnector *connector = [self connectorNamed:key];
-                [connector setupSettings:obj];
-            }];
+- (void)configureWithOptions:(NSDictionary *)dictionary {
+    [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        AccessSocialConnector *connector = [self connectorNamed:key];
+        [connector setupSettings:obj];
+    }];
 }
 
-- (void)handleDidBecomeActive
-{
+- (void)handleDidBecomeActive {
     for (AccessSocialConnector *connector in self.rootConnectors.availableConnectors) {
         [connector handleDidBecomeActive];
     }
 }
 
-- (void)closeAllSessionsAndClearCredentials:(void (^)(NSError *))completion
-{
+- (void)closeAllSessionsAndClearCredentials:(void (^)(NSError *))completion {
     NSArray *connectors = self.rootConnectors.availableConnectors.allObjects;
 
     [connectors asyncEach:^(AccessSocialConnector *connector, ISArrayAsyncEachResultBlock next) {
@@ -257,7 +232,7 @@
         [connector closeSessionAndClearCredentials:[SObject new] completion:^(SObject *result) {
             next(result.error);
         }];
-    } comletition:^(NSError *errorOrNil) {
+    }         comletition:^(NSError *errorOrNil) {
         completion(errorOrNil);
     }];
 }

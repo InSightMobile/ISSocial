@@ -3,11 +3,6 @@
 //  socials
 //
 
-#import "ISSVKRequest.h"
-#import "ISSVKSession.h"
-#import "AFHTTPRequestOperation.h"
-#import "NSObject+PerformBlockInBackground.h"
-
 @interface ISSVKRequest ()
 @property(nonatomic, copy) NSString *method;
 @property(nonatomic, copy) NSDictionary *parameters;
@@ -16,8 +11,7 @@
 @end
 
 @implementation ISSVKRequest
-+ (ISSVKRequest *)requestMethod:(NSString *)method parameters:(NSDictionary *)parameters
-{
++ (ISSVKRequest *)requestMethod:(NSString *)method parameters:(NSDictionary *)parameters {
     ISSVKRequest *req = [[ISSVKRequest alloc] init];
     req.method = method;
     req.session = [ISSVKSession activeSession];
@@ -25,8 +19,7 @@
     return req;
 }
 
-+ (ISSVKRequest *)requestWithURL:(NSString *)url parameters:(NSDictionary *)parameters
-{
++ (ISSVKRequest *)requestWithURL:(NSString *)url parameters:(NSDictionary *)parameters {
     ISSVKRequest *req = [[ISSVKRequest alloc] init];
     req.url = url;
     req.session = [ISSVKSession activeSession];
@@ -34,13 +27,11 @@
     return req;
 }
 
-- (VKRequestOperation *)startWithCompletionHandler:(VKRequestHandler)completion
-{
+- (VKRequestOperation *)startWithCompletionHandler:(VKRequestHandler)completion {
     return [self startWithCompletionHandler:completion retries:0];
 }
 
-- (VKRequestOperation *)startWithCompletionHandler:(VKRequestHandler)completion retries:(int)retries
-{
+- (VKRequestOperation *)startWithCompletionHandler:(VKRequestHandler)completion retries:(int)retries {
     static const int kMaxSeesionRetries = 3;
 
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:_parameters];

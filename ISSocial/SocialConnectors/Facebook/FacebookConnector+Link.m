@@ -13,8 +13,7 @@
 
 @implementation FacebookConnector (Link)
 
-- (SObject *)publishLinkWithDialog:(SLinkData *)link completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)publishLinkWithDialog:(SLinkData *)link completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:link completion:completion processor:^(SocialConnectorOperation *operation) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
 
@@ -131,8 +130,7 @@
        }];*/
 }
 
-- (SObject *)publishLink:(SLinkData *)link completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)publishLink:(SLinkData *)link completion:(SObjectCompletionBlock)completion {
     if (link.owner && ![link.owner.objectId isEqual:self.currentUserData.objectId]) {
         return [self publishLinkWithDialog:link completion:completion];
     }
@@ -181,8 +179,7 @@
     }];
 }
 
-- (SObject *)readLinkLikes:(SLinkData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readLinkLikes:(SLinkData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         if (params.userLikes.boolValue) {
             [operation complete:params];
@@ -207,11 +204,11 @@
                 link.likesCount = count;
             }
 
-            [self simpleMethod:[NSString stringWithFormat:@"me/og.likes/%@",likeId] operation:operation processor:^(id o) {
+            [self simpleMethod:[NSString stringWithFormat:@"me/og.likes/%@", likeId] operation:operation processor:^(id o) {
 
                 NSArray *data = o[@"data"];
 
-                if(data.count) {
+                if (data.count) {
                     link.userLikes = @YES;
                 }
 
@@ -223,8 +220,7 @@
 }
 
 
-- (SObject *)addLinkLike:(SLinkData *)link completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)addLinkLike:(SLinkData *)link completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:link completion:completion processor:^(SocialConnectorOperation *operation) {
         if (link.userLikes.boolValue) {
             [operation complete:link];
@@ -237,28 +233,27 @@
         }
 
         //[self checkAuthorizationFor:@[@"publish_actions"] operation:operation processor:^(id res) {
-            NSDictionary *object = @{@"object" : link.linkURL.absoluteString};
+        NSDictionary *object = @{@"object" : link.linkURL.absoluteString};
 
-            [self simpleMethod:@"POST" path:@"me/og.likes" params:object
-                        object:nil operation:operation processor:^(id response) {
-                        NSLog(@"response = %@", response);
+        [self simpleMethod:@"POST" path:@"me/og.likes" params:object
+                    object:nil operation:operation processor:^(id response) {
+                    NSLog(@"response = %@", response);
 
-                        SLinkData *result = [link copyWithHandler:self];
-                        result.objectId = [response[@"id"] stringValue];
-                        result.userLikes = @YES;
-                        result.likesCount = @(result.likesCount.intValue + 1);
+                    SLinkData *result = [link copyWithHandler:self];
+                    result.objectId = [response[@"id"] stringValue];
+                    result.userLikes = @YES;
+                    result.likesCount = @(result.likesCount.intValue + 1);
 
-                        [result fireUpdateNotification];
+                    [result fireUpdateNotification];
 
-                        [operation complete:result];
-                    }];
+                    [operation complete:result];
+                }];
 
         //}];
     }];
 }
 
-- (SObject *)removeLinkLike:(SLinkData *)link completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)removeLinkLike:(SLinkData *)link completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:link completion:completion processor:^(SocialConnectorOperation *operation) {
         if (link.userLikes.boolValue) {
             [operation complete:link];

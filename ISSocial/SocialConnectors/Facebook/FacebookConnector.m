@@ -20,8 +20,7 @@
 @implementation FacebookConnector
 
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         self.supportedSpecifications = [NSSet setWithArray:@[
@@ -32,8 +31,7 @@
 }
 
 
-+ (FacebookConnector *)instance
-{
++ (FacebookConnector *)instance {
     static FacebookConnector *_instance = nil;
     static dispatch_once_t pred;
     dispatch_once(&pred, ^{
@@ -42,25 +40,21 @@
     return _instance;
 }
 
-- (void)simpleMethod:(NSString *)method operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
-{
+- (void)simpleMethod:(NSString *)method operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
     [self simpleMethod:nil path:method params:nil object:nil operation:operation processor:processor];
 }
 
-- (void)simpleMethod:(NSString *)method params:(NSDictionary *)params operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
-{
+- (void)simpleMethod:(NSString *)method params:(NSDictionary *)params operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
     [self simpleMethod:nil path:method params:params object:nil operation:operation processor:processor];
 }
 
 
-+ (NSString *)connectorCode
-{
++ (NSString *)connectorCode {
     return ISSocialConnectorIdFacebook;
 }
 
 
-- (void)simpleMethodWithURL:(NSString *)urlString operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
-{
+- (void)simpleMethodWithURL:(NSString *)urlString operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
     FBRequest *request = [[FBRequest alloc] initWithSession:FBSession.activeSession graphPath:nil];
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
     [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
@@ -77,8 +71,7 @@
     [connection start];
 }
 
-- (void)simpleQuery:(NSString *)query operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
-{
+- (void)simpleQuery:(NSString *)query operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
     FBRequest *fql = [FBRequest requestForGraphPath:@"fql"];
     [fql.parameters setObject:query forKey:@"q"];
 
@@ -98,8 +91,7 @@
     [operation addConnection:connection];
 }
 
-- (void)simpleRequest:(NSString *)method path:(NSString *)path object:(NSDictionary *)object operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
-{
+- (void)simpleRequest:(NSString *)method path:(NSString *)path object:(NSDictionary *)object operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
     FBRequest *request = [[FBRequest alloc] initWithSession:[FBSession activeSession]
                                                   graphPath:path
                                                  parameters:object
@@ -121,9 +113,8 @@
     [operation addConnection:connection];
 }
 
-- (void)simplePost:(NSString *)method object:(NSDictionary *)object operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
-{
-    NSMutableDictionary<FBGraphObject> *graphObject = [FBGraphObject graphObject];
+- (void)simplePost:(NSString *)method object:(NSDictionary *)object operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
+    NSMutableDictionary <FBGraphObject> *graphObject = [FBGraphObject graphObject];
 
     [graphObject setDictionary:object];
 
@@ -142,8 +133,7 @@
     [operation addConnection:connection];
 }
 
-- (void)simpleMethod:(NSString *)httpMethod path:(NSString *)path params:(NSDictionary *)params object:(NSDictionary *)object operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
-{
+- (void)simpleMethod:(NSString *)httpMethod path:(NSString *)path params:(NSDictionary *)params object:(NSDictionary *)object operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
     if (!object) {
         FBRequestConnection *connection =
                 [[[FBRequest alloc] initWithSession:[FBSession activeSession]
@@ -152,15 +142,15 @@
                                          HTTPMethod:httpMethod]
                         startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
 
-                    [operation removeConnection:connection];
-                    if (error) {
-                        NSLog(@"Facebook error on method: %@ error:%@", path, error.userInfo);
-                        [self processFacebookError:error operation:operation processor:processor];
-                    }
-                    else {
-                        processor(result);
-                    }
-                }];
+                            [operation removeConnection:connection];
+                            if (error) {
+                                NSLog(@"Facebook error on method: %@ error:%@", path, error.userInfo);
+                                [self processFacebookError:error operation:operation processor:processor];
+                            }
+                            else {
+                                processor(result);
+                            }
+                        }];
         [operation addConnection:connection];
     }
     else {
@@ -182,8 +172,7 @@
     }
 }
 
-- (void)processFacebookError:(NSError *)error operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
-{
+- (void)processFacebookError:(NSError *)error operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
 
     NSDictionary *errorData = error.userInfo[FBErrorParsedJSONResponseKey];
 
@@ -197,7 +186,7 @@
         code = ISSocialErrorOperationAlreadyDone;
     }
 
-    if(code == ISSocialErrorUnknown) {
+    if (code == ISSocialErrorUnknown) {
         if (error.code == FBErrorHTTPError) {
             [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorNetwork sourseError:error.userInfo[FBErrorInnerErrorKey] userInfo:nil]];
             return;
@@ -210,8 +199,7 @@
     [operation completeWithError:socialError];
 }
 
-- (void)checkAuthorizationFor:(NSArray *)permissions operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
-{
+- (void)checkAuthorizationFor:(NSArray *)permissions operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
     [self authorizeWithPublishPermissions:permissions completion:^(SObject *result) {
         if (result.isFailed) {
             [operation completeWithFailure];
@@ -220,8 +208,7 @@
     }];
 }
 
-- (void)authorizeWithPublishPermissions:(NSArray *)permissions completion:(SObjectCompletionBlock)completion
-{
+- (void)authorizeWithPublishPermissions:(NSArray *)permissions completion:(SObjectCompletionBlock)completion {
     bool ok = YES;
     for (NSString *permission in permissions) {
         NSLog(@"permissions = %@", [[FBSession activeSession] permissions]);
@@ -263,14 +250,12 @@
     }
 }
 
-- (void)handleDidBecomeActive
-{
+- (void)handleDidBecomeActive {
     [[FBSession activeSession] handleDidBecomeActive];
 }
 
 
-- (void)setupSettings:(NSDictionary *)settings
-{
+- (void)setupSettings:(NSDictionary *)settings {
     [super setupSettings:settings];
 
     if (settings[@"AppID"]) {
@@ -284,8 +269,7 @@
     }
 }
 
-- (SObject *)closeSessionAndClearCredentials:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)closeSessionAndClearCredentials:(SObject *)params completion:(SObjectCompletionBlock)completion {
     self.currentUserData = nil;
     [FBSession.activeSession closeAndClearTokenInformation];
     _loggedIn = NO;
@@ -293,16 +277,14 @@
     return [SObject successful];
 }
 
-- (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
     [FBSession.activeSession close];
     _loggedIn = NO;
     completion([SObject successful]);
     return [SObject successful];
 }
 
-- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         NSArray *permissions = self.defaultReadPermissions;
 
@@ -317,7 +299,7 @@
 
         BOOL loggedIn = [[FBSession activeSession] isOpen] || [FBSession openActiveSessionWithAllowLoginUI:NO];
 
-        if(loggedIn) {
+        if (loggedIn) {
             [self processLoggedInSession:[FBSession activeSession] completion:completion];
             return;
         }
@@ -365,8 +347,7 @@
 
 }
 
-- (void)processLoggedInSession:(FBSession *)session completion:(SObjectCompletionBlock)completion
-{
+- (void)processLoggedInSession:(FBSession *)session completion:(SObjectCompletionBlock)completion {
     [self readUserData:[SUserData new] completion:^(SObject *result) {
         [self iss_performBlock:^(id sender) {
             [SObject successful:completion];
@@ -377,23 +358,19 @@
 }
 
 
-- (SocialConnectorOperation *)operationWithParent:(SocialConnectorOperation *)operation
-{
+- (SocialConnectorOperation *)operationWithParent:(SocialConnectorOperation *)operation {
     return [[FacebookConnectorOperation alloc] initWithHandler:self parent:operation];
 }
 
-- (BOOL)isLoggedIn
-{
+- (BOOL)isLoggedIn {
     return _loggedIn;
 }
 
-- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation {
     return [[FBSession activeSession] handleOpenURL:url];
 }
 
-- (ISSAuthorisationInfo *)authorizatioInfo
-{
+- (ISSAuthorisationInfo *)authorizatioInfo {
     ISSAuthorisationInfo *token = [ISSAuthorisationInfo new];
     token.handler = self;
     token.accessToken = [FBSession activeSession].accessTokenData.accessToken;
@@ -402,8 +379,7 @@
 }
 
 
-- (SObject *)fetchDataWithPath:(NSString *)path parameters:(NSDictionary *)parameters params:(SObject *)params completion:(SObjectCompletionBlock)completion processor:(PagingProcessor)processor
-{
+- (SObject *)fetchDataWithPath:(NSString *)path parameters:(NSDictionary *)parameters params:(SObject *)params completion:(SObjectCompletionBlock)completion processor:(PagingProcessor)processor {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:path params:parameters operation:operation processor:^(NSDictionary *response) {
@@ -427,8 +403,7 @@
     }];
 }
 
-- (SObject *)pageObject:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)pageObject:(SObject *)params completion:(SObjectCompletionBlock)completion {
     SPagingData *paging = params.pagingObject;
     NSMutableDictionary *parameters = [paging.params mutableCopy];
     NSString *path = paging.method;
@@ -459,8 +434,7 @@
     }];
 }
 
-- (void)fillPagingDataFor:(SObject *)result withpath:(NSString *)path response:(NSDictionary *)response processor:(PagingProcessor)processor parameters:(NSDictionary *)parameters
-{
+- (void)fillPagingDataFor:(SObject *)result withpath:(NSString *)path response:(NSDictionary *)response processor:(PagingProcessor)processor parameters:(NSDictionary *)parameters {
     SPagingData *paging = [SPagingData objectWithHandler:self];
     paging.anchor = response[@"paging"][@"cursors"][@"after"];
     paging.method = path;

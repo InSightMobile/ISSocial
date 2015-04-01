@@ -9,7 +9,6 @@
 #import <AFNetworking/AFHTTPRequestOperationManager.h>
 #import "OdnoklassnikiConnector.h"
 #import "ODKSession.h"
-#import "ODKRequest.h"
 #import "SUserData.h"
 #import "ISSocial.h"
 #import "ISSAuthorisationInfo.h"
@@ -24,8 +23,7 @@
 
 @implementation OdnoklassnikiConnector
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         self.client = [[AFHTTPRequestOperationManager alloc] init];
@@ -35,8 +33,7 @@
 }
 
 
-- (void)setupSettings:(NSDictionary *)settings
-{
+- (void)setupSettings:(NSDictionary *)settings {
     [super setupSettings:settings];
 
     self.appID = settings[@"AppID"];
@@ -46,8 +43,7 @@
 }
 
 
-+ (OdnoklassnikiConnector *)instance
-{
++ (OdnoklassnikiConnector *)instance {
     static OdnoklassnikiConnector *_instance = nil;
 
     @synchronized (self) {
@@ -59,19 +55,16 @@
     return _instance;
 }
 
-- (NSString *)connectorCode
-{
+- (NSString *)connectorCode {
     return ISSocialConnectorIdOdnoklassniki;
 }
 
-- (BOOL)isLoggedIn
-{
+- (BOOL)isLoggedIn {
     return [[ODKSession activeSession] isLoggedIn];
 }
 
 
-- (ISSAuthorisationInfo *)authorizatioInfo
-{
+- (ISSAuthorisationInfo *)authorizatioInfo {
     if (!self.currentUserData.objectId) {
         return nil;
     }
@@ -83,8 +76,7 @@
     return token;
 }
 
-- (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
     self.currentUserData = nil;
     [[ODKSession activeSession] close];
     _loggedIn = NO;
@@ -92,45 +84,43 @@
     return [SObject successful];
 }
 
-- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
 
         [ODKSession openActiveSessionWithPermissions:self.permissions appId:self.appID appSecret:self.appSecret appKey:self.appKey
                                    completionHandler:^(ODKSession *session, ODKSessionState status, NSError *error) {
-           switch (status) {
-               case ODKSessionStateOpen: {
+                                       switch (status) {
+                                           case ODKSessionStateOpen: {
 
-                   [self readUserData:nil completion:^(SObject *result) {
-                       if (!result.isFailed) {
-                           self.currentUserData = (SUserData *) result;
+                                               [self readUserData:nil completion:^(SObject *result) {
+                                                   if (!result.isFailed) {
+                                                       self.currentUserData = (SUserData *) result;
 
-                           [operation complete:[SObject successful]];
-                       }
-                       else {
-                           [operation completeWithFailure];
-                       }
-                   }];
-               }
-                   break;
-               case ODKSessionStateClosed:
-               case ODKSessionStateClosedLoginFailed: {
-                   [operation completeWithFailure];
-               }
-                   break;
-               default:
-                   [operation completeWithFailure];
-                   break;
-           }
+                                                       [operation complete:[SObject successful]];
+                                                   }
+                                                   else {
+                                                       [operation completeWithFailure];
+                                                   }
+                                               }];
+                                           }
+                                               break;
+                                           case ODKSessionStateClosed:
+                                           case ODKSessionStateClosedLoginFailed: {
+                                               [operation completeWithFailure];
+                                           }
+                                               break;
+                                           default:
+                                               [operation completeWithFailure];
+                                               break;
+                                       }
 
-       }];
+                                   }];
 
     }];
 }
 
-- (void)simpleMethod:(NSString *)method parameters:(NSDictionary *)parameters operation:(SocialConnectorOperation *)operation processor:(void (^)(id response))processor
-{
+- (void)simpleMethod:(NSString *)method parameters:(NSDictionary *)parameters operation:(SocialConnectorOperation *)operation processor:(void (^)(id response))processor {
     NSMutableDictionary *preparedParameters = [NSMutableDictionary dictionaryWithCapacity:parameters.count];
     [parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         preparedParameters[key] = [obj stringValue];
@@ -147,8 +137,7 @@
 }
 
 
-- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation {
     return [[OKSession activeSession] handleOpenURL:url];
 }
 

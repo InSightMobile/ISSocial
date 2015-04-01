@@ -11,8 +11,7 @@
 
 @implementation OdnoklassnikiConnector (Messages)
 
-- (SObject *)markMessagesAsRead:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)markMessagesAsRead:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         SMessageData *message = nil;
@@ -35,8 +34,7 @@
     }];
 }
 
-- (SObject *)readDialogs:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readDialogs:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"messages.getConversations" parameters:@{@"return_last_msg" : @"true"} operation:operation processor:^(id response) {
@@ -72,8 +70,7 @@
     }];
 }
 
-- (SObject *)sendInvitation:(SInvitation *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)sendInvitation:(SInvitation *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         SMessageData *message = [SMessageData new];
@@ -85,8 +82,7 @@
     }];
 }
 
-- (SObject *)postMessage:(SMessageData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)postMessage:(SMessageData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"messages.send" parameters:@{@"friend_uid" : params.messageCompanion.objectId, @"text" : params.message} operation:operation processor:^(id response) {
@@ -101,13 +97,11 @@
 }
 
 
-- (SObject *)readMessageHistory:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readMessageHistory:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self readMessagesForTread:(SMessageThread *) params completion:completion];
 }
 
-- (SObject *)readMessageUpdates:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readMessageUpdates:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         SObject *updateParams = [params copyWithHandler:self];
@@ -132,8 +126,7 @@
     }];
 }
 
-- (SObject *)readMessagesForTread:(SMessageThread *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readMessagesForTread:(SMessageThread *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSDictionary *parameters = @{@"friend_uid" : params.objectId, @"first" : [@0 stringValue]};

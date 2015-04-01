@@ -53,14 +53,14 @@
    in public interfaces due to compiler differences.  */
 
 #if 1
-# if defined __sgi && ! defined __c99
+# if defined __sgi && !defined __c99
    /* Bypass IRIX's <stdint.h> if in C89 mode, since it merely annoys users
       with "This header file is to be used only for c99 mode compilations"
       diagnostics.  */
 #  define __STDINT_H__
 # endif
 
-  /* Some pre-C++11 <stdint.h> implementations need this.  */
+/* Some pre-C++11 <stdint.h> implementations need this.  */
 # ifdef __cplusplus
 #  ifndef __STDC_CONSTANT_MACROS
 #   define __STDC_CONSTANT_MACROS 1
@@ -70,15 +70,16 @@
 #  endif
 # endif
 
-  /* Other systems may have an incomplete or buggy <stdint.h>.
-     Include it before <inttypes.h>, since any "#include <stdint.h>"
-     in <inttypes.h> would reinclude us, skipping our contents because
-     _GL_LGL_STDINT_H is defined.
-     The include requires a split double-inclusion guard.  */
+/* Other systems may have an incomplete or buggy <stdint.h>.
+   Include it before <inttypes.h>, since any "#include <stdint.h>"
+   in <inttypes.h> would reinclude us, skipping our contents because
+   _GL_LGL_STDINT_H is defined.
+   The include requires a split double-inclusion guard.  */
 # include <stdint.h>
+
 #endif
 
-#if ! defined _GL_LGL_STDINT_H && ! defined _GL_JUST_INCLUDE_SYSTEM_STDINT_H
+#if !defined _GL_LGL_STDINT_H && !defined _GL_JUST_INCLUDE_SYSTEM_STDINT_H
 #define _GL_LGL_STDINT_H
 
 /* <sys/types.h> defines some of the stdint.h types as well, on glibc,
@@ -87,8 +88,10 @@
    MacOS X 10.4.6 <sys/types.h> includes <stdint.h> (which is us), but
    relies on the system <stdint.h> definitions, so include
    <sys/types.h> after <stdint.h>.  */
-#if 1 && ! defined _AIX
+#if 1 && !defined _AIX
+
 # include <sys/types.h>
+
 #endif
 
 /* Get SCHAR_MIN, SCHAR_MAX, UCHAR_MAX, INT_MIN, INT_MAX,
@@ -96,17 +99,18 @@
 #include <limits.h>
 
 #if 1
-  /* In OpenBSD 3.8, <inttypes.h> includes <machine/types.h>, which defines
-     int{8,16,32,64}_t, uint{8,16,32,64}_t and __BIT_TYPES_DEFINED__.
-     <inttypes.h> also defines intptr_t and uintptr_t.  */
+/* In OpenBSD 3.8, <inttypes.h> includes <machine/types.h>, which defines
+   int{8,16,32,64}_t, uint{8,16,32,64}_t and __BIT_TYPES_DEFINED__.
+   <inttypes.h> also defines intptr_t and uintptr_t.  */
 # include <inttypes.h>
+
 #elif 0
   /* Solaris 7 <sys/inttypes.h> has the types except the *_fast*_t types, and
      the macros except for *_FAST*_*, INTPTR_MIN, PTRDIFF_MIN, PTRDIFF_MAX.  */
 # include <sys/inttypes.h>
 #endif
 
-#if 0 && ! defined __BIT_TYPES_DEFINED__
+#if 0 && !defined __BIT_TYPES_DEFINED__
   /* Linux libc4 >= 4.6.7 and libc5 have a <sys/bitypes.h> that defines
      int{8,16,32,64}_t and __BIT_TYPES_DEFINED__.  In libc5 >= 5.2.2 it is
      included by <sys/types.h>.  */
@@ -337,8 +341,8 @@ typedef unsigned long int gl_uintmax_t;
 /* Verify that intmax_t and uintmax_t have the same size.  Too much code
    breaks if this is not the case.  If this check fails, the reason is likely
    to be found in the autoconf macros.  */
-typedef int _verify_intmax_size[sizeof (intmax_t) == sizeof (uintmax_t)
-                                ? 1 : -1];
+typedef int _verify_intmax_size[sizeof(intmax_t) == sizeof(uintmax_t)
+        ? 1 : -1];
 
 #define GNULIB_defined_stdint_types 1
 #endif /* !GNULIB_defined_stdint_types */
@@ -371,14 +375,14 @@ typedef int _verify_intmax_size[sizeof (intmax_t) == sizeof (uintmax_t)
 #define INT32_MAX  2147483647
 #define UINT32_MAX  4294967295U
 
-#if defined GL_INT64_T && ! defined INT64_MAX
+#if defined GL_INT64_T && !defined INT64_MAX
 /* Prefer (- INTMAX_C (1) << 63) over (~ INT64_MAX) because SunPRO C 5.0
    evaluates the latter incorrectly in preprocessor expressions.  */
 # define INT64_MIN  (- INTMAX_C (1) << 63)
 # define INT64_MAX  INTMAX_C (9223372036854775807)
 #endif
 
-#if defined GL_UINT64_T && ! defined UINT64_MAX
+#if defined GL_UINT64_T && !defined UINT64_MAX
 # define UINT64_MAX  UINTMAX_C (18446744073709551615)
 #endif
 
@@ -545,7 +549,7 @@ typedef int _verify_intmax_size[sizeof (intmax_t) == sizeof (uintmax_t)
    sequence of nested includes
    <wchar.h> -> <stdio.h> -> <getopt.h> -> <stdlib.h>, and the latter includes
    <stdint.h> and assumes its types are already defined.  */
-#if 1 && ! (defined WCHAR_MIN && defined WCHAR_MAX)
+#if 1 && !(defined WCHAR_MIN && defined WCHAR_MAX)
   /* BSD/OS 4.0.1 has a bug: <stddef.h>, <stdio.h> and <time.h> must be
      included before <wchar.h>.  */
 # include <stddef.h>

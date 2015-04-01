@@ -2,12 +2,178 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="db57ebb8-ab50-475d-81e8-bc0ca29057e8" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGApi/IGRequest.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGApi/IGRequest.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGApi/IGSession.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGApi/IGSession.m" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/System/AccessSocialConnector.h" afterPath="$PROJECT_DIR$/../ISSocial/System/AccessSocialConnector.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/System/AccessSocialConnector.m" afterPath="$PROJECT_DIR$/../ISSocial/System/AccessSocialConnector.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ISSocialDemo/AppDelegate.h" afterPath="$PROJECT_DIR$/ISSocialDemo/AppDelegate.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ISSocialDemo/AppDelegate.m" afterPath="$PROJECT_DIR$/ISSocialDemo/AppDelegate.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/System/AsyncBlockOperation.m" afterPath="$PROJECT_DIR$/../ISSocial/System/AsyncBlockOperation.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/System/BlockOperationQueue.m" afterPath="$PROJECT_DIR$/../ISSocial/System/BlockOperationQueue.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/System/CahedConnector.m" afterPath="$PROJECT_DIR$/../ISSocial/System/CahedConnector.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/System/CompositeConnector.h" afterPath="$PROJECT_DIR$/../ISSocial/System/CompositeConnector.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/System/CompositeConnector.m" afterPath="$PROJECT_DIR$/../ISSocial/System/CompositeConnector.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/DDList.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/DDList.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/DDList.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/DDList.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/DDXML.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/DDXML.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/DDXMLDocument.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/DDXMLDocument.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/DDXMLDocument.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/DDXMLDocument.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/DDXMLElement.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/DDXMLElement.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/DDXMLElement.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/DDXMLElement.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/Additions/DDXMLElementAdditions.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/Additions/DDXMLElementAdditions.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/Additions/DDXMLElementAdditions.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/Additions/DDXMLElementAdditions.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/DDXMLNode.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/DDXMLNode.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/DDXMLNode.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/DDXMLNode.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/Private/DDXMLPrivate.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/Private/DDXMLPrivate.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/Example.iml" afterPath="$PROJECT_DIR$/.idea/Example.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnector+Feed.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnector+Feed.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnector+Link.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnector+Link.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnector+Photos.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnector+Photos.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnector+UserData.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnector+UserData.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnector+Video.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnector+Video.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnector.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnector.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnectorOperation.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/FacebookConnectorOperation.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/GCDMulticastDelegate.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/GCDMulticastDelegate.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/GCDMulticastDelegate.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/GCDMulticastDelegate.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GPSession.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GPSession.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GPSession.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GPSession.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Categories/GTMNSString+HTML.m" afterPath="$PROJECT_DIR$/../ISSocial/Categories/GTMNSString+HTML.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GooglePlusConnector+Feed.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GooglePlusConnector+Feed.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GooglePlusConnector.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GooglePlusConnector.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGRequest.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGRequest.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGSession.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGSession.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGSession.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGSession.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/System/ISSAuthorisationInfo.m" afterPath="$PROJECT_DIR$/../ISSocial/System/ISSAuthorisationInfo.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Services/ISSCacheManager.m" afterPath="$PROJECT_DIR$/../ISSocial/Services/ISSCacheManager.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Services/ISSFeedConsolidation.m" afterPath="$PROJECT_DIR$/../ISSocial/Services/ISSFeedConsolidation.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Services/ISSImageCollectionData.h" afterPath="$PROJECT_DIR$/../ISSocial/Services/ISSImageCollectionData.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Services/ISSImageCollectionData.m" afterPath="$PROJECT_DIR$/../ISSocial/Services/ISSImageCollectionData.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Services/ISSPresentingViewController.m" afterPath="$PROJECT_DIR$/../ISSocial/Services/ISSPresentingViewController.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VKApi/ISSVKRequest.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VKApi/ISSVKRequest.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VKApi/ISSVKSession.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VKApi/ISSVKSession.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VKApi/ISSVKSession.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VKApi/ISSVKSession.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/ISSocial+Errors.m" afterPath="$PROJECT_DIR$/../ISSocial/ISSocial+Errors.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/ISSocial.m" afterPath="$PROJECT_DIR$/../ISSocial/ISSocial.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial.podspec" afterPath="$PROJECT_DIR$/../ISSocial.podspec" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ISSocialDemo/ISSocialDemo-Info.plist" afterPath="$PROJECT_DIR$/ISSocialDemo/ISSocialDemo-Info.plist" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ISSocialDemo/ISSocialDemo-Prefix.pch" afterPath="$PROJECT_DIR$/ISSocialDemo/ISSocialDemo-Prefix.pch" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Services/ISSocialLoginManager.m" afterPath="$PROJECT_DIR$/../ISSocial/Services/ISSocialLoginManager.m" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/InstagramConnector+Photo.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/InstagramConnector+Photo.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Podfile" afterPath="$PROJECT_DIR$/Podfile" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/InstagramConnector.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/InstagramConnector.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/LibIDN.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/LibIDN.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/LibIDN.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/LibIDN.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Services/MultiImage.h" afterPath="$PROJECT_DIR$/../ISSocial/Services/MultiImage.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Services/MultiImage.m" afterPath="$PROJECT_DIR$/../ISSocial/Services/MultiImage.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Categories/NSArray+Finding.m" afterPath="$PROJECT_DIR$/../ISSocial/Categories/NSArray+Finding.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Categories/NSArray+ISSAsyncBlocks.m" afterPath="$PROJECT_DIR$/../ISSocial/Categories/NSArray+ISSAsyncBlocks.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Categories/NSData+XMPP.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Categories/NSData+XMPP.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Categories/NSData+XMPP.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Categories/NSData+XMPP.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/NSDate+Facebook.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Facebook/NSDate+Facebook.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/NSDate+ISSOdnoklassniki.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/NSDate+ISSOdnoklassniki.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/NSDate+Odnoklassniki.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/NSDate+Odnoklassniki.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/NSDate+Vkontakte.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/NSDate+Vkontakte.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/NSDate+Vkontakte.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/NSDate+Vkontakte.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Categories/NSNumber+XMPP.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Categories/NSNumber+XMPP.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Categories/NSNumber+XMPP.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Categories/NSNumber+XMPP.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Categories/NSObject+PerformBlockInBackground.m" afterPath="$PROJECT_DIR$/../ISSocial/Categories/NSObject+PerformBlockInBackground.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Categories/NSSet+ModificationAdditions.m" afterPath="$PROJECT_DIR$/../ISSocial/Categories/NSSet+ModificationAdditions.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/Categories/NSString+DDXML.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/Categories/NSString+DDXML.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/Categories/NSString+DDXML.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/KissXML/Categories/NSString+DDXML.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Categories/NSString+HTML.m" afterPath="$PROJECT_DIR$/../ISSocial/Categories/NSString+HTML.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Categories/NSString+StripHTML.m" afterPath="$PROJECT_DIR$/../ISSocial/Categories/NSString+StripHTML.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Categories/NSString+TypeSafety.m" afterPath="$PROJECT_DIR$/../ISSocial/Categories/NSString+TypeSafety.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Categories/NSString+ValueConvertion.m" afterPath="$PROJECT_DIR$/../ISSocial/Categories/NSString+ValueConvertion.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Categories/NSXMLElement+XMPP.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Categories/NSXMLElement+XMPP.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Categories/NSXMLElement+XMPP.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Categories/NSXMLElement+XMPP.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Services/NetworkCheck.m" afterPath="$PROJECT_DIR$/../ISSocial/Services/NetworkCheck.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKRequest.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKRequest.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKSession.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKSession.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKSession.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/ODKApi/ODKSession.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKRequest.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKRequest.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKRequest.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKRequest.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKRequest.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKRequest.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKRequest.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKRequest.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKRequestConnection.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKRequestConnection.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKSession.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKSession.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKSession.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKSession.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKSession.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKSession.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKSession.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKSession.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKTokenCache.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKTokenCache.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKTokenCache.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKTokenCache.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKTokenCache.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/OKTokenCache.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKTokenCache.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKTokenCache.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKUtils.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKUtils.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKUtils.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/OKUtils.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/Odnoklassniki.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/Odnoklassniki.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/Odnoklassniki.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/Odnoklassniki.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/Odnoklassniki.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OKSdk/Odnoklassniki.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/Odnoklassniki.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/Odnoklassniki SDK/Odnoklassniki.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OdnoklassnikiConnector+Messages.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OdnoklassnikiConnector+Messages.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OdnoklassnikiConnector+Photo.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OdnoklassnikiConnector+Photo.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OdnoklassnikiConnector+Users.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OdnoklassnikiConnector+Users.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OdnoklassnikiConnector.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Odnoklassniki/OdnoklassnikiConnector.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/RFImageToDataTransformer.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/RFImageToDataTransformer.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/RFImageToDataTransformer.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/RFImageToDataTransformer.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialObjects/SCommentData.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialObjects/SCommentData.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialObjects/SInvitation.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialObjects/SInvitation.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialObjects/SInvitation.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialObjects/SInvitation.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialObjects/SLinkData.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialObjects/SLinkData.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialObjects/SLinkData.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialObjects/SLinkData.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialObjects/SMediaObject.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialObjects/SMediaObject.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialObjects/SMessageData.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialObjects/SMessageData.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialObjects/SMessageThread.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialObjects/SMessageThread.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialObjects/SMessageThread.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialObjects/SMessageThread.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/System/SObject.h" afterPath="$PROJECT_DIR$/../ISSocial/System/SObject.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/System/SObject.m" afterPath="$PROJECT_DIR$/../ISSocial/System/SObject.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialObjects/SPagingData.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialObjects/SPagingData.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialObjects/SPagingData.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialObjects/SPagingData.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialObjects/SPhotoAlbumData.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialObjects/SPhotoAlbumData.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialObjects/SReadAlbumsParameters.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialObjects/SReadAlbumsParameters.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialObjects/SReadAlbumsParameters.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialObjects/SReadAlbumsParameters.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialObjects/SShareItem.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialObjects/SShareItem.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/System/SocialConnector.h" afterPath="$PROJECT_DIR$/../ISSocial/System/SocialConnector.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/System/SocialConnector.m" afterPath="$PROJECT_DIR$/../ISSocial/System/SocialConnector.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/System/SocialConnectorOperation.m" afterPath="$PROJECT_DIR$/../ISSocial/System/SocialConnectorOperation.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Twitter/TwitterConnector.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Twitter/TwitterConnector.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ISSocialDemo/ViewController.m" afterPath="$PROJECT_DIR$/ISSocialDemo/ViewController.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+Audio.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+Audio.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+Feed.h" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+Feed.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+Feed.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+Feed.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+Link.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+Link.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+Messages.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+Messages.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+News.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+News.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+Photos.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+Photos.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+Pull.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+Pull.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+UserData.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+UserData.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+Video.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector+Video.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector.m" afterPath="$PROJECT_DIR$/../ISSocial/SocialConnectors/Vkontakte/VkontakteConnector.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Services/WebLoginController.h" afterPath="$PROJECT_DIR$/../ISSocial/Services/WebLoginController.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Services/WebLoginController.m" afterPath="$PROJECT_DIR$/../ISSocial/Services/WebLoginController.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Services/WebLoginManager.m" afterPath="$PROJECT_DIR$/../ISSocial/Services/WebLoginManager.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPElement.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPElement.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPElement.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPElement.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/XMPPIDTracker.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/XMPPIDTracker.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/XMPPIDTracker.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/XMPPIDTracker.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPIQ.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPIQ.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPIQ.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPIQ.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPInternal.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPInternal.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPJID.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPJID.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPJID.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPJID.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPLogging.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPLogging.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPMessage.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPMessage.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPMessage.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPMessage.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPModule.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPModule.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPModule.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPModule.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPParser.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPParser.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPParser.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPParser.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPPresence.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPPresence.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPPresence.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPPresence.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Authentication/XMPPSASLAuthentication.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Authentication/XMPPSASLAuthentication.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/XMPPSRVResolver.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/XMPPSRVResolver.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/XMPPSRVResolver.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Utilities/XMPPSRVResolver.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPStream.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPStream.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPStream.m" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/XMPPFramework/Core/XMPPStream.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/libidn/idn-int.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/libidn/idn-int.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ISSocialDemo/main.m" afterPath="$PROJECT_DIR$/ISSocialDemo/main.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ISSocial/Libraries/libidn/stringprep.h" afterPath="$PROJECT_DIR$/../ISSocial/Libraries/libidn/stringprep.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Example.iws" />
@@ -30,103 +196,109 @@
     <option name="hideWarnings" value="true" />
     <option name="HIDE_WARNINGS" value="true" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="iphonesimulator_iPhone_4s_8.1_i386_1" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="iphoneos_5b47b9793bb42ec77771e4affaf90a89499f0300" />
   <component name="FavoritesManager">
     <favorites_list name="ISSocialDemo" />
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Podfile" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Podfile">
+      <file leaf-file-name="InfoPlist.strings" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ISSocialDemo/en.lproj/InfoPlist.strings">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="240">
-              <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="InstagramConnector+Photo.m" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/InstagramConnector+Photo.m">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3600" max-vertical-offset="5565">
-              <caret line="240" column="109" selection-start-line="240" selection-start-column="109" selection-end-line="240" selection-end-column="109" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="IGRequest.m" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGRequest.m">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="576" max-vertical-offset="1350">
-              <caret line="77" column="54" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
-              <folding>
-                <element signature="e#131#152#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AFHTTPRequestOperationManager.m" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Pods/AFNetworking/AFNetworking/AFHTTPRequestOperationManager.m">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1352" max-vertical-offset="3795">
-              <caret line="113" column="28" selection-start-line="113" selection-start-column="28" selection-end-line="113" selection-end-column="28" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="IGSession.m" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGSession.m">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.4146341" vertical-offset="0" max-vertical-offset="2430">
-              <caret line="58" column="21" selection-start-line="58" selection-start-column="14" selection-end-line="58" selection-end-column="14" />
-              <folding>
-                <element signature="e#8#29#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="IGSession.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGSession.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="720">
-              <caret line="25" column="16" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
-              <folding>
-                <element signature="e#10#43#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AFHTTPSessionManager.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Pods/AFNetworking/AFNetworking/AFHTTPSessionManager.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3690">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="120">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AFURLSessionManager.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Pods/AFNetworking/AFNetworking/AFURLSessionManager.h">
+      <file leaf-file-name="ViewController.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ISSocialDemo/ViewController.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8055">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="285">
+              <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ISSocialDemo-Info.plist" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ISSocialDemo/ISSocialDemo-Info.plist">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="825">
+              <caret line="25" column="15" selection-start-line="25" selection-start-column="15" selection-end-line="25" selection-end-column="15" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GTMNSString+HTML.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../ISSocial/Categories/GTMNSString+HTML.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1065">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AFHTTPRequestOperationManager.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Pods/AFNetworking/AFNetworking/AFHTTPRequestOperationManager.h">
+      <file leaf-file-name="GTMNSString+HTML.m" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../ISSocial/Categories/GTMNSString+HTML.m">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1260" max-vertical-offset="4710">
-              <caret line="84" column="11" selection-start-line="84" selection-start-column="11" selection-end-line="84" selection-end-column="11" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7905">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ISSCacheManager.m" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../ISSocial/Services/ISSCacheManager.m">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.6840278" vertical-offset="279" max-vertical-offset="1155">
+              <caret line="59" column="33" selection-start-line="59" selection-start-column="33" selection-end-line="59" selection-end-column="33" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ViewController.m" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ISSocialDemo/ViewController.m">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="495">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.m" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ISSocialDemo/main.m">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="315">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <marker date="1427846785000" expanded="false" signature="123:146" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AppDelegate.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ISSocialDemo/AppDelegate.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="315">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AppDelegate.m" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ISSocialDemo/AppDelegate.m">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="690">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -163,6 +335,7 @@
         <option value="$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGSession.h" />
         <option value="$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGRequest.m" />
         <option value="$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGSession.m" />
+        <option value="$PROJECT_DIR$/ISSocialDemo/ISSocialDemo-Info.plist" />
       </list>
     </option>
   </component>
@@ -171,10 +344,10 @@
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="42" />
+    <option name="x" value="50" />
     <option name="y" value="23" />
-    <option name="width" value="1398" />
-    <option name="height" value="877" />
+    <option name="width" value="2508" />
+    <option name="height" value="1417" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -221,82 +394,6 @@
               <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Pods" />
-              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" />
-              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeRootNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Pods" />
-              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Pods" />
-              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AFNetworking" />
-              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" />
-              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeRootNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Pods" />
-              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Pods" />
-              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AFNetworking" />
-              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NSURLSession" />
-              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" />
-              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeRootNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Pods" />
-              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Pods" />
-              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AFNetworking" />
-              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NSURLConnection" />
-              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" />
-              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeRootNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Pods" />
-              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="Development Pods" />
               <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
             </PATH_ELEMENT>
@@ -323,7 +420,75 @@
               <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Instagram" />
+              <option name="myItemId" value="Core" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeRootNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Pods" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Development Pods" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ISSocial" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Core" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Services" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ISSocial" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Services" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeRootNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Pods" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Development Pods" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ISSocial" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Core" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Categories" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ISSocial" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Categories" />
               <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -335,6 +500,20 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="ISSocialDemo" />
               <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeRootNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ISSocialDemo" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ISSocialDemo" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.XcodeViewNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -359,8 +538,9 @@
   <component name="PropertiesComponent">
     <property name="recentsLimit" value="5" />
     <property name="FullScreen" value="false" />
+    <property name="LayoutCode.rearrangeEntries" value="false" />
   </component>
-  <component name="RunManager" selected="Application.ISSocialDemo">
+  <component name="RunManager" selected="Application.Pods-ISSocial">
     <configuration default="true" type="AppleRunConfiguration" factoryName="Application" PASS_PARENT_ENVS="FALSE" PROJECT_NAME="ISSocialDemo" TARGET_NAME="ISSocialDemo" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="ISSocialDemo" RUN_TARGET_NAME="ISSocialDemo" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
       <envs />
       <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
@@ -380,6 +560,7 @@
       <node-options />
       <gulpfile />
       <tasks />
+      <arguments />
       <pass-parent-envs>true</pass-parent-envs>
       <envs />
       <method />
@@ -463,16 +644,7 @@
       </EXTENSION>
       <method />
     </configuration>
-    <configuration default="false" name="ISSocialDemo" type="AppleRunConfiguration" factoryName="Application" WORKING_DIR="" PASS_PARENT_ENVS="FALSE" PROJECT_NAME="ISSocialDemo" TARGET_NAME="ISSocialDemo" CONFIG_NAME="Debug" SCHEME_NAME="ISSocialDemo" RUN_TARGET_PROJECT_NAME="ISSocialDemo" RUN_TARGET_NAME="ISSocialDemo" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
-      <envs />
-      <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
-        <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
-      </EXTENSION>
-      <RunnerSettings RunnerId="AppRunner" />
-      <ConfigurationWrapper RunnerId="AppRunner" />
-      <method />
-    </configuration>
-    <list size="12">
+    <list size="11">
       <item index="0" class="java.lang.String" itemvalue="Application.Pods-ISSocial" />
       <item index="1" class="java.lang.String" itemvalue="Application.Pods" />
       <item index="2" class="java.lang.String" itemvalue="Application.Pods-Bolts" />
@@ -484,7 +656,6 @@
       <item index="8" class="java.lang.String" itemvalue="Application.Pods-ReactiveCocoa" />
       <item index="9" class="java.lang.String" itemvalue="Application.Pods-RegexKitLite" />
       <item index="10" class="java.lang.String" itemvalue="Application.Pods-AFNetworking" />
-      <item index="11" class="java.lang.String" itemvalue="Application.ISSocialDemo" />
     </list>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
@@ -498,26 +669,26 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="42" y="23" width="1398" height="877" extended-state="6" />
+    <frame x="50" y="23" width="2508" height="1417" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18089172" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32780707" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18085907" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2764331" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25780684" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18174507" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32866243" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2764331" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -546,80 +717,10 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../ISSocial/Services/ISSFeedConsolidation.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="450">
-          <caret line="6" column="19" selection-start-line="6" selection-start-column="19" selection-end-line="6" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/Services/MultiImage.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="705">
-          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/System/AccessSocialConnector.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="230" max-vertical-offset="2070">
-          <caret line="9" column="29" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/ISSocial+Errors.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="641">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/ISSocial.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="930">
-          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Twitter/TwitterConnector.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="813">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Twitter/TwitterConnector.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.22916667" vertical-offset="0" max-vertical-offset="6645">
-          <caret line="11" column="18" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/GooglePlus/GooglePlusConnector.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="476">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/Services/ISSImageCollectionData.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1290">
-          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Pods/SDWebImage/SDWebImage/UIImageView+WebCache.h">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3090">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../ISSocial/Categories/NSArray+AsyncBlocks.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1018" max-vertical-offset="1740">
-          <caret line="22" column="27" selection-start-line="22" selection-start-column="27" selection-end-line="22" selection-end-column="27" />
         </state>
       </provider>
     </entry>
@@ -726,7 +827,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="465">
           <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -886,16 +986,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Pods/AFNetworking/AFNetworking/AFHTTPRequestOperationManager.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1327" max-vertical-offset="4620">
-          <caret line="84" column="11" selection-start-line="84" selection-start-column="11" selection-end-line="84" selection-end-column="11" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1260" max-vertical-offset="4950">
+          <caret line="84" column="0" selection-start-line="84" selection-start-column="0" selection-end-line="84" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGSession.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="720">
-          <caret line="25" column="16" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="720">
+          <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
           <folding>
             <element signature="e#10#43#0" expanded="true" />
           </folding>
@@ -904,16 +1004,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Pods/AFNetworking/AFNetworking/AFHTTPRequestOperationManager.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1352" max-vertical-offset="3795">
-          <caret line="113" column="28" selection-start-line="113" selection-start-column="28" selection-end-line="113" selection-end-column="28" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1590" max-vertical-offset="4140">
+          <caret line="106" column="5" selection-start-line="106" selection-start-column="5" selection-end-line="106" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGRequest.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="576" max-vertical-offset="1350">
-          <caret line="77" column="54" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1095" max-vertical-offset="1290">
+          <caret line="73" column="0" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
           <folding>
             <element signature="e#131#152#0" expanded="true" />
           </folding>
@@ -922,11 +1022,93 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../ISSocial/SocialConnectors/Instagram/IGSession.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.4146341" vertical-offset="0" max-vertical-offset="2430">
-          <caret line="58" column="21" selection-start-line="58" selection-start-column="14" selection-end-line="58" selection-end-column="14" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="810" max-vertical-offset="2265">
+          <caret line="54" column="14" selection-start-line="54" selection-start-column="14" selection-end-line="54" selection-end-column="14" />
           <folding>
             <element signature="e#8#29#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ISSocialDemo/en.lproj/InfoPlist.strings">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1299">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ISSocialDemo/AppDelegate.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1299">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ISSocialDemo/AppDelegate.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1299">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ISSocialDemo/main.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1299">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1427846785000" expanded="false" signature="123:146" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ISSocialDemo/ViewController.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1299">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ISSocialDemo/ViewController.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="285">
+          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ISSocialDemo/ISSocialDemo-Info.plist">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="825">
+          <caret line="25" column="15" selection-start-line="25" selection-start-column="15" selection-end-line="25" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ISSocial/Categories/GTMNSString+HTML.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1065">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ISSocial/Categories/GTMNSString+HTML.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7905">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../ISSocial/Services/ISSCacheManager.m">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6840278" vertical-offset="279" max-vertical-offset="1155">
+          <caret line="59" column="33" selection-start-line="59" selection-start-column="33" selection-end-line="59" selection-end-column="33" />
+          <folding />
         </state>
       </provider>
     </entry>

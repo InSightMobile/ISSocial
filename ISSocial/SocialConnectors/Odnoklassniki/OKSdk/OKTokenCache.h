@@ -1,4 +1,3 @@
-
 #import <Foundation/Foundation.h>
 
 extern NSString *const kOKAccessTokenKey;
@@ -10,7 +9,9 @@ extern NSString *const kOKPermissionsKey;
 + (OKTokenCache *)sharedCache;
 
 - (void)cacheTokenInformation:(NSDictionary *)tokenInfo;
+
 - (NSDictionary *)tokenInfo;
+
 - (void)clearToken;
 
 @end

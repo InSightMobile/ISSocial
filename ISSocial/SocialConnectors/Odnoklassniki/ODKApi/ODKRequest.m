@@ -18,13 +18,11 @@
 @property(nonatomic, copy) ODKRequestHandler completion;
 @end
 
-@implementation ODKRequest
-{
+@implementation ODKRequest {
     __strong id _selfRetain;
 }
 
-+ (ODKRequest *)requestMethod:(NSString *)method parameters:(NSDictionary *)parameters
-{
++ (ODKRequest *)requestMethod:(NSString *)method parameters:(NSDictionary *)parameters {
     ODKRequest *req = [[self alloc] init];
 
     req.method = method;
@@ -34,8 +32,7 @@
     return req;
 }
 
-- (void)request:(OKRequest *)request didLoad:(id)result
-{
+- (void)request:(OKRequest *)request didLoad:(id)result {
     if (_completion) {
         _completion(self, result, nil);
         self.completion = nil;
@@ -43,11 +40,10 @@
     _selfRetain = nil;
 }
 
-- (void)request:(OKRequest *)request didFailWithError:(NSError *)error
-{
-    if(error.code == 102) {
+- (void)request:(OKRequest *)request didFailWithError:(NSError *)error {
+    if (error.code == 102) {
         [[ODKSession activeSession] reopenSessionWithCompletionHandler:^(ODKSession *session, ODKSessionState status, NSError *error) {
-            if(error) {
+            if (error) {
                 _completion(self, nil, error);
                 self.completion = nil;
             }

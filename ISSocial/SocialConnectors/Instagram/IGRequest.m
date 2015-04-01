@@ -21,12 +21,10 @@
 @property(nonatomic, copy) NSString *url;
 @end
 
-@implementation IGRequest
-{
+@implementation IGRequest {
     NSString *_method;
 }
-+ (IGRequest *)requestWithMethod:(NSString *)method path:(NSString *)path parameters:(NSDictionary *)parameters
-{
++ (IGRequest *)requestWithMethod:(NSString *)method path:(NSString *)path parameters:(NSDictionary *)parameters {
     IGRequest *req = [[IGRequest alloc] init];
     req.path = path;
     req.method = method;
@@ -35,13 +33,11 @@
     return req;
 }
 
-- (IGRequestOperation *)startWithCompletionHandler:(IGRequestHandler)completion
-{
+- (IGRequestOperation *)startWithCompletionHandler:(IGRequestHandler)completion {
     return [self startWithCompletionHandler:completion retries:0];
 }
 
-- (IGRequestOperation *)startWithCompletionHandler:(IGRequestHandler)completion retries:(int)retries
-{
+- (IGRequestOperation *)startWithCompletionHandler:(IGRequestHandler)completion retries:(int)retries {
     static const int kMaxSeesionRetries = 3;
 
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:_parameters];

@@ -13,14 +13,12 @@
 @property(readwrite, nonatomic) BOOL isExecuting;
 @end
 
-@implementation SocialConnectorOperation
-{
+@implementation SocialConnectorOperation {
     NSMutableSet *_connections;
 }
 
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         _connections = [NSMutableSet set];
@@ -30,8 +28,7 @@
 }
 
 
-- (void)start
-{
+- (void)start {
     if (_isCanceled) {
         return;
     }
@@ -43,8 +40,7 @@
     }
 }
 
-- (void)cancel
-{
+- (void)cancel {
     if (_isExecuting) {
         [self willChangeValueForKey:@"isExecuting"];
         _isExecuting = NO;
@@ -62,8 +58,7 @@
 
 }
 
-- (void)cancelConnections
-{
+- (void)cancelConnections {
     for (id connection in [_connections copy]) {
         if ([connection respondsToSelector:@selector(cancel)]) {
             [connection cancel];
@@ -72,8 +67,7 @@
     [_connections removeAllObjects];
 }
 
-- (void)complete:(SObject *)object
-{
+- (void)complete:(SObject *)object {
     if (_isCanceled) {
         return;
     }
@@ -96,15 +90,13 @@
     }
 }
 
-- (void)update:(SObject *)object
-{
+- (void)update:(SObject *)object {
     if (_completionHandler)
         _completionHandler(object);
 }
 
 
-- (id)initWithHandler:(SocialConnector *)connector parent:(SocialConnectorOperation *)parent
-{
+- (id)initWithHandler:(SocialConnector *)connector parent:(SocialConnectorOperation *)parent {
     self = [super init];
     if (self) {
         self.handler = connector;
@@ -117,13 +109,11 @@
     return self;
 }
 
-- (void)completeWithFailure
-{
+- (void)completeWithFailure {
     [self complete:[SObject error:[ISSocial errorWithError:nil]]];
 }
 
-- (SObject *)object
-{
+- (SObject *)object {
     if (_object) return _object;
 
     SObject *obj = [[SObject alloc] initWithHandler:_handler];
@@ -131,34 +121,28 @@
     return obj;
 }
 
-- (void)completeWithError:(NSError *)error
-{
+- (void)completeWithError:(NSError *)error {
     [self complete:[SObject error:[ISSocial errorWithError:error]]];
 }
 
-- (void)addConnection:(id)connection
-{
+- (void)addConnection:(id)connection {
     [_connections addObject:connection];
 }
 
-- (void)removeConnection:(id)connection
-{
+- (void)removeConnection:(id)connection {
     [_connections removeObject:connection];
 }
 
-- (void)startSubOperation:(NSOperation *)operation
-{
+- (void)startSubOperation:(NSOperation *)operation {
     [operation start];
     [self addSubOperation:operation];
 }
 
-- (void)addSubOperation:(NSOperation *)operation
-{
+- (void)addSubOperation:(NSOperation *)operation {
     [self addConnection:operation];
 }
 
-- (void)removeSubOperation:(NSOperation *)operation
-{
+- (void)removeSubOperation:(NSOperation *)operation {
     [self removeConnection:operation];
 }
 @end

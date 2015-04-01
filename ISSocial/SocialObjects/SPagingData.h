@@ -15,5 +15,5 @@
 
 @end
 
-@interface SPagingData : SObject<SPagingData>
+@interface SPagingData : SObject <SPagingData>
 @end

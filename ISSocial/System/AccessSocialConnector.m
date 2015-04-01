@@ -10,8 +10,7 @@
 #import "ISSocial/ISSocial.h"
 
 
-@implementation AccessSocialConnector
-{
+@implementation AccessSocialConnector {
 
     NSMutableDictionary *_media;
     NSCache *_cache;
@@ -19,8 +18,7 @@
 }
 
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         _media = [NSMutableDictionary dictionary];
@@ -30,8 +28,7 @@
     return self;
 }
 
-- (id <SMediaObject>)mediaObjectForId:(NSString *)objectId type:(NSString *)mediaType
-{
+- (id <SMediaObject>)mediaObjectForId:(NSString *)objectId type:(NSString *)mediaType {
     if (!mediaType.length) {
         mediaType = @"object";
     }
@@ -68,8 +65,7 @@
     return ref;
 }
 
-- (SObject *)addPagingData:(SObject *)result to:(SObject *)data
-{
+- (SObject *)addPagingData:(SObject *)result to:(SObject *)data {
     SObject *currentData = [data copyWithHandler:self];
     [currentData.subObjects addObjectsFromArray:result.subObjects];
     currentData.pagingData = result.pagingData;
@@ -81,40 +77,35 @@
     return _defaultAlbumName ?: @"Album";
 }
 
-- (NSInteger)connectorPriority
-{
+- (NSInteger)connectorPriority {
     return _priority;
 }
 
-- (void)setConnectorPriority:(NSInteger)priority
-{
+- (void)setConnectorPriority:(NSInteger)priority {
     _priority = priority;
 }
 
 
-- (void)setupSettings:(NSDictionary *)settings
-{
-    if(settings[@"Priority"]) {
-        [self setConnectorPriority:[settings[@"Priority"] integerValue] ];
+- (void)setupSettings:(NSDictionary *)settings {
+    if (settings[@"Priority"]) {
+        [self setConnectorPriority:[settings[@"Priority"] integerValue]];
     }
-    if(settings[@"DefaultAlbum"]) {
+    if (settings[@"DefaultAlbum"]) {
         [self setDefaultAlbumName:settings[@"DefaultAlbum"]];
     }
 }
 
-- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation {
     return NO;
 }
 
 + (id)instance {
 
-    AccessSocialConnector* connector = [[ISSocial defaultInstance] connectorNamed:[self connectorCode]];
+    AccessSocialConnector *connector = [[ISSocial defaultInstance] connectorNamed:[self connectorCode]];
     return connector;
 }
 
-- (NSString *)connectorCode
-{
+- (NSString *)connectorCode {
     Class x = self.class;
     if ([x respondsToSelector:@selector(connectorCode)]) {
         return [x connectorCode];
@@ -122,14 +113,12 @@
     return nil;
 }
 
-- (void)handleDidBecomeActive
-{
+- (void)handleDidBecomeActive {
 
 }
 
 
-- (SObject *)closeSessionAndClearCredentials:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)closeSessionAndClearCredentials:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self closeSession:params completion:completion];
 }
 

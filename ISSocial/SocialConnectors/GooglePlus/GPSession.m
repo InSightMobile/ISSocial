@@ -18,13 +18,11 @@
 @property(nonatomic, readwrite) NSString *userID;
 @end
 
-@implementation GPSession
-{
+@implementation GPSession {
 
 }
 
-+ (GPSession *)activeSession
-{
++ (GPSession *)activeSession {
     static GPSession *_instance = nil;
 
     @synchronized (self) {
@@ -41,12 +39,11 @@
 
 }
 
-- (NSString *)idToken
-{
+- (NSString *)idToken {
     return self.signIn.idToken;
 }
-- (void)finishedWithAuth:(GTMOAuth2Authentication *)auth error:(NSError *)error
-{
+
+- (void)finishedWithAuth:(GTMOAuth2Authentication *)auth error:(NSError *)error {
     if (error) {
         NSLog(@"error = %@", error);
         if (_handler)self.handler(self, GPSessionStateClosed, error);
@@ -56,9 +53,9 @@
     self.auth = auth;
     if (_handler)self.handler(self, GPSessionStateOpen, error);
     self.handler = nil;
-    
+
     self.accessToken = auth.accessToken;
-    self.userID =  auth.userID;
+    self.userID = auth.userID;
 
 
     // 1. Create a |GTLServicePlus| instance to send a request to Google+.
@@ -73,18 +70,15 @@
 
 - (BOOL)handleURL:(NSURL *)url
 sourceApplication:(NSString *)sourceApplication
-       annotation:(id)annotation
-{
+       annotation:(id)annotation {
     return [_signIn handleURL:url sourceApplication:sourceApplication annotation:annotation];
 }
 
-+ (void)openActiveSessionWithClientID:(NSString *)appID permissions:(NSArray *)permissions completionHandler:(GPSessionStateHandler)handler
-{
++ (void)openActiveSessionWithClientID:(NSString *)appID permissions:(NSArray *)permissions completionHandler:(GPSessionStateHandler)handler {
     [[self activeSession] openSessionWithClientID:appID permissions:permissions completionHandler:handler];
 }
 
-- (void)openSessionWithClientID:(NSString *)clientId permissions:(NSArray *)permissions completionHandler:(GPSessionStateHandler)handler
-{
+- (void)openSessionWithClientID:(NSString *)clientId permissions:(NSArray *)permissions completionHandler:(GPSessionStateHandler)handler {
     NSArray *scopes = @[kGTLAuthScopePlusLogin, kGTLAuthScopePlusMe];
 
     GPPSignIn *signIn = [GPPSignIn sharedInstance];
@@ -95,14 +89,13 @@ sourceApplication:(NSString *)sourceApplication
     self.handler = handler;
     self.signIn = signIn;
 
-    if(![signIn trySilentAuthentication]) {
+    if (![signIn trySilentAuthentication]) {
         [signIn authenticate];
     }
 }
 
-- (void)didActivated
-{
-    if(self.handler) {
+- (void)didActivated {
+    if (self.handler) {
         [self iss_performBlock:^(id sender) {
             if (self.handler) {
                 self.handler(self, GPSessionStateClosed, nil);
@@ -114,8 +107,7 @@ sourceApplication:(NSString *)sourceApplication
 }
 
 
-- (void)closeSession
-{
+- (void)closeSession {
     [self.signIn signOut];
     self.signIn = nil;
 }

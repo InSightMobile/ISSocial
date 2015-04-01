@@ -1,4 +1,3 @@
-
 /*
      File: RFImageToDataTransformer.h
  Abstract: A value transformer, which transforms a UIImage or NSImage object into an NSData object.

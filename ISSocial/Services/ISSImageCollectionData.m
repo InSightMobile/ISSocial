@@ -10,13 +10,11 @@
 @property(nonatomic, copy) UIImage *(^imageObtainingBlock)();
 @end
 
-@implementation ISSImageCollectionData
-{
+@implementation ISSImageCollectionData {
     NSString *_identificationString;
 }
 
-- (void)updateImageForImageView:(UIImageView *)view
-{
+- (void)updateImageForImageView:(UIImageView *)view {
     if (_url) {
         [view setImageWithURL:_url placeholderImage:view.image];
     }
@@ -25,8 +23,7 @@
     }
 }
 
-- (void)loadImageWithCompletion:(void (^)(UIImage *, NSError *))completion
-{
+- (void)loadImageWithCompletion:(void (^)(UIImage *, NSError *))completion {
     UIImage *readyImage = [self fetchImage];
     if (readyImage) {
         completion(readyImage, nil);
@@ -38,18 +35,16 @@
                                                      options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
 
 
-                completion(image, error);
-            }];
+                        completion(image, error);
+                    }];
 
 }
 
-- (BOOL)isValid
-{
+- (BOOL)isValid {
     return self.url || self.image;
 }
 
-- (NSString *)identificationString
-{
+- (NSString *)identificationString {
     if (_identificationString) {
         return _identificationString;
     }
@@ -59,8 +54,7 @@
     return nil;
 }
 
-- (UIImage *)fetchImage
-{
+- (UIImage *)fetchImage {
     if (self.image) {
         return self.image;
     }
@@ -70,8 +64,7 @@
     return nil;
 }
 
-+ (instancetype)imageDataWithIdentificationString:(NSString *)identificationString obtainingBlock:(UIImage *(^)())obtainingBlock
-{
++ (instancetype)imageDataWithIdentificationString:(NSString *)identificationString obtainingBlock:(UIImage *(^)())obtainingBlock {
     ISSImageCollectionData *data = [self new];
     data->_identificationString = identificationString;
     data.imageObtainingBlock = obtainingBlock;

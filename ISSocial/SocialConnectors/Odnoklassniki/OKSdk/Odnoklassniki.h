@@ -1,14 +1,13 @@
-
 #import <Foundation/Foundation.h>
 #import "OKSession.h"
 
-@interface Odnoklassniki : NSObject<OKSessionDelegate>
-@property (nonatomic, weak) id <OKSessionDelegate> delegate;
+@interface Odnoklassniki : NSObject <OKSessionDelegate>
+@property(nonatomic, weak) id <OKSessionDelegate> delegate;
 
-@property (nonatomic, strong, readonly) OKSession *session;
-@property (nonatomic, copy, readonly) NSString *appId;
-@property (nonatomic, copy, readonly) NSString *appSecret;
-@property (nonatomic, copy, readonly) NSString *appKey;
+@property(nonatomic, strong, readonly) OKSession *session;
+@property(nonatomic, copy, readonly) NSString *appId;
+@property(nonatomic, copy, readonly) NSString *appSecret;
+@property(nonatomic, copy, readonly) NSString *appKey;
 
 /**
 * Initializes Odnoklassniki object
@@ -20,7 +19,7 @@
 - (id)initWithAppId:(NSString *)appId
           appSecret:(NSString *)appSecret
              appKey:(NSString *)appKey
-           delegate:(id<OKSessionDelegate>)delegate;
+           delegate:(id <OKSessionDelegate>)delegate;
 
 /**
 * Authorize the application with permissions
@@ -54,11 +53,11 @@
 + (OKRequest *)requestWithMethodName:(NSString *)methodName
                               params:(NSDictionary *)params
                           httpMethod:(NSString *)httpMethod
-                            delegate:(id<OKRequestDelegate>)delegate;
+                            delegate:(id <OKRequestDelegate>)delegate;
 
 + (OKRequest *)requestWithMethodName:(NSString *)methodName
                               params:(NSDictionary *)params
-                            delegate:(id<OKRequestDelegate>)delegate;
+                            delegate:(id <OKRequestDelegate>)delegate;
 
 + (OKRequest *)requestWithMethodName:(NSString *)methodName
                               params:(NSDictionary *)params;

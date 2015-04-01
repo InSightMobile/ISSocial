@@ -20,7 +20,7 @@
 
 - (UIImage *)fetchImage;
 
-+ (instancetype)imageDataWithIdentificationString:(NSString *)identificationString obtainingBlock:(UIImage* (^)())obtainingBlock;
++ (instancetype)imageDataWithIdentificationString:(NSString *)identificationString obtainingBlock:(UIImage *(^)())obtainingBlock;
 
 @end
 

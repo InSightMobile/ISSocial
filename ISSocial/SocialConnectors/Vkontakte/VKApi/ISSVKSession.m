@@ -1,14 +1,9 @@
 //
 //
 
-#import "ISSVKSession.h"
 #import "AFJSONRequestOperation.h"
 #import "AFHTTPClient.h"
 #import "WebLoginController.h"
-#import "NSString+ValueConvertion.h"
-#import "ISSocial.h"
-#import "ISSocial+Errors.h"
-#import "NSObject+PerformBlockInBackground.h"
 
 @interface ISSVKSession () <WebLoginControllerDelegate>
 
@@ -20,13 +15,11 @@
 @property(nonatomic) BOOL invalidToken;
 @end
 
-@implementation ISSVKSession
-{
+@implementation ISSVKSession {
     BOOL _externalAuthorization;
 }
 
-+ (ISSVKSession *)activeSession
-{
++ (ISSVKSession *)activeSession {
     static ISSVKSession *_instance = nil;
 
     @synchronized (self) {
@@ -39,8 +32,7 @@
     return _instance;
 }
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         self.client = [AFHTTPClient clientWithBaseURL:[NSURL URLWithString:@"https://api.vk.com/"]];
@@ -52,19 +44,16 @@
     return self;
 }
 
-+ (void)openActiveSessionWithPermissions:(NSArray *)permissions completionHandler:(VKSessionStateHandler)handler
-{
++ (void)openActiveSessionWithPermissions:(NSArray *)permissions completionHandler:(VKSessionStateHandler)handler {
     [[self activeSession] openWithPermissions:permissions completionHandler:handler];
 }
 
-- (void)reopenSessionWithCompletionHandler:(VKSessionStateHandler)handler
-{
+- (void)reopenSessionWithCompletionHandler:(VKSessionStateHandler)handler {
     self.invalidToken = YES;
     [self openWithPermissions:self.currentPermissions completionHandler:handler];
 }
 
-- (NSString *)redirectURI
-{
+- (NSString *)redirectURI {
     if (_externalAuthorization) {
         return [NSString stringWithFormat:@"vk%@://authorize", self.clientId];
     }
@@ -73,8 +62,7 @@
     }
 }
 
-- (void)openWithPermissions:(NSArray *)permissions completionHandler:(VKSessionStateHandler)handler
-{
+- (void)openWithPermissions:(NSArray *)permissions completionHandler:(VKSessionStateHandler)handler {
     self.currentPermissions = permissions;
     if (!self.clientId) {
         NSString *appID = [[NSBundle mainBundle].infoDictionary objectForKey:@"VkontakteAppID"];
@@ -95,7 +83,7 @@
     else {
         NSString *permissionsStr = @"wall";
         if (permissions.count) {
-                    permissionsStr = [permissions componentsJoinedByString:@","];
+            permissionsStr = [permissions componentsJoinedByString:@","];
         }
 
         NSString *authLink =
@@ -109,8 +97,7 @@
         else {
             WebLoginController *controller = [WebLoginController loginController];
 
-            [self performBlock:^(id sender)
-            {
+            [self performBlock:^(id sender) {
                 self.statusHandler = handler;
                 controller.delegate = self;
                 [controller presentWithRequest:[NSURLRequest requestWithURL:url]];
@@ -121,8 +108,7 @@
 
 - (NSString *)stringBetweenString:(NSString *)start
                         andString:(NSString *)end
-                      innerString:(NSString *)str
-{
+                      innerString:(NSString *)str {
     NSScanner *scanner = [NSScanner scannerWithString:str];
     [scanner setCharactersToBeSkipped:nil];
     [scanner scanUpToString:start intoString:NULL];
@@ -135,8 +121,7 @@
     return nil;
 }
 
-- (WebLoginLoadingTypes)webLogin:(WebLoginController *)webLogin loadingTypeForRequest:(NSURLRequest *)request
-{
+- (WebLoginLoadingTypes)webLogin:(WebLoginController *)webLogin loadingTypeForRequest:(NSURLRequest *)request {
     if ([self handleURL:request.URL]) {
         [webLogin dismiss];
         return WebLoginDoNotLoad;
@@ -144,16 +129,14 @@
     return WebLoginLoadVisible;
 }
 
-- (void)webLoginDidCanceled:(WebLoginController *)controller
-{
+- (void)webLoginDidCanceled:(WebLoginController *)controller {
     if (_statusHandler) {
         self.statusHandler(self, ISSVKSessionStateClosed, nil);
         self.statusHandler = nil;
     }
 }
 
-- (BOOL)handleURL:(NSURL *)url
-{
+- (BOOL)handleURL:(NSURL *)url {
     NSLog(@"url = %@", url);
     if ([url.absoluteString hasPrefix:self.redirectURI]) {
 
@@ -207,18 +190,15 @@
     return NO;
 }
 
-- (void)webLogin:(WebLoginController *)webLogin didFinishPageLoad:(NSURLRequest *)request
-{
+- (void)webLogin:(WebLoginController *)webLogin didFinishPageLoad:(NSURLRequest *)request {
 
 }
 
-+ (VKRequestOperation *)uploadDataTo:(NSString *)uploadURL fromURL:(NSURL *)fileUrl name:(NSString *)name fileName:(NSString *)filename mime:(NSString *)mime handler:(VKRequestHandler)handler
-{
++ (VKRequestOperation *)uploadDataTo:(NSString *)uploadURL fromURL:(NSURL *)fileUrl name:(NSString *)name fileName:(NSString *)filename mime:(NSString *)mime handler:(VKRequestHandler)handler {
     AFHTTPClient *client = [ISSVKSession activeSession].client;
 
     NSMutableURLRequest *request =
-            [client multipartFormRequestWithMethod:@"POST" path:uploadURL parameters:nil constructingBodyWithBlock:^(id <AFMultipartFormData> formData)
-            {
+            [client multipartFormRequestWithMethod:@"POST" path:uploadURL parameters:nil constructingBodyWithBlock:^(id <AFMultipartFormData> formData) {
 
                 NSString *mimeType = mime;
                 if (!mimeType) {
@@ -237,14 +217,12 @@
     NSLog(@"request = %@", request);
 
     AFHTTPRequestOperation *op =
-            [client HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject)
-            {
+            [client HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
 
                 NSLog(@"responseObject = %@", responseObject);
                 handler(operation, responseObject, nil);
 
-            }                               failure:^(AFHTTPRequestOperation *operation, NSError *error)
-            {
+            }                               failure:^(AFHTTPRequestOperation *operation, NSError *error) {
 
                 handler(operation, nil, error);
 
@@ -253,8 +231,7 @@
     return op;
 }
 
-- (void)closeAndClearTokenInformation
-{
+- (void)closeAndClearTokenInformation {
     self.accessToken = nil;
     self.userId = nil;
     self.state = ISSVKSessionStateClosed;
@@ -268,13 +245,11 @@
 
 }
 
-+ (void)sendPOSTRequest:(NSString *)reqURl withImageData:(NSData *)imageData handler:(VKRequestHandler)handler
-{
++ (void)sendPOSTRequest:(NSString *)reqURl withImageData:(NSData *)imageData handler:(VKRequestHandler)handler {
     AFHTTPClient *client = [ISSVKSession activeSession].client;
 
     NSMutableURLRequest *requestM =
-            [client multipartFormRequestWithMethod:@"POST" path:reqURl parameters:nil constructingBodyWithBlock:^(id <AFMultipartFormData> formData)
-            {
+            [client multipartFormRequestWithMethod:@"POST" path:reqURl parameters:nil constructingBodyWithBlock:^(id <AFMultipartFormData> formData) {
 
                 [formData appendPartWithFileData:imageData name:@"photo" fileName:@"photo.jpg" mimeType:@"image/jpeg"];
             }];
@@ -282,14 +257,12 @@
     NSLog(@"requestM = %@", requestM);
 
     AFHTTPRequestOperation *op =
-            [client HTTPRequestOperationWithRequest:requestM success:^(AFHTTPRequestOperation *operation, id responseObject)
-            {
+            [client HTTPRequestOperationWithRequest:requestM success:^(AFHTTPRequestOperation *operation, id responseObject) {
 
                 NSLog(@"responseObject = %@", responseObject);
                 handler(operation, responseObject, nil);
 
-            }                               failure:^(AFHTTPRequestOperation *operation, NSError *error)
-            {
+            }                               failure:^(AFHTTPRequestOperation *operation, NSError *error) {
 
                 handler(operation, nil, error);
 
@@ -297,8 +270,7 @@
     [op start];
 }
 
-- (void)clearCookies
-{
+- (void)clearCookies {
 
     NSHTTPCookieStorage *cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     NSArray *vkCookies1 = [cookies cookiesForURL:

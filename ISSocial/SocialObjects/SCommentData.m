@@ -8,8 +8,7 @@
 #import "SCommentData.h"
 
 
-@implementation SCommentData
-{
+@implementation SCommentData {
 
 }
 

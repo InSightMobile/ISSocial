@@ -8,31 +8,36 @@
 #import <UIKit/UIKit.h>
 #import "OKRequest.h"
 
-extern NSString* const kLoginURL;
-extern NSString* const kRedirectURL;
-extern NSString* const kAccessTokenURL;
-extern NSString* const kAPIBaseURL;
+extern NSString *const kLoginURL;
+extern NSString *const kRedirectURL;
+extern NSString *const kAccessTokenURL;
+extern NSString *const kAPIBaseURL;
 
-@protocol OKSessionDelegate<NSObject>
+@protocol OKSessionDelegate <NSObject>
 @optional
--(void)okDidLogin;
--(void)okDidNotLogin:(BOOL)canceled;
--(void)okDidNotLoginWithError:(NSError *)error;
--(void)okDidExtendToken:(NSString *)accessToken;
--(void)okDidNotExtendToken:(NSError *)error;
--(void)okDidLogout;
+- (void)okDidLogin;
+
+- (void)okDidNotLogin:(BOOL)canceled;
+
+- (void)okDidNotLoginWithError:(NSError *)error;
+
+- (void)okDidExtendToken:(NSString *)accessToken;
+
+- (void)okDidNotExtendToken:(NSError *)error;
+
+- (void)okDidLogout;
 @end
 
-@interface OKSession : NSObject<OKRequestDelegate>{
-	NSString *_appId;
-	NSString *_appSecret;
-	NSString *_appKey;
-	NSArray *_permissions;
-	OKRequest *_tokenRequest;
-	__weak OKRequest *_refreshTokenRequest;
-	NSString *_accessToken;
-	NSString *_refreshToken;
-	__weak id<OKSessionDelegate>_delegate;
+@interface OKSession : NSObject <OKRequestDelegate> {
+    NSString *_appId;
+    NSString *_appSecret;
+    NSString *_appKey;
+    NSArray *_permissions;
+    OKRequest *_tokenRequest;
+    __weak OKRequest *_refreshTokenRequest;
+    NSString *_accessToken;
+    NSString *_refreshToken;
+    __weak id <OKSessionDelegate> _delegate;
 }
 @property(nonatomic, copy) NSString *appId;
 @property(nonatomic, retain) NSArray *permissions;
@@ -45,20 +50,23 @@ extern NSString* const kAPIBaseURL;
 @property(nonatomic, weak) OKRequest *refreshTokenRequest;
 
 
-+ (OKSession*)activeSession;
-+ (OKSession*)setActiveSession:(OKSession*)session;
++ (OKSession *)activeSession;
 
-+ (BOOL)openActiveSessionWithPermissions:(NSArray *)permissions appId:(NSString *)appID appSecret:(NSString*)secret;
++ (OKSession *)setActiveSession:(OKSession *)session;
 
-- (id)initWithAppID:(NSString *)appID permissions:(NSArray *)permissions appSecret:(NSString*)secret;
++ (BOOL)openActiveSessionWithPermissions:(NSArray *)permissions appId:(NSString *)appID appSecret:(NSString *)secret;
+
+- (id)initWithAppID:(NSString *)appID permissions:(NSArray *)permissions appSecret:(NSString *)secret;
+
 - (void)authorizeWithOKAppAuth:(BOOL)tryOKAppAuth
-					safariAuth:(BOOL)trySafariAuth;
+                    safariAuth:(BOOL)trySafariAuth;
 
 - (NSString *)getAppBaseUrl;
 
 - (void)refreshAuthToken;
 
-- (BOOL)handleOpenURL:(NSURL*)url;
+- (BOOL)handleOpenURL:(NSURL *)url;
+
 - (void)close;
 
 @end

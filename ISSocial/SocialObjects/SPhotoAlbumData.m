@@ -7,7 +7,6 @@
 //
 
 #import "SPhotoAlbumData.h"
-#import "MultiImage.h"
 
 @implementation SPhotoAlbumData
 

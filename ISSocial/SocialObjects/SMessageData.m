@@ -4,8 +4,7 @@
 #import "SMessageData.h"
 
 
-@implementation SMessageData
-{
+@implementation SMessageData {
 
 }
 

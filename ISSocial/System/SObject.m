@@ -10,7 +10,6 @@
 #import "SObject.h"
 #import "SocialConnectorOperation.h"
 #import "SocialConnector.h"
-#import "SPagingData.h"
 
 
 @interface SObject ()
@@ -19,22 +18,19 @@
 
 @end
 
-@implementation SObject
-{
+@implementation SObject {
 
 }
 
 @dynamic error, operation;
 
-- (void)dealloc
-{
+- (void)dealloc {
     if (self.objectId) {
         [_referencingDictionary removeObjectForKey:self.objectId];
     }
 }
 
-- (id)initWithHandler:(id)handler
-{
+- (id)initWithHandler:(id)handler {
     self = [super init];
     if (self) {
         self.handler = handler;
@@ -42,8 +38,7 @@
     return self;
 }
 
-- (id)initWithHandler:(SocialConnector *)handler state:(SObjectState)state
-{
+- (id)initWithHandler:(SocialConnector *)handler state:(SObjectState)state {
     self = [super init];
     if (self) {
         self.handler = handler;
@@ -52,32 +47,27 @@
     return self;
 }
 
-+ (id)objectWithHandler:(SocialConnector *)handler state:(SObjectState)state
-{
++ (id)objectWithHandler:(SocialConnector *)handler state:(SObjectState)state {
     return [[self alloc] initWithHandler:handler state:state];
 }
 
-+ (id)objectWithHandler:(SocialConnector *)handler
-{
++ (id)objectWithHandler:(SocialConnector *)handler {
     return [[self alloc] initWithHandler:handler];
 }
 
-+ (SObject *)successful
-{
++ (SObject *)successful {
     SObject *obj = [[SObject alloc] init];
     obj.state = SObjectStateSuccess;
     return obj;
 }
 
-+ (SObject *)failed
-{
++ (SObject *)failed {
     SObject *obj = [[SObject alloc] init];
     obj.state = SObjectStateFailed;
     return obj;
 }
 
-+ (SObject *)error:(NSError *)error
-{
++ (SObject *)error:(NSError *)error {
     NSLog(@"error = %@", error);
 
     SObject *obj = [[SObject alloc] init];
@@ -86,24 +76,20 @@
     return obj;
 }
 
-- (BOOL)isFailed
-{
+- (BOOL)isFailed {
     return _state == SObjectStateFailed || _state == SObjectStateUnsupported;
 }
 
-- (BOOL)isSuccessful
-{
+- (BOOL)isSuccessful {
     return !self.isFailed;
 }
 
-- (BOOL)isProcessing
-{
+- (BOOL)isProcessing {
     return _state == SObjectStateProcessing;
 }
 
 
-+ (SObject *)successful:(SObjectCompletionBlock)completion
-{
++ (SObject *)successful:(SObjectCompletionBlock)completion {
     if (completion) {
         completion([self successful]);
         return nil;
@@ -113,8 +99,7 @@
     }
 }
 
-+ (SObject *)failed:(SObjectCompletionBlock)completion
-{
++ (SObject *)failed:(SObjectCompletionBlock)completion {
     if (completion) {
         completion([self failed]);
         return nil;
@@ -124,8 +109,7 @@
     }
 }
 
-+ (SObject *)error:(NSError *)error completion:(SObjectCompletionBlock)completion
-{
++ (SObject *)error:(NSError *)error completion:(SObjectCompletionBlock)completion {
     if (completion) {
         completion([self error:error]);
         return nil;
@@ -135,10 +119,9 @@
     }
 }
 
-- (void)addSubObject:(SObject *)subObject
-{
+- (void)addSubObject:(SObject *)subObject {
     if (!subObject) {
-            return;
+        return;
     }
 
     if (!_subObjects) {
@@ -147,23 +130,20 @@
     [_subObjects addObject:subObject];
 }
 
-- (void)complete:(SObjectCompletionBlock)completion
-{
+- (void)complete:(SObjectCompletionBlock)completion {
     if (completion) {
-            completion(self);
+        completion(self);
     }
 }
 
-- (id)objectForKeyedSubscript:(id)key
-{
+- (id)objectForKeyedSubscript:(id)key {
     if ([key isKindOfClass:[NSString class]]) {
         return [self valueForKey:key];
     }
     return self.data[key];
 }
 
-- (void)setObject:(id)object forKeyedSubscript:(id)key
-{
+- (void)setObject:(id)object forKeyedSubscript:(id)key {
     if ([key isKindOfClass:[NSString class]]) {
         [self setValue:object forKey:key];
         return;
@@ -175,8 +155,7 @@
     self.data[key] = object;
 }
 
-- (id)copyWithZone:(NSZone *)zone
-{
+- (id)copyWithZone:(NSZone *)zone {
     SObject *copy = [[SObject alloc] initWithHandler:self.handler];
     copy.data = [[self data] mutableCopyWithZone:zone];
     copy.state = self.state;
@@ -187,31 +166,26 @@
     return copy;
 }
 
-- (NSUInteger)count
-{
+- (NSUInteger)count {
     return self.data.count;
 }
 
-- (id)objectForKey:(id)key
-{
-   return [self.data objectForKey:key];
+- (id)objectForKey:(id)key {
+    return [self.data objectForKey:key];
 }
 
-- (NSArray *)allKeys
-{
+- (NSArray *)allKeys {
     return [self.data allKeys];
 }
 
-- (void)setObjectId:(NSString *)objectId
-{
+- (void)setObjectId:(NSString *)objectId {
     if (_objectId && ![objectId isEqualToString:_objectId]) {
         [_referencingDictionary removeObjectForKey:self.objectId];
     }
     _objectId = objectId;
 }
 
-- (void)addSubObjects:(NSArray *)array
-{
+- (void)addSubObjects:(NSArray *)array {
     if (!_subObjects) {
         self.subObjects = [NSMutableArray arrayWithArray:array];
     }
@@ -220,16 +194,14 @@
     }
 }
 
-id dynamicGetterIMP(SObject *self, SEL _cmd)
-{
+id dynamicGetterIMP(SObject *self, SEL _cmd) {
 
     NSString *name = NSStringFromSelector(_cmd);
 
     return [self.data objectForKey:NSStringFromSelector(_cmd)];
 }
 
-void dynamicSetterIMP(SObject *self, SEL _cmd, id object)
-{
+void dynamicSetterIMP(SObject *self, SEL _cmd, id object) {
 
     NSString *sel = NSStringFromSelector(_cmd);
     sel = [sel substringWithRange:NSMakeRange(3, sel.length - 4)];
@@ -240,20 +212,19 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object)
         self.data = [NSMutableDictionary dictionaryWithCapacity:1];
     }
     if (object) {
-            [self.data setObject:object forKey:sel];
-        }
+        [self.data setObject:object forKey:sel];
+    }
     else {
-            [self.data removeObjectForKey:sel];
+        [self.data removeObjectForKey:sel];
     }
 }
 
-+ (BOOL)resolveInstanceMethod:(SEL)aSEL
-{
++ (BOOL)resolveInstanceMethod:(SEL)aSEL {
     NSString *name = NSStringFromSelector(aSEL);
 
     BOOL upper = NO;
     if (name.length > 3) {
-            upper = [[NSCharacterSet uppercaseLetterCharacterSet] characterIsMember:[name characterAtIndex:3]];
+        upper = [[NSCharacterSet uppercaseLetterCharacterSet] characterIsMember:[name characterAtIndex:3]];
     }
 
     if ([name hasSuffix:@":"]) {
@@ -271,37 +242,32 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object)
     return [super resolveClassMethod:aSEL];
 }
 
-- (id)valueForKey:(NSString *)key
-{
+- (id)valueForKey:(NSString *)key {
     id obj = [_data objectForKey:key];
     if (obj) {
-            return obj;
+        return obj;
     }
 
     return [super valueForKey:key];
 }
 
-+ (SObject *)objectCollectionWithHandler:(id)handler
-{
++ (SObject *)objectCollectionWithHandler:(id)handler {
 
     SObject *object = [[self alloc] initWithHandler:handler];
     object.subObjects = [NSMutableArray arrayWithCapacity:4];
     return object;
 }
 
-+ (id)object
-{
++ (id)object {
     return [[self alloc] init];
 }
 
-- (void)encodeWithCoder:(NSCoder *)coder
-{
+- (void)encodeWithCoder:(NSCoder *)coder {
     [coder encodeObject:_data forKey:@"data"];
     [coder encodeObject:_subObjects forKey:@"subObjets"];
 }
 
-- (id)initWithCoder:(NSCoder *)coder
-{
+- (id)initWithCoder:(NSCoder *)coder {
     if (self = [super init]) {
         _data = [coder decodeObjectForKey:@"data"];
         _subObjects = [coder decodeObjectForKey:@"subObjets"];
@@ -309,17 +275,14 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object)
     return self;
 }
 
-+ (id)objectWithState:(SObjectState)state
-{
++ (id)objectWithState:(SObjectState)state {
     SObject *object = [[SObject alloc] init];
     object.state = state;
     return object;
 }
 
 
-
-- (NSString *)description
-{
+- (NSString *)description {
     if (_data.count) {
         return _data.description;
     }
@@ -329,8 +292,7 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object)
     return @"SObject: empty";
 }
 
-- (NSString *)debugDescription
-{
+- (NSString *)debugDescription {
     if (_data.count) {
         return _data.debugDescription;
     }
@@ -340,8 +302,7 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object)
     return @"SObject: empty";
 }
 
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id __unsafe_unretained [])buffer count:(NSUInteger)len
-{
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len {
     if (_data.count) {
         return [_data countByEnumeratingWithState:state objects:buffer count:len];
     }
@@ -351,15 +312,13 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object)
 }
 
 
-- (void)cancelOperation
-{
+- (void)cancelOperation {
     SocialConnectorOperation *operation = self.operation;
     [operation cancel];
     self.operation = nil;
 }
 
-- (id)copyWithHandler:(id)handler
-{
+- (id)copyWithHandler:(id)handler {
 
     SObject *res = [self copy];
     res.handler = handler;
@@ -367,8 +326,7 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object)
     return res;
 }
 
-- (SObject *)loadNextPageWithCompletion:(SObjectCompletionBlock)completion
-{
+- (SObject *)loadNextPageWithCompletion:(SObjectCompletionBlock)completion {
     if (!self.handler || !self.pagingSelector) {
         completion([SObject failed]);
         return [SObject failed];
@@ -376,13 +334,11 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object)
     return [self.handler performSelector:self.pagingSelector withObject:self withObject:completion];
 }
 
-- (BOOL)isDeletable
-{
+- (BOOL)isDeletable {
     return self.canDelete.boolValue && self.handler && self.deletionSelector;
 }
 
-- (SObject *)deleteObject:(SObjectCompletionBlock)completion
-{
+- (SObject *)deleteObject:(SObjectCompletionBlock)completion {
     if (!self.isDeletable) {
         completion([SObject failed]);
         return [SObject failed];
@@ -391,32 +347,26 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object)
 }
 
 
-- (void)combinedLoadNextPageWithCompletion:(SObjectCompletionBlock)completion
-{
+- (void)combinedLoadNextPageWithCompletion:(SObjectCompletionBlock)completion {
     SObject *result = [self copy];
     [result.subObjects removeAllObjects];
 
-    [self.subObjects asyncEach:^(id object, ISArrayAsyncEachResultBlock next)
-    {
-        [object loadNextPageWithCompletion:^(SObject *updated)
-        {
+    [self.subObjects asyncEach:^(id object, ISArrayAsyncEachResultBlock next) {
+        [object loadNextPageWithCompletion:^(SObject *updated) {
             [result addSubObject:updated];
             next(nil);
         }];
-    }              comletition:^(NSError *errorOrNil)
-    {
+    }              comletition:^(NSError *errorOrNil) {
         completion(result);
     }];
 }
 
-- (void)fireUpdateNotification
-{
+- (void)fireUpdateNotification {
     [[NSNotificationCenter defaultCenter] postNotificationName:kSObjectDidUpdated object:self];
 }
 
 
-- (NSMutableArray *)combinedSubobjectsSortedBy:(NSString *)key ascending:(BOOL)ascending
-{
+- (NSMutableArray *)combinedSubobjectsSortedBy:(NSString *)key ascending:(BOOL)ascending {
     NSMutableArray *array = [NSMutableArray array];
 
     for (SObject *subObject in self.subObjects) {

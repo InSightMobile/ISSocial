@@ -6,14 +6,12 @@
 
 // TODO: Optimization needed
 
-@implementation ISSFeedConsolidation
-{
+@implementation ISSFeedConsolidation {
 
     NSMutableArray *_consolidatedContent;
 }
 
-- (SObject *)loadDataWithConnector:(SocialConnector *)connector params:(SObject *)params operation:(SEL)operation sortingKey:(NSString *)key ascending:(BOOL)ascending completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)loadDataWithConnector:(SocialConnector *)connector params:(SObject *)params operation:(SEL)operation sortingKey:(NSString *)key ascending:(BOOL)ascending completion:(SObjectCompletionBlock)completion {
     self.sorkKey = key;
     self.ascending = ascending;
 
@@ -27,8 +25,7 @@
     }];
 }
 
-- (void)consolidateContent:(SObject *)result
-{
+- (void)consolidateContent:(SObject *)result {
     NSArray *descriptors = @[[NSSortDescriptor sortDescriptorWithKey:_sorkKey ascending:_ascending]];
     NSComparisonResult ordering = _ascending ? NSOrderedDescending : NSOrderedAscending;
 
@@ -114,8 +111,7 @@
     _consolidatedContent = resultData;
 }
 
-- (SObject *)loadDataMoreContentWithCompletion:(SObjectCompletionBlock)completion
-{
+- (SObject *)loadDataMoreContentWithCompletion:(SObjectCompletionBlock)completion {
     [_dataSource combinedLoadNextPageWithCompletion:^(SObject *result) {
         self.dataSource = result;
         [self consolidateContent:result];
@@ -124,8 +120,7 @@
     return nil;
 }
 
-- (NSArray *)consolidatedContent
-{
+- (NSArray *)consolidatedContent {
 
     return _consolidatedContent;
 }

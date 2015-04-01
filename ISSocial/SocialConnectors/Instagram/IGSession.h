@@ -7,8 +7,7 @@
 #import "WebLoginController.h"
 
 
-typedef enum
-{
+typedef enum {
     IGSessionStateOpen,
     IGSessionStateClosedLoginFailed,
     IGSessionStateClosed

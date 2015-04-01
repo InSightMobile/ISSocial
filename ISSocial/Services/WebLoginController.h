@@ -11,8 +11,7 @@
 @class WebLoginController;
 @class SocialConnectorOperation;
 
-typedef enum
-{
+typedef enum {
 
     WebLoginDoNotLoad,
     WebLoginLoadHidden,

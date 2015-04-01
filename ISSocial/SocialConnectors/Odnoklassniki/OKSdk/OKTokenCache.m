@@ -1,11 +1,10 @@
-
 #import "OKTokenCache.h"
 
-static NSString * const OKTokenKey = @"ru.odnoklassniki.sdk:TokenKey";
+static NSString *const OKTokenKey = @"ru.odnoklassniki.sdk:TokenKey";
 
-NSString * const kOKAccessTokenKey = @"access_token";
-NSString * const kOKRefreshTokenKey = @"refresh_token";
-NSString * const kOKPermissionsKey = @"permissions";
+NSString *const kOKAccessTokenKey = @"access_token";
+NSString *const kOKRefreshTokenKey = @"refresh_token";
+NSString *const kOKPermissionsKey = @"permissions";
 
 @implementation OKTokenCache
 
@@ -21,20 +20,20 @@ NSString * const kOKPermissionsKey = @"permissions";
 }
 
 - (void)cacheTokenInformation:(NSDictionary *)tokenInfo {
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setObject:tokenInfo forKey:OKTokenKey];
-	[defaults synchronize];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:tokenInfo forKey:OKTokenKey];
+    [defaults synchronize];
 }
 
 - (NSDictionary *)tokenInfo {
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	return [defaults objectForKey:OKTokenKey];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults objectForKey:OKTokenKey];
 }
 
 - (void)clearToken {
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults removeObjectForKey:OKTokenKey];
-	[defaults synchronize];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:OKTokenKey];
+    [defaults synchronize];
 }
 
 @end

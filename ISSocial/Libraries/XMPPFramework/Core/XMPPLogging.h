@@ -1,62 +1,62 @@
 /**
- * In order to provide fast and flexible logging, this project uses Cocoa Lumberjack.
- * 
- * The GitHub project page has a wealth of documentation if you have any questions.
- * https://github.com/robbiehanson/CocoaLumberjack
- * 
- * Here's what you need to know concerning how logging is setup for XMPPFramework:
- * 
- * There are 4 log levels:
- * - Error
- * - Warning
- * - Info
- * - Verbose
- * 
- * In addition to this, there is a Trace flag that can be enabled.
- * When tracing is enabled, it spits out the methods that are being called.
- * 
- * Please note that tracing is separate from the log levels.
- * For example, one could set the log level to warning, and enable tracing.
- * 
- * All logging is asynchronous, except errors.
- * To use logging within your own custom files, follow the steps below.
- * 
- * Step 1:
- * Import this header in your implementation file:
- * 
- * #import "XMPPLogging.h"
- * 
- * Step 2:
- * Define your logging level in your implementation file:
- * 
- * // Log levels: off, error, warn, info, verbose
- * static const int xmppLogLevel = XMPP_LOG_LEVEL_VERBOSE;
- * 
- * If you wish to enable tracing, you could do something like this:
- * 
- * // Log levels: off, error, warn, info, verbose
- * static const int xmppLogLevel = XMPP_LOG_LEVEL_INFO | XMPP_LOG_FLAG_TRACE;
- * 
- * Step 3:
- * Replace your NSLog statements with XMPPLog statements according to the severity of the message.
- * 
- * NSLog(@"Fatal error, no dohickey found!"); -> XMPPLogError(@"Fatal error, no dohickey found!");
- * 
- * XMPPLog has the same syntax as NSLog.
- * This means you can pass it multiple variables just like NSLog.
- * 
- * You may optionally choose to define different log levels for debug and release builds.
- * You can do so like this:
- * 
- * // Log levels: off, error, warn, info, verbose
- * #if DEBUG
- *   static const int xmppLogLevel = XMPP_LOG_LEVEL_VERBOSE;
- * #else
- *   static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
- * #endif
- * 
- * Xcode projects created with Xcode 4 automatically define DEBUG via the project's preprocessor macros.
- * If you created your project with a previous version of Xcode, you may need to add the DEBUG macro manually.
+* In order to provide fast and flexible logging, this project uses Cocoa Lumberjack.
+*
+* The GitHub project page has a wealth of documentation if you have any questions.
+* https://github.com/robbiehanson/CocoaLumberjack
+*
+* Here's what you need to know concerning how logging is setup for XMPPFramework:
+*
+* There are 4 log levels:
+* - Error
+* - Warning
+* - Info
+* - Verbose
+*
+* In addition to this, there is a Trace flag that can be enabled.
+* When tracing is enabled, it spits out the methods that are being called.
+*
+* Please note that tracing is separate from the log levels.
+* For example, one could set the log level to warning, and enable tracing.
+*
+* All logging is asynchronous, except errors.
+* To use logging within your own custom files, follow the steps below.
+*
+* Step 1:
+* Import this header in your implementation file:
+*
+* #import "XMPPLogging.h"
+*
+* Step 2:
+* Define your logging level in your implementation file:
+*
+* // Log levels: off, error, warn, info, verbose
+* static const int xmppLogLevel = XMPP_LOG_LEVEL_VERBOSE;
+*
+* If you wish to enable tracing, you could do something like this:
+*
+* // Log levels: off, error, warn, info, verbose
+* static const int xmppLogLevel = XMPP_LOG_LEVEL_INFO | XMPP_LOG_FLAG_TRACE;
+*
+* Step 3:
+* Replace your NSLog statements with XMPPLog statements according to the severity of the message.
+*
+* NSLog(@"Fatal error, no dohickey found!"); -> XMPPLogError(@"Fatal error, no dohickey found!");
+*
+* XMPPLog has the same syntax as NSLog.
+* This means you can pass it multiple variables just like NSLog.
+*
+* You may optionally choose to define different log levels for debug and release builds.
+* You can do so like this:
+*
+* // Log levels: off, error, warn, info, verbose
+* #if DEBUG
+*   static const int xmppLogLevel = XMPP_LOG_LEVEL_VERBOSE;
+* #else
+*   static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
+* #endif
+*
+* Xcode projects created with Xcode 4 automatically define DEBUG via the project's preprocessor macros.
+* If you created your project with a previous version of Xcode, you may need to add the DEBUG macro manually.
 **/
 
 #import "DDLog.h"

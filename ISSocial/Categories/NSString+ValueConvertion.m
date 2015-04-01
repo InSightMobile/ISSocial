@@ -8,16 +8,14 @@
 
 @implementation NSString (ValueConvertion)
 
-- (NSString *)stringByDecodeFromPercentEscapes
-{
+- (NSString *)stringByDecodeFromPercentEscapes {
     return (__bridge_transfer NSString *) CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL,
             (__bridge CFStringRef) self,
             CFSTR(""),
             kCFStringEncodingUTF8);
 }
 
-- (NSDictionary *)explodeURLQuery
-{
+- (NSDictionary *)explodeURLQuery {
     NSArray *arrParameters = [self componentsSeparatedByString:@"&"];
     NSMutableDictionary *dictParameters = [NSMutableDictionary dictionaryWithCapacity:arrParameters.count];
 

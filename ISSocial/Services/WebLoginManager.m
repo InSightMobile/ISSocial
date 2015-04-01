@@ -12,14 +12,12 @@
 @property(nonatomic, strong) NSOperationQueue *queue;
 @end
 
-@implementation WebLoginManager
-{
+@implementation WebLoginManager {
 
 }
 
 
-+ (WebLoginManager *)instance
-{
++ (WebLoginManager *)instance {
     static WebLoginManager *_instance = nil;
     static dispatch_once_t pred;
     dispatch_once(&pred, ^{
@@ -28,8 +26,7 @@
     return _instance;
 }
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         self.queue = [[NSOperationQueue alloc] init];
@@ -39,19 +36,17 @@
     return self;
 }
 
-- (WebLoginController *)loadLoginController
-{
+- (WebLoginController *)loadLoginController {
     return [[WebLoginController alloc] init];
 
-    UIStoryboard *st =[[UIApplication sharedApplication].windows[0] rootViewController].storyboard;
+    UIStoryboard *st = [[UIApplication sharedApplication].windows[0] rootViewController].storyboard;
 
     WebLoginController *controller = [st instantiateViewControllerWithIdentifier:@"webLogin"];
 
     return controller;
 }
 
-- (void)addLoginOperation:(AsyncBlockOperation *)operation
-{
+- (void)addLoginOperation:(AsyncBlockOperation *)operation {
     [self.queue addOperation:operation];
 }
 @end

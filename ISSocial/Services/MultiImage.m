@@ -4,8 +4,7 @@
 #import "MultiImage.h"
 
 
-@implementation MultiImage
-{
+@implementation MultiImage {
     NSMutableArray *_images;
     float _baseQuality;
     float _aspect;
@@ -15,21 +14,18 @@
     BOOL _sorted;
 }
 
-- (BOOL)isAspectKnown
-{
+- (BOOL)isAspectKnown {
     return _aspect > 0.01;
 }
 
-- (CGFloat)aspect
-{
+- (CGFloat)aspect {
     if (self.isAspectKnown) {
         return _aspect;
     }
     return 1;
 }
 
-- (void)addImageURL:(NSURL *)url forWitdh:(NSUInteger)width height:(NSUInteger)height
-{
+- (void)addImageURL:(NSURL *)url forWitdh:(NSUInteger)width height:(NSUInteger)height {
     if (!url) {
         return;
     }
@@ -54,8 +50,7 @@
     [self addImageData:data];
 }
 
-- (id)initWithURL:(NSURL *)url
-{
+- (id)initWithURL:(NSURL *)url {
     NSAssert([url isKindOfClass:[NSURL class]], @"Invalid url");
 
     self = [super init];
@@ -67,13 +62,11 @@
     return self;
 }
 
-- (CGFloat)baseQuality
-{
+- (CGFloat)baseQuality {
     return _baseQuality > 0 ? _baseQuality : 1.0f;
 }
 
-- (void)addImageURL:(NSURL *)url quality:(CGFloat)quality
-{
+- (void)addImageURL:(NSURL *)url quality:(CGFloat)quality {
     if (!url) {
         return;
     }
@@ -96,21 +89,18 @@
     [self addImageData:data];
 }
 
-- (NSUInteger)count
-{
+- (NSUInteger)count {
     return _images.count;
 }
 
-- (NSURL *)previewURL
-{
+- (NSURL *)previewURL {
     if (!_images.count) {
         return nil;
     }
     return [_images[0] url];
 }
 
-- (void)setBaseQuality:(float)quality forWitdh:(int)width height:(int)height
-{
+- (void)setBaseQuality:(float)quality forWitdh:(int)width height:(int)height {
     _baseQuality = quality;
     _baseWidth = width;
     _baseHeight = height;
@@ -119,8 +109,7 @@
     }
 }
 
-- (ISSImageCollectionData *)bestImageForWidth:(CGFloat)width height:(CGFloat)height
-{
+- (ISSImageCollectionData *)bestImageForWidth:(CGFloat)width height:(CGFloat)height {
     if (_imageWightHeightParamURLFormat) {
         ISSImageCollectionData *data = [ISSImageCollectionData new];
         data.width = (NSUInteger) width;
@@ -142,7 +131,7 @@
     ISSImageCollectionData *data = nil;
 
     for (ISSImageCollectionData *image in _images) {
-        if(image.diagonal >= diagonal) {
+        if (image.diagonal >= diagonal) {
             CGFloat diff = fabsf(image.diagonal - diagonal);
             if (diff < minDiff) {
                 minDiff = diff;
@@ -151,15 +140,14 @@
         }
     }
 
-    if(!data) {
+    if (!data) {
         return _images.lastObject;
     }
 
     return data;
 }
 
-- (void)sortIfNeeded
-{
+- (void)sortIfNeeded {
     if (_sorted) {
         return;
     }
@@ -169,19 +157,16 @@
     _sorted = YES;
 }
 
-- (ISSImageCollectionData *)bestAviableImage
-{
+- (ISSImageCollectionData *)bestAviableImage {
     [self sortIfNeeded];
     return [_images lastObject];
 }
 
-- (void)addImageURL:(NSURL *)url forSize:(int)size
-{
+- (void)addImageURL:(NSURL *)url forSize:(int)size {
     [self addImageURL:url forWitdh:size height:size];
 }
 
-- (void)addImage:(UIImage *)image
-{
+- (void)addImage:(UIImage *)image {
     ISSImageCollectionData *data = [ISSImageCollectionData new];
 
     data.width = (NSUInteger) image.size.width;
@@ -192,8 +177,7 @@
     [self addImageData:data];
 }
 
-- (void)addImageData:(ISSImageCollectionData *)imageData
-{
+- (void)addImageData:(ISSImageCollectionData *)imageData {
     if (!_images) {
         _images = [NSMutableArray arrayWithCapacity:1];
     }
@@ -203,13 +187,11 @@
 }
 
 
-- (void)setImageWightHeightURLFormat:(NSString *)format
-{
+- (void)setImageWightHeightURLFormat:(NSString *)format {
     _imageWightHeightParamURLFormat = format;
 }
 
-- (instancetype)initWithWightHeightURLFormat:(NSString *)imageWightHeightParamURLFormat
-{
+- (instancetype)initWithWightHeightURLFormat:(NSString *)imageWightHeightParamURLFormat {
     self = [super init];
     if (self) {
         _imageWightHeightParamURLFormat = imageWightHeightParamURLFormat;

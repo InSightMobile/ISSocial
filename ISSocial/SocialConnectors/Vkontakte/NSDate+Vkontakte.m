@@ -12,8 +12,7 @@
 @implementation NSDate (Vkontakte)
 
 
-+ (NSDate *)dateWithVkontakteBirthdayString:(id)data
-{
++ (NSDate *)dateWithVkontakteBirthdayString:(id)data {
     if ([data isKindOfClass:[NSNumber class]]) {
         return [NSDate dateWithTimeIntervalSince1970:[data doubleValue]];
     }
@@ -21,14 +20,13 @@
     //2010-12-01T21:35:43+0000
     [df setDateFormat:@"dd.MM.yyyy"];
     NSDate *date = [df dateFromString:data];
-    if(!date) {
-        return  [self dateWithVkontakteBirthdayNoYearString:data];
+    if (!date) {
+        return [self dateWithVkontakteBirthdayNoYearString:data];
     }
     return date;
 }
 
-+ (NSDate *)dateWithVkontakteBirthdayNoYearString:(id)data
-{
++ (NSDate *)dateWithVkontakteBirthdayNoYearString:(id)data {
     if ([data isKindOfClass:[NSNumber class]]) {
         return [NSDate dateWithTimeIntervalSince1970:[data doubleValue]];
     }

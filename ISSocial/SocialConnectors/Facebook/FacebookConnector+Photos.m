@@ -21,8 +21,7 @@ static const int kPageSize = 20;
 
 @implementation FacebookConnector (Photos)
 
-- (SObject *)parsePhoto:(id)data
-{
+- (SObject *)parsePhoto:(id)data {
     NSLog(@"data = %@", data);
 
     NSString *objectId = [data[@"id"] stringValue];
@@ -87,13 +86,11 @@ static const int kPageSize = 20;
     return result;
 }
 
-- (SObject *)readPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self readAllPhotos:params completion:completion];
 }
 
-- (SObject *)readUploadedPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUploadedPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"me/photos/uploaded" operation:operation processor:^(id response) {
 
@@ -108,8 +105,7 @@ static const int kPageSize = 20;
     }];
 }
 
-- (SObject *)readAllPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readAllPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         SObject *result = [SObject objectCollectionWithHandler:self];
@@ -150,8 +146,7 @@ static const int kPageSize = 20;
     }];
 }
 
-- (SObject *)readPhotosFromAlbum:(SPhotoAlbumData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readPhotosFromAlbum:(SPhotoAlbumData *)params completion:(SObjectCompletionBlock)completion {
     if (!params.objectId) {
         return [self readUploadedPhotos:params completion:completion];
     }
@@ -173,8 +168,7 @@ static const int kPageSize = 20;
     }];
 }
 
-- (SObject *)parsePhotosWithResponse:(NSDictionary *)response method:(NSString *)method parameters:(NSDictionary *)parameters
-{
+- (SObject *)parsePhotosWithResponse:(NSDictionary *)response method:(NSString *)method parameters:(NSDictionary *)parameters {
     SObject *result = [[SObject alloc] initWithHandler:self];
 
     for (id photoData in response[@"data"]) {
@@ -192,8 +186,7 @@ static const int kPageSize = 20;
     return result;
 }
 
-- (SObject *)pagePhotos:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)pagePhotos:(SObject *)params completion:(SObjectCompletionBlock)completion {
     SPagingData *paging = params.pagingObject;
     NSMutableDictionary *parameters = [paging.params mutableCopy];
 
@@ -272,8 +265,7 @@ static const int kPageSize = 20;
 }
 */
 
-- (SObject *)createPhotoAlbum:(SPhotoAlbumData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)createPhotoAlbum:(SPhotoAlbumData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self checkAuthorizationFor:@[@"publish_actions"] operation:operation processor:^(id obj) {
 
@@ -295,8 +287,7 @@ static const int kPageSize = 20;
     }];
 }
 
-- (void)readWallAlbumWithOperation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
-{
+- (void)readWallAlbumWithOperation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion {
     if (self.wallAlbum) {
         completion(self.wallAlbum);
         return;
@@ -326,8 +317,7 @@ static const int kPageSize = 20;
     }];
 }
 
-- (SPhotoAlbumData *)parseAlbumData:(NSDictionary *)albumData
-{
+- (SPhotoAlbumData *)parseAlbumData:(NSDictionary *)albumData {
     SPhotoAlbumData *album = [[SPhotoAlbumData alloc] initWithHandler:self];
     album.objectId = albumData[@"id"];
     album.title = albumData[@"name"];
@@ -346,8 +336,7 @@ static const int kPageSize = 20;
 
 - (SObject *)readPhotoAlbums:(SReadAlbumsParameters *)params
                   completion:
-                          (SObjectCompletionBlock)completion
-{
+                          (SObjectCompletionBlock)completion {
     NSString *fields = @"id,name,description,count,can_upload,type,cover_photo";
 
     return [self fetchDataWithPath:@"me/albums" parameters:@{@"fields" : fields} params:params completion:completion processor:^(NSDictionary *response, SocialConnectorOperation *operation) {
@@ -382,12 +371,12 @@ static const int kPageSize = 20;
                     if (coverPhoto) {
                         [self simpleMethod:[NSString stringWithFormat:@"%@/", coverPhoto]
                                  operation:operation processor:^(id response) {
-                            NSLog(@"response = %@", response);
+                                    NSLog(@"response = %@", response);
 
-                            SPhotoData *photo = [self parsePhoto:response];
-                            album.multiImage = photo.multiImage;
-                            next(nil);
-                        }];
+                                    SPhotoData *photo = [self parsePhoto:response];
+                                    album.multiImage = photo.multiImage;
+                                    next(nil);
+                                }];
                     }
                     else {
                         next(nil);
@@ -410,22 +399,21 @@ static const int kPageSize = 20;
 }
 
 - (SObject *)getDefaultPhotoAlbum:(SObject *)params
-                       completion: (SObjectCompletionBlock)completion
-{
+                       completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"me/albums" operation:operation processor:^(NSDictionary *response) {
 
             NSLog(@"response = %@", response);
             NSArray *data = response[@"data"];
             if (data.count) {
-                for(NSDictionary *albumData in data) {
+                for (NSDictionary *albumData in data) {
                     SPhotoAlbumData *album = [self parseAlbumData:albumData];
-                    if(album.canUpload.boolValue) {
-                        if([album.title isEqualToString:self.defaultAlbumName]) {
+                    if (album.canUpload.boolValue) {
+                        if ([album.title isEqualToString:self.defaultAlbumName]) {
                             [operation complete:album];
                             return;
                         }
-                        if([album.title isEqualToString:[NSString stringWithFormat:@"%@ Photos",self.defaultAlbumName]]) {
+                        if ([album.title isEqualToString:[NSString stringWithFormat:@"%@ Photos", self.defaultAlbumName]]) {
                             [operation complete:album];
                             return;
                         }
@@ -441,15 +429,13 @@ static const int kPageSize = 20;
 
 - (SObject *)addPhotoToAlbum:(SPhotoData *)params
                   completion:
-                          (SObjectCompletionBlock)completionn
-{
+                          (SObjectCompletionBlock)completionn {
     return [self addPhotoWithParams:params completion:completionn];
 }
 
 - (SObject *)addPhoto:(SPhotoData *)srcParams
            completion:
-                   (SObjectCompletionBlock)completion
-{
+                   (SObjectCompletionBlock)completion {
     SPhotoData *params = [srcParams copy];
     params.album = nil;
 
@@ -458,8 +444,7 @@ static const int kPageSize = 20;
 
 - (SObject *)addPhotoWithParams:(SPhotoData *)params
                      completion:
-                             (SObjectCompletionBlock)completion
-{
+                             (SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         SPhotoAlbumData *photoAlbum = params.album;
@@ -497,15 +482,14 @@ static const int kPageSize = 20;
 - (void)uploadPhoto:(SPhotoData *)photo
              toPath:(NSString *)path
           operation:(SocialConnectorOperation *)operation
-         completion:(SObjectCompletionBlock)completion
-{
+         completion:(SObjectCompletionBlock)completion {
 
     [self checkAuthorizationFor:@[@"publish_actions"] operation:operation processor:^(id obj) {
 
-        NSMutableDictionary *params= [NSMutableDictionary new];
+        NSMutableDictionary *params = [NSMutableDictionary new];
 
         params[@"source"] = photo.sourceImage;
-        if(photo.title.length) {
+        if (photo.title.length) {
             params[@"message"] = photo.title;
         }
 
@@ -539,29 +523,25 @@ static const int kPageSize = 20;
 
 - (SObject *)addPhotoLike:(SPhotoData *)feed
                completion:
-                       (SObjectCompletionBlock)completion
-{
+                       (SObjectCompletionBlock)completion {
     return [self addFeedLike:(id) feed completion:completion];
 }
 
 - (SObject *)removePhotoLike:(SPhotoData *)feed
                   completion:
-                          (SObjectCompletionBlock)completion
-{
+                          (SObjectCompletionBlock)completion {
     return [self removeFeedLike:(id) feed completion:completion];
 }
 
 - (SObject *)addPhotoComment:(SPhotoData *)comments
                   completion:
-                          (SObjectCompletionBlock)completion
-{
+                          (SObjectCompletionBlock)completion {
     return [self addFeedComment:(id) comments completion:completion];
 }
 
 - (SObject *)readPhotoComments:(SPhotoData *)feed
                     completion:
-                            (SObjectCompletionBlock)completion
-{
+                            (SObjectCompletionBlock)completion {
     return [self readFeedComments:(id) feed completion:completion];
 }
 

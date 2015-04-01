@@ -13,19 +13,16 @@
 
 @implementation VkontakteConnector (UserData)
 
-- (NSString *)profileFields
-{
+- (NSString *)profileFields {
     return @"first_name,last_name,photo_50,photo_100,photo_200_orig,photo_200,photo_400_orig,photo_max,photo_max_orig,photo_id,bdate,city,country,sex,screen_name";
 }
 
-- (NSString *)userFields
-{
+- (NSString *)userFields {
     return @"uid,first_name,last_name,bdate,photo_50,photo_100,photo_200_orig";
 }
 
 
-- (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
-{
+- (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion {
     if (!usersData.count) {
         completion(nil);
         return;
@@ -46,8 +43,7 @@
 }
 
 
-- (void)updateCountryCodesWithOperation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
-{
+- (void)updateCountryCodesWithOperation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion {
     NSArray *countryArray = [NSLocale ISOCountryCodes];
     if (self.countryCodesById) {
         completion([SObject successful]);
@@ -68,8 +64,7 @@
             }];
 }
 
-- (SObject *)parseUserData:(NSDictionary *)userInfo
-{
+- (SObject *)parseUserData:(NSDictionary *)userInfo {
 
     NSString *userId = userInfo[@"id"];
 
@@ -146,8 +141,7 @@
     return userData;
 }
 
-- (SObject *)parseUsersData:(id)response
-{
+- (SObject *)parseUsersData:(id)response {
     SObject *result = [SObject objectCollectionWithHandler:self];
     for (NSDictionary *userInfo in response) {
         if ([userInfo isKindOfClass:[NSDictionary class]]) {
@@ -160,8 +154,7 @@
 - (void)updateOnlineStatus:(SUserData *)params
                      users:(NSArray *)users
                  operation:(SocialConnectorOperation *)operation
-                completion:(SObjectCompletionBlock)completion
-{
+                completion:(SObjectCompletionBlock)completion {
     NSString *userId = params.objectId;
     if (!userId) {
         userId = self.userId;
@@ -204,8 +197,7 @@
             }];
 }
 
-- (SObject *)readUserFriendsOnline:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUserFriendsOnline:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self updateOnlineStatus:params users:nil operation:operation completion:^(SObject *result) {
@@ -214,8 +206,7 @@
     }];
 }
 
-- (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSString *userId = params.objectId;
@@ -225,7 +216,7 @@
 
         NSDictionary *const parameters = @{
                 @"uid" : userId,
-                @"photo_sizes": @1,
+                @"photo_sizes" : @1,
                 @"fields" : self.userFields
         };
 
@@ -242,8 +233,7 @@
     }];
 }
 
-- (SObject *)acceptUserFriendRequest:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)acceptUserFriendRequest:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSString *userId = params.objectId;
@@ -257,8 +247,7 @@
     }];
 }
 
-- (SObject *)rejectUserFriendRequest:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)rejectUserFriendRequest:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSString *userId = params.objectId;
@@ -272,8 +261,7 @@
     }];
 }
 
-- (SObject *)readUserFriendRequests:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUserFriendRequests:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSString *userId = params.objectId;
@@ -302,8 +290,7 @@
     }];
 }
 
-- (SObject *)readUserData:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUserData:(SUserData *)params completion:(SObjectCompletionBlock)completion {
 
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -335,14 +322,11 @@
 }
 
 
-
-- (SUserData *)dataForUserId:(NSString *)userId
-{
+- (SUserData *)dataForUserId:(NSString *)userId {
     return (SUserData *) [self mediaObjectForId:userId type:@"users"];
 }
 
-- (SObject *)readUserMutualFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUserMutualFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self readUserFriends:params completion:completion];
 }
 

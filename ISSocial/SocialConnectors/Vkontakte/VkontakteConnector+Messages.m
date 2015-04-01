@@ -15,8 +15,7 @@
 
 @implementation VkontakteConnector (Messages)
 
-- (SMessageData *)parseMessageData:(NSDictionary *)info
-{
+- (SMessageData *)parseMessageData:(NSDictionary *)info {
     NSLog(@"info = %@", info);
 
     NSString *objectId = [info[@"mid"] stringValue];
@@ -49,19 +48,16 @@
     return messageData;
 }
 
-- (SObject *)readMessageUpdates:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readMessageUpdates:(SObject *)params completion:(SObjectCompletionBlock)completion {
     SObject *operation = [self operationWithObject:params completion:completion];
     [self addPullReceiver:operation.copy forArea:@"messages"];
     return operation;
 }
 
-- (SObject *)postMessage:(SMessageData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)postMessage:(SMessageData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        [self uploadAttachments:params.attachments owner:nil destination:@"message" operation:operation completion:^(NSArray *attachments)
-        {
+        [self uploadAttachments:params.attachments owner:nil destination:@"message" operation:operation completion:^(NSArray *attachments) {
 
             NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
 
@@ -73,16 +69,14 @@
 
             if (attachments.count) {
 
-                NSString *attach = [[attachments.rac_sequence map:^id(id <SMultimediaObject> obj)
-                {
+                NSString *attach = [[attachments.rac_sequence map:^id(id <SMultimediaObject> obj) {
                     return [NSString stringWithFormat:@"%@%@", obj.mediaType, obj.objectId];
                 }].array componentsJoinedByString:@","];
 
                 parameters[@"attachment"] = attach;
             }
 
-            [self simpleMethod:@"messages.send" parameters:parameters operation:operation processor:^(NSArray* response)
-            {
+            [self simpleMethod:@"messages.send" parameters:parameters operation:operation processor:^(NSArray *response) {
 
                 NSLog(@"response = %@", response);
 
@@ -90,8 +84,7 @@
                     response = response[0];
                 }
 
-                [self simpleMethod:@"messages.getById" parameters:@{@"mid" : response} operation:operation processor:^(id response)
-                {
+                [self simpleMethod:@"messages.getById" parameters:@{@"mid" : response} operation:operation processor:^(id response) {
 
                     for (NSDictionary *info in response) {
 
@@ -108,18 +101,15 @@
     }];
 }
 
-- (SObject *)readMessagesForTread:(SMessageThread *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readMessagesForTread:(SMessageThread *)params completion:(SObjectCompletionBlock)completion {
     return [self readMessageHistory:params.messageCompanion completion:completion];
 }
 
-- (SObject *)markMessagesAsRead:(SMessageThread *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)markMessagesAsRead:(SMessageThread *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        NSString *mids = [[[params.subObjects.rac_sequence filter:^BOOL(SMessageData *obj)
-        {
-             return obj.isUnread.boolValue;
+        NSString *mids = [[[params.subObjects.rac_sequence filter:^BOOL(SMessageData *obj) {
+            return obj.isUnread.boolValue;
         }].array valueForKey:@"objectId"] componentsJoinedByString:@","];
 
 
@@ -136,8 +126,7 @@
     }];
 }
 
-- (SObject *)pageMessageHistory:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)pageMessageHistory:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSString *userId = [(SUserData *) params objectId];
@@ -153,8 +142,7 @@
     }];
 }
 
-- (SObject *)readMessageHistory:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readMessageHistory:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSString *userId = [(SUserData *) params objectId];
@@ -171,8 +159,7 @@
     }];
 }
 
-- (SObject *)parseMessages:(id)response paging:(SObject *)paging
-{
+- (SObject *)parseMessages:(id)response paging:(SObject *)paging {
     SObject *result = [SObject objectCollectionWithHandler:self];
     NSLog(@"response = %@", response);
     int count = 0;
@@ -202,8 +189,7 @@
     return result;
 }
 
-- (SObject *)readDialogs:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readDialogs:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"messages.getDialogs" parameters:nil operation:operation processor:^(id response) {
             SObject *result = [SObject objectCollectionWithHandler:self];
@@ -226,8 +212,7 @@
     }];
 }
 
-- (SObject *)readMessages:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readMessages:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"messages.get" parameters:nil operation:operation processor:^(id response) {
@@ -250,8 +235,7 @@
     }];
 }
 
-- (SObject *)readUnreadMessages:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUnreadMessages:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"messages.get" parameters:@{@"filters" : @"1"} operation:operation processor:^(id response) {

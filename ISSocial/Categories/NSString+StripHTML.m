@@ -7,8 +7,7 @@
 #import "NSString+StripHTML.h"
 #import "RegexKitLite.h"
 
-@interface NSString_stripHtml_XMLParsee : NSObject <NSXMLParserDelegate>
-{
+@interface NSString_stripHtml_XMLParsee : NSObject <NSXMLParserDelegate> {
 @private
     NSMutableArray *strings;
 }
@@ -16,34 +15,29 @@
 @end
 
 @implementation NSString_stripHtml_XMLParsee
-- (id)init
-{
+- (id)init {
     if ((self = [super init])) {
         strings = [[NSMutableArray alloc] init];
     }
     return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     //[strings release];
     //[super dealloc];
 }
 
-- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
-{
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
     [strings addObject:string];
 }
 
-- (NSString *)getCharsFound
-{
+- (NSString *)getCharsFound {
     return [strings componentsJoinedByString:@""];
 }
 @end
 
 @implementation NSString (StripHtml)
-- (NSString *)stripHtml
-{
+- (NSString *)stripHtml {
     // take this string obj and wrap it in a root element to ensure only a single root element exists
 
     NSString *string = [self stringByReplacingOccurrencesOfRegex:@"<\\s*br\\s*/?>" withString:@"\n"];

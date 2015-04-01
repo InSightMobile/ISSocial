@@ -10,28 +10,24 @@
 
 @end
 
-@implementation ISSAuthorisationInfo
-{
+@implementation ISSAuthorisationInfo {
 
     SocialConnector *_handler;
 }
 
-- (void)setHandler:(SocialConnector *)handler
-{
+- (void)setHandler:(SocialConnector *)handler {
     _handler = handler;
     self.provider = handler.connectorCode;
 }
 
-- (SocialConnector *)handler
-{
-    if(!_handler && _provider) {
+- (SocialConnector *)handler {
+    if (!_handler && _provider) {
         _handler = [[ISSocial defaultInstance] connectorNamed:_provider];
     }
     return _handler;
 }
 
-- (id)initWithCoder:(NSCoder *)coder
-{
+- (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
     if (self) {
         self.accessToken = [coder decodeObjectForKey:@"self.accessToken"];
@@ -46,8 +42,7 @@
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)coder
-{
+- (void)encodeWithCoder:(NSCoder *)coder {
     [coder encodeObject:self.accessToken forKey:@"self.accessToken"];
     [coder encodeObject:self.accessTokenSecret forKey:@"self.accessTokenSecret"];
     [coder encodeObject:self.userId forKey:@"self.userId"];

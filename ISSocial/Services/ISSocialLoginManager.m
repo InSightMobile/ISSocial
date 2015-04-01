@@ -17,13 +17,11 @@ typedef void (^BlockCompletionBlock)();
 @property(nonatomic, strong) NSMutableArray *completions;
 @end
 
-@implementation ISSocialLoginManager
-{
+@implementation ISSocialLoginManager {
 
 }
 
-+ (ISSocialLoginManager *)instance
-{
++ (ISSocialLoginManager *)instance {
     static ISSocialLoginManager *_instance = nil;
     static dispatch_once_t pred;
     dispatch_once(&pred, ^{
@@ -32,8 +30,7 @@ typedef void (^BlockCompletionBlock)();
     return _instance;
 }
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         self.resultConnector = [[CompositeConnector alloc] initWithConnectorSpecifications:nil];
@@ -46,21 +43,18 @@ typedef void (^BlockCompletionBlock)();
     return self;
 }
 
-- (CompositeConnector *)destinationConnectors
-{
+- (CompositeConnector *)destinationConnectors {
     if (_destinationConnectors) {
         return _destinationConnectors;
     }
     return [CompositeConnector globalConnectors];
 }
 
-- (void)loginWithCompletion:(void (^)())completion
-{
+- (void)loginWithCompletion:(void (^)())completion {
     [self loginWithParams:nil connector:nil completion:completion];
 }
 
-- (void)loginWithParams:(SObject *)options connector:(SocialConnector *)connector completion:(void (^)())completion
-{
+- (void)loginWithParams:(SObject *)options connector:(SocialConnector *)connector completion:(void (^)())completion {
     __weak ISSocialLoginManager *wself = self;
 
     void (^connectedBlock)(BOOL) = ^(BOOL connected) {
@@ -159,22 +153,19 @@ typedef void (^BlockCompletionBlock)();
     }
 }
 
-- (void)handleLoginError:(SocialConnector *)connector result:(SObject *)result
-{
+- (void)handleLoginError:(SocialConnector *)connector result:(SObject *)result {
     if (self.loginHandler) {
         self.loginHandler(connector, result.error);
     }
 }
 
-- (void)applyChanges
-{
+- (void)applyChanges {
     for (CompositeConnector *connector in _destinationConnectors) {
         [connector addAndActivateConnectors:self.resultConnector.activeConnectors exclusive:YES];
     }
 }
 
-- (CompositeConnector *)sourceConnectors
-{
+- (CompositeConnector *)sourceConnectors {
     if (_sourceConnectors) {
         return _sourceConnectors;
     }
@@ -182,16 +173,14 @@ typedef void (^BlockCompletionBlock)();
 }
 
 
-- (void)cancelLogins
-{
+- (void)cancelLogins {
     [self.completions removeAllObjects];
     [_queue cancelAllOperations];
     [[CompositeConnector globalConnectors] activateConnectors:self.resultConnector.activeConnectors exclusive:YES];
     self.canceled = YES;
 }
 
-- (void)logoutAllWithCompletion:(void (^)())completion
-{
+- (void)logoutAllWithCompletion:(void (^)())completion {
     [self.sourceConnectors.availableConnectors asyncEach:^(id object, ISArrayAsyncEachResultBlock next) {
         SocialConnector *connector = object;
 
@@ -211,8 +200,7 @@ typedef void (^BlockCompletionBlock)();
 
 }
 
-- (void)logoutConnector:(SocialConnector *)connector withCompletion:(void (^)())completion
-{
+- (void)logoutConnector:(SocialConnector *)connector withCompletion:(void (^)())completion {
     if (connector.isLoggedIn) {
         [connector closeSession:nil completion:^(SObject *result) {
             [self.resultConnector deactivateConnector:connector];

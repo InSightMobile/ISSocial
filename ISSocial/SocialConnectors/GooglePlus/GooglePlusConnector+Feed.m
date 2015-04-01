@@ -2,7 +2,6 @@
 // 
 
 #import "SCommentData.h"
-#import "GooglePlus.h"
 
 #import "SPhotoData.h"
 #import "NSString+TypeSafety.h"
@@ -19,8 +18,7 @@
 
 
 @implementation GooglePlusConnector (Feed)
-- (SObject *)readFeedComments:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readFeedComments:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         GTLQueryPlus *query =
@@ -49,14 +47,13 @@
 
                 [result addSubObject:commentData];
             }
-            
+
             [operation complete:result];
         }];
     }];
 }
 
-- (SObject *)readFeed:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readFeed:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         GTLQueryPlus *query =

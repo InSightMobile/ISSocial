@@ -10,5 +10,5 @@
 @property(nonatomic, copy) NSNumber *loadAllPhotosMetaAlbum;
 @end
 
-@interface SReadAlbumsParameters : SObject<SReadAlbumsParameters>
+@interface SReadAlbumsParameters : SObject <SReadAlbumsParameters>
 @end

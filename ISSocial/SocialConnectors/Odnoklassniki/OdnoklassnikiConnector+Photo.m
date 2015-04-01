@@ -19,8 +19,7 @@ static const int kPhotoPageSize = 20;
 
 @implementation OdnoklassnikiConnector (Photo)
 
-- (SObject *)parsePhotos:(NSDictionary *)responce forMethod:(NSString *)method params:(NSDictionary *)params
-{
+- (SObject *)parsePhotos:(NSDictionary *)responce forMethod:(NSString *)method params:(NSDictionary *)params {
     SObject *photos = [SObject objectCollectionWithHandler:self];
 
     for (NSDictionary *data in responce[@"photos"]) {
@@ -70,8 +69,7 @@ static const int kPhotoPageSize = 20;
     return photos;
 }
 
-- (SObject *)pagePhotos:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)pagePhotos:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         SPagingData *pagingData = params.pagingData;
@@ -88,8 +86,7 @@ static const int kPhotoPageSize = 20;
     }];
 }
 
-- (void)parseAlbums:(id)responce params:(SReadAlbumsParameters *)params operation:(SocialConnectorOperation *)operation
-{
+- (void)parseAlbums:(id)responce params:(SReadAlbumsParameters *)params operation:(SocialConnectorOperation *)operation {
     SObject *albums = [SObject objectCollectionWithHandler:self];
 
     if (params.loadAllPhotosMetaAlbum.boolValue) {
@@ -137,8 +134,7 @@ static const int kPhotoPageSize = 20;
     }
 }
 
-- (SPhotoAlbumData *)parseAlbum:(NSDictionary *)data
-{
+- (SPhotoAlbumData *)parseAlbum:(NSDictionary *)data {
     SPhotoAlbumData *album = [[SPhotoAlbumData alloc] initWithHandler:self];
 
     album.objectId = [data[@"aid"] stringValue];
@@ -153,15 +149,13 @@ static const int kPhotoPageSize = 20;
     return album;
 }
 
-- (SObject *)readPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self loadPhotoWithMethod:@"photos.getPhotos" parameters:nil operation:operation];
     }];
 }
 
-- (void)loadPhotoWithMethod:(NSString *)method parameters:(NSDictionary *)parameters operation:(SocialConnectorOperation *)operation
-{
+- (void)loadPhotoWithMethod:(NSString *)method parameters:(NSDictionary *)parameters operation:(SocialConnectorOperation *)operation {
     NSMutableDictionary *params = parameters ? [parameters mutableCopy] : [NSMutableDictionary dictionaryWithCapacity:1];
     params[@"detectTotalCount"] = @1;
 
@@ -171,8 +165,7 @@ static const int kPhotoPageSize = 20;
     }];
 }
 
-- (SObject *)readPhotosFromAlbum:(SPhotoAlbumData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readPhotosFromAlbum:(SPhotoAlbumData *)params completion:(SObjectCompletionBlock)completion {
     if (!params.objectId) {
         return [self readPhotos:params completion:completion];
     }
@@ -183,8 +176,7 @@ static const int kPhotoPageSize = 20;
     }];
 }
 
-- (SObject *)readPhotoAlbums:(SReadAlbumsParameters *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readPhotoAlbums:(SReadAlbumsParameters *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSDictionary *parameters = @{@"fields" : @"album.aid,album.title,album.description,album.created,album.type,album.types,album.type_change_enabled,album.comments_count,album.photos_count,photo.id,photo.pic50x50,photo.pic128x128,photo.pic640x480"};
@@ -196,8 +188,7 @@ static const int kPhotoPageSize = 20;
     }];
 }
 
-- (SObject *)getDefaultPhotoAlbum:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)getDefaultPhotoAlbum:(SObject *)params completion:(SObjectCompletionBlock)completion {
     if (self.defaultAlbum) {
         completion(self.defaultAlbum);
         return self.defaultAlbum;
@@ -242,8 +233,7 @@ static const int kPhotoPageSize = 20;
 - (void)uploadPhoto:(SPhotoData *)params
               album:(NSString *)album
           operation:(SocialConnectorOperation *)operation
-         completion:(SObjectCompletionBlock)completionn
-{
+         completion:(SObjectCompletionBlock)completionn {
     NSDictionary *parameters;
     if (album) {
         parameters = @{@"aid" : album};
@@ -278,48 +268,46 @@ static const int kPhotoPageSize = 20;
                                                success:
                                                        ^(AFHTTPRequestOperation *op, id responseObject) {
 
-                    NSLog(@"responseObject = %@", responseObject);
+                                                           NSLog(@"responseObject = %@", responseObject);
 
-                    //NSString *data = [[NSString alloc] initWithBytes:[responseObject bytes] length:[responseObject length] encoding:NSUTF8StringEncoding];
-                    if ([responseObject[@"photos"] count] == 0) {
-                        completionn([SObject failed]);
-                        return;
-                    }
-                    NSString *token = responseObject[@"photos"][photoId][@"token"];
+                                                           //NSString *data = [[NSString alloc] initWithBytes:[responseObject bytes] length:[responseObject length] encoding:NSUTF8StringEncoding];
+                                                           if ([responseObject[@"photos"] count] == 0) {
+                                                               completionn([SObject failed]);
+                                                               return;
+                                                           }
+                                                           NSString *token = responseObject[@"photos"][photoId][@"token"];
 
-                    if (!token) {
-                        completionn([SObject failed]);
-                        return;
-                    }
+                                                           if (!token) {
+                                                               completionn([SObject failed]);
+                                                               return;
+                                                           }
 
-                    [self simpleMethod:@"photosV2.commit" parameters:@{@"photo_id" : photoId, @"token" : token} operation:operation processor:^(id response) {
+                                                           [self simpleMethod:@"photosV2.commit" parameters:@{@"photo_id" : photoId, @"token" : token} operation:operation processor:^(id response) {
 
-                        NSLog(@"responseObject = %@", response);
-                        SPhotoData *result = [params copyWithHandler:self];
+                                                               NSLog(@"responseObject = %@", response);
+                                                               SPhotoData *result = [params copyWithHandler:self];
 
-                        if ([responseObject[@"photos"] count] == 0) {
-                            completionn([SObject failed]);
-                            return;
-                        }
+                                                               if ([responseObject[@"photos"] count] == 0) {
+                                                                   completionn([SObject failed]);
+                                                                   return;
+                                                               }
 
-                        completionn(result);
-                    }];
+                                                               completionn(result);
+                                                           }];
 
-                }
+                                                       }
                                                failure:
                                                        ^(AFHTTPRequestOperation *op, NSError *error) {
-                    completionn([SObject error:error]);
-                }];
+                                                           completionn([SObject error:error]);
+                                                       }];
     }];
 }
 
-- (NSString *)dafaultPhotoAlbumTitle
-{
+- (NSString *)dafaultPhotoAlbumTitle {
     return self.defaultAlbumName;
 }
 
-- (SObject *)createPhotoAlbum:(SPhotoAlbumData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)createPhotoAlbum:(SPhotoAlbumData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"photos.createAlbum" parameters:@{@"title" : params.title, @"type" : @"public"} operation:operation processor:^(id response) {
 
@@ -331,8 +319,7 @@ static const int kPhotoPageSize = 20;
     }];
 }
 
-- (SObject *)addPhotoToAlbum:(SPhotoData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)addPhotoToAlbum:(SPhotoData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self uploadPhoto:params album:params.album.objectId operation:operation completion:^(SObject *result) {
@@ -342,8 +329,7 @@ static const int kPhotoPageSize = 20;
     }];
 }
 
-- (SObject *)addPhoto:(SPhotoData *)srcParams completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)addPhoto:(SPhotoData *)srcParams completion:(SObjectCompletionBlock)completion {
     SPhotoData *params = [srcParams copy];
     params.album = nil;
 

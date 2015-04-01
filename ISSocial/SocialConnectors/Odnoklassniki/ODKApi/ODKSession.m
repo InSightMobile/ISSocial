@@ -23,8 +23,7 @@
 
 @implementation ODKSession
 
-+ (ODKSession *)activeSession
-{
++ (ODKSession *)activeSession {
     static ODKSession *_instance = nil;
 
     @synchronized (self) {
@@ -36,21 +35,18 @@
     return _instance;
 }
 
-- (void)okDidLogin
-{
+- (void)okDidLogin {
     if (_sessionOpenHandler) {
         _sessionOpenHandler(self, ODKSessionStateOpen, nil);
         self.sessionOpenHandler = nil;
     }
 }
 
-- (void)okDidExtendToken:(NSString *)accessToken
-{
+- (void)okDidExtendToken:(NSString *)accessToken {
     [self okDidLogin];
 }
 
-- (void)okDidNotExtendToken:(NSError *)error
-{
+- (void)okDidNotExtendToken:(NSError *)error {
     NSLog(@"okDidNotLogin");
     if (_sessionOpenHandler) {
         _sessionOpenHandler(self, ODKSessionStateClosedLoginFailed, error);
@@ -58,8 +54,7 @@
     }
 }
 
-- (void)okDidNotLogin:(BOOL)canceled
-{
+- (void)okDidNotLogin:(BOOL)canceled {
     NSLog(@"okDidNotLogin");
     if (_sessionOpenHandler) {
         _sessionOpenHandler(self, ODKSessionStateClosedLoginFailed, nil);
@@ -67,8 +62,7 @@
     }
 }
 
-- (void)okDidLogout
-{
+- (void)okDidLogout {
     NSLog(@"okDidLogout");
     if (_sessionOpenHandler) {
         _sessionOpenHandler(self, ODKSessionStateClosed, nil);
@@ -77,8 +71,7 @@
 }
 
 
-- (void)okDidNotLoginWithError:(NSError *)error
-{
+- (void)okDidNotLoginWithError:(NSError *)error {
     NSLog(@"error = %@", error);
     if (_sessionOpenHandler) {
         _sessionOpenHandler(self, ODKSessionStateClosedLoginFailed, error);
@@ -86,19 +79,16 @@
     }
 }
 
-- (void)reopenSessionWithCompletionHandler:(ODKSessionStateHandler)handler
-{
+- (void)reopenSessionWithCompletionHandler:(ODKSessionStateHandler)handler {
     [self openSessionWithCompletionHandler:handler];
 }
 
-- (void)close
-{
+- (void)close {
     [[OKSession activeSession] close];
     self.session = nil;
 }
 
-- (void)openSessionWithCompletionHandler:(ODKSessionStateHandler)handler
-{
+- (void)openSessionWithCompletionHandler:(ODKSessionStateHandler)handler {
 
     if (!self.permissions) {
         self.permissions = @[@"VALUABLE ACCESS", @"SET STATUS", @"PUBLISH TO STREAM", @"PHOTO CONTENT", @"MESSAGING"];
@@ -129,8 +119,7 @@
 
 + (void)openActiveSessionWithPermissions:(NSArray *)permissions appId:(NSString *)appId
                                appSecret:(NSString *)appSecret appKey:(NSString *)appKey
-                       completionHandler:(ODKSessionStateHandler)handler
-{
+                       completionHandler:(ODKSessionStateHandler)handler {
     ODKSession *session = [self activeSession];
     session.appId = appId;
     session.appSecret = appSecret;
@@ -140,13 +129,11 @@
     [session openSessionWithCompletionHandler:handler];
 }
 
-- (BOOL)isLoggedIn
-{
+- (BOOL)isLoggedIn {
     return self.session.accessToken != nil;
 }
 
-- (void)didActivated:(NSNotification *)notification
-{
+- (void)didActivated:(NSNotification *)notification {
     if (self.sessionOpenHandler) {
         [self iss_performBlock:^(id sender) {
             if (self.sessionOpenHandler) {
@@ -158,8 +145,7 @@
     }
 }
 
-- (NSString *) accessToken
-{
+- (NSString *)accessToken {
     return self.session.accessToken;
 }
 

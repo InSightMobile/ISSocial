@@ -12,14 +12,12 @@
 @property(nonatomic, copy) IGSessionStateHandler statusHandler;
 @end
 
-@implementation IGSession
-{
+@implementation IGSession {
 
     BOOL _externalAuthorization;
 }
 
-+ (IGSession *)activeSession
-{
++ (IGSession *)activeSession {
     static IGSession *_instance = nil;
 
     @synchronized (self) {
@@ -31,8 +29,7 @@
     return _instance;
 }
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
 
@@ -45,8 +42,7 @@
 }
 
 
-- (BOOL)handleURL:(NSURL *)url
-{
+- (BOOL)handleURL:(NSURL *)url {
     if ([url.absoluteString hasPrefix:self.redirectURI]) {
         NSDictionary *params = [url.fragment explodeURLQuery];
         NSString *accessToken = params[@"access_token"];
@@ -65,29 +61,24 @@
     return NO;
 }
 
-+ (void)openActiveSessionWithPermissions:(NSArray *)permissions completionHandler:(IGSessionStateHandler)handler
-{
++ (void)openActiveSessionWithPermissions:(NSArray *)permissions completionHandler:(IGSessionStateHandler)handler {
     [[self activeSession] openSessionWithPermissions:permissions completionHandler:handler];
 }
 
-- (NSString *)clientId
-{
+- (NSString *)clientId {
     if (!_clientId) _clientId = NSBundle.mainBundle.infoDictionary[@"InstagramAppID"];
     return _clientId;
 }
 
-- (NSString *)redirectURI
-{
+- (NSString *)redirectURI {
     return [NSString stringWithFormat:@"ig%@://authorize", self.clientId];
 }
 
-- (void)webLogin:(WebLoginController *)webLogin didFinishPageLoad:(NSURLRequest *)request
-{
+- (void)webLogin:(WebLoginController *)webLogin didFinishPageLoad:(NSURLRequest *)request {
 
 }
 
-- (WebLoginLoadingTypes)webLogin:(WebLoginController *)controller loadingTypeForRequest:(NSURLRequest *)request
-{
+- (WebLoginLoadingTypes)webLogin:(WebLoginController *)controller loadingTypeForRequest:(NSURLRequest *)request {
     if ([self handleURL:request.URL]) {
         [controller dismiss];
         return WebLoginDoNotLoad;
@@ -95,8 +86,7 @@
     return WebLoginLoadVisible;
 }
 
-- (void)webLoginDidCanceled:(WebLoginController *)controller
-{
+- (void)webLoginDidCanceled:(WebLoginController *)controller {
     if (_statusHandler) {
         self.statusHandler(self, IGSessionStateClosedLoginFailed, nil);
         self.statusHandler = nil;
@@ -104,8 +94,7 @@
 }
 
 
-- (void)openSessionWithPermissions:(NSArray *)permissions completionHandler:(IGSessionStateHandler)handler
-{
+- (void)openSessionWithPermissions:(NSArray *)permissions completionHandler:(IGSessionStateHandler)handler {
     //self.currentPermissions = permissions;
     NSString *appID = self.clientId;
 

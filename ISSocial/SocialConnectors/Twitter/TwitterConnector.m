@@ -38,8 +38,7 @@
 @implementation TwitterConnector
 
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
 
@@ -48,8 +47,7 @@
 }
 
 
-+ (TwitterConnector *)instance
-{
++ (TwitterConnector *)instance {
     static TwitterConnector *_instance = nil;
     static dispatch_once_t pred;
     dispatch_once(&pred, ^{
@@ -58,22 +56,19 @@
     return _instance;
 }
 
-+ (NSString *)connectorCode
-{
++ (NSString *)connectorCode {
     return ISSocialConnectorIdTwitter;
 }
 
 
-- (void)setupSettings:(NSDictionary *)settings
-{
+- (void)setupSettings:(NSDictionary *)settings {
     [super setupSettings:settings];
 
     self.consumerKey = settings[@"AppKey"];
     self.consumerSecret = settings[@"AppSecret"];
 }
 
-- (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
     //[FBSession.activeSession closeAndClearTokenInformation];
     self.account = nil;
     _loggedIn = NO;
@@ -81,8 +76,7 @@
     return [SObject successful];
 }
 
-- (ISSAuthorisationInfo *)authorizatioInfo
-{
+- (ISSAuthorisationInfo *)authorizatioInfo {
     ISSAuthorisationInfo *token = [ISSAuthorisationInfo new];
     token.handler = self;
     token.accessToken = self.token;
@@ -92,8 +86,7 @@
     return token;
 }
 
-- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         BOOL allowLoginUI = YES;
@@ -163,13 +156,11 @@
     }];
 }
 
-- (NSString *)systemCallbackURL
-{
+- (NSString *)systemCallbackURL {
     return [NSString stringWithFormat:@"%@://iss/twittter", [NSBundle mainBundle].bundleIdentifier];
 }
 
-- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation {
     if ([url.absoluteString hasPrefix:self.systemCallbackURL]) {
 
         self.urlHandled = YES;
@@ -187,8 +178,7 @@
     return NO;
 }
 
-- (void)handleDidBecomeActive
-{
+- (void)handleDidBecomeActive {
     [self iss_performBlock:^(id sender) {
         if (self.authorizationOperation && !self.urlHandled) {
             self.urlHandled = YES;
@@ -199,8 +189,7 @@
 }
 
 
-- (void)setOAuthToken:(NSString *)token oauthVerifier:(NSString *)verifier
-{
+- (void)setOAuthToken:(NSString *)token oauthVerifier:(NSString *)verifier {
 
     [self.twitterAPI postAccessTokenRequestWithPIN:verifier successBlock:^(NSString *oauthToken, NSString *oauthTokenSecret, NSString *userID, NSString *screenName) {
 
@@ -218,16 +207,14 @@
     }];
 }
 
-- (NSError *)errorWithError:(NSError *)error
-{
+- (NSError *)errorWithError:(NSError *)error {
     NSLog(@"error = %@", error);
     return [ISSocial errorWithError:error];
 }
 
 
 - (SObject *)readUserData:(SUserData *)params
-               completion:(SObjectCompletionBlock)completion
-{
+               completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
 
@@ -242,8 +229,7 @@
 }
 
 
-- (void)updateUserDataWithOperation:(SocialConnectorOperation *)operation
-{
+- (void)updateUserDataWithOperation:(SocialConnectorOperation *)operation {
 
     [self.twitterAPI getAccountVerifyCredentialsWithIncludeEntites:@NO skipStatus:@YES successBlock:^(NSDictionary *info) {
 
@@ -257,13 +243,11 @@
     }];
 }
 
-- (SUserData *)dataForUserId:(NSString *)userId
-{
+- (SUserData *)dataForUserId:(NSString *)userId {
     return (SUserData *) [self mediaObjectForId:userId type:@"users"];
 }
 
-- (SUserData *)userDataWithResponse:(NSDictionary *)info
-{
+- (SUserData *)userDataWithResponse:(NSDictionary *)info {
     NSString *objectId = [info[@"id"] stringValue];
     SUserData *userData = [self dataForUserId:objectId];
 
@@ -272,18 +256,15 @@
     return userData;
 }
 
-- (BOOL)isLoggedIn
-{
+- (BOOL)isLoggedIn {
     return _loggedIn;
 }
 
-- (BOOL)isLocalTwitterAccountAvailable
-{
+- (BOOL)isLocalTwitterAccountAvailable {
     return [SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter];
 }
 
-- (void)getSystemAuthWithUI:(BOOL)withUI success:(void (^)(ACAccount *account))onSuccess failure:(void (^)(NSError *error))onError
-{
+- (void)getSystemAuthWithUI:(BOOL)withUI success:(void (^)(ACAccount *account))onSuccess failure:(void (^)(NSError *error))onError {
     self.successCallback = onSuccess;
     self.failureCallback = onError;
 
@@ -297,7 +278,7 @@
     ACAccountStore *accountStore = [ACAccountStore new];
     ACAccountType *twitterType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
 
-    if(!withUI) {
+    if (!withUI) {
         [self getSystemAuthForStore:accountStore onSuccess:onSuccess failure:onError withUI:withUI];
         return;
     }
@@ -316,15 +297,14 @@
     }];
 }
 
-- (void)getSystemAuthForStore:(ACAccountStore *)accountStore onSuccess:(void (^)(ACAccount *))onSuccess failure:(void (^)(NSError *error))onError withUI:(BOOL)withUI
-{
+- (void)getSystemAuthForStore:(ACAccountStore *)accountStore onSuccess:(void (^)(ACAccount *))onSuccess failure:(void (^)(NSError *error))onError withUI:(BOOL)withUI {
     ACAccountType *twitterType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
 
     self.accounts = [accountStore accountsWithAccountType:twitterType];
     if (self.accounts.count == 1) {
         onSuccess(self.accounts[0]);
     }
-    else if(self.accounts.count > 1 && withUI){
+    else if (self.accounts.count > 1 && withUI) {
         UIActionSheet *sheet = [[UIActionSheet alloc] init];
 
         for (ACAccount *acct in self.accounts) {
@@ -346,8 +326,7 @@
     }
 }
 
-- (SObject *)sendInvitation:(SInvitation *)invitation completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)sendInvitation:(SInvitation *)invitation completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:invitation completion:completion processor:^(SocialConnectorOperation *operation) {
         [self.twitterAPI postDirectMessage:invitation.message forScreenName:nil orUserID:invitation.user.objectId successBlock:^(NSDictionary *message) {
             [operation complete:[SObject successful]];
@@ -357,8 +336,7 @@
     }];
 }
 
-- (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self.twitterAPI getFriendsForScreenName:self.screenName successBlock:^(NSArray *users) {
@@ -381,8 +359,7 @@
     }];
 }
 
-- (SObject *)readUserMutualFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readUserMutualFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self readUserFriends:operation.object completion:^(SObject *result) {
@@ -424,8 +401,7 @@
 
 #pragma mark - UIActionSheetDelegate
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet.cancelButtonIndex == buttonIndex) {
         self.failureCallback([ISSocial errorWithCode:ISSocialErrorUserCanceled sourseError:nil userInfo:nil]);
     }

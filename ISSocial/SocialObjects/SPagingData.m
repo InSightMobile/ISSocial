@@ -4,8 +4,7 @@
 #import "SPagingData.h"
 
 
-@implementation SPagingData
-{
+@implementation SPagingData {
 
 }
 @end

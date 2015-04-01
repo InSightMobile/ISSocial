@@ -10,9 +10,6 @@
 #import "ISSCacheManager.h"
 #import "SUserData.h"
 #import "ISSAuthorisationInfo.h"
-#import "SInvitation.h"
-#import "SShareItem.h"
-#import "SReadAlbumsParameters.h"
 
 NSString *const kNewMessagesNotification = @"NewMessageNotification";
 NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChanged";
@@ -23,14 +20,12 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
 
 @end
 
-@implementation SocialConnector
-{
+@implementation SocialConnector {
 
 }
 
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         _connectorState = [SObject object];
@@ -40,8 +35,7 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
     return self;
 }
 
-- (void)forwardInvocation:(NSInvocation *)anInvocation
-{
+- (void)forwardInvocation:(NSInvocation *)anInvocation {
     SEL selector = [anInvocation selector];
 
     int numberOfArguments = anInvocation.methodSignature.numberOfArguments;
@@ -51,13 +45,13 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
     if (numberOfArguments == 4 && [selectorName hasSuffix:@":completion:"]) {
         __unsafe_unretained SObject *invokationParam;
         __unsafe_unretained SObjectCompletionBlock invokationBlock;
-        
+
         SObject *param;
         SObjectCompletionBlock block;
 
         [anInvocation getArgument:&invokationParam atIndex:2];
         [anInvocation getArgument:&invokationBlock atIndex:3];
-        
+
         param = invokationParam;
         block = [invokationBlock copy];
 
@@ -82,85 +76,72 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
     [super forwardInvocation:anInvocation];
 }
 
-- (SObject *)readCached:(SEL)selector params:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readCached:(SEL)selector params:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [[ISSCacheManager instance] cashedReadWithConnector:self
-                                                  operation:selector
-                                                     params:params
-                                                        ttl:0
-                                                 completion:completion];
+                                                     operation:selector
+                                                        params:params
+                                                           ttl:0
+                                                    completion:completion];
 }
 
 
-- (SObject *)defaultOperation:(SObject *)defaultOperation completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)defaultOperation:(SObject *)defaultOperation completion:(SObjectCompletionBlock)completion {
 
     return [SObject failed:completion];
 }
 
-- (SObject *)implementSocialConnectorCallProtocol:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)implementSocialConnectorCallProtocol:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return nil;
 }
 
-- (SObject *)processSocialConnectorProtocol:(SObject *)params completion:(SObjectCompletionBlock)completion operation:(SEL)selector
-{
+- (SObject *)processSocialConnectorProtocol:(SObject *)params completion:(SObjectCompletionBlock)completion operation:(SEL)selector {
     SObject *obj = [SObject objectWithState:SObjectStateUnsupported];
     if (completion) {
-            completion(obj);
+        completion(obj);
     }
     return obj;
 }
 
-- (NSString *)connectorCode
-{
+- (NSString *)connectorCode {
     return nil;
 }
 
-- (UIImage *)connectorImage
-{
+- (UIImage *)connectorImage {
     return [UIImage imageNamed:[NSString stringWithFormat:@"%@_ava.png", self.connectorCode]];
 }
 
 
-- (NSString *)connectorName
-{
+- (NSString *)connectorName {
     return NSLocalizedString(self.connectorCode, nil);
 }
 
-- (NSInteger)connectorPriority
-{
+- (NSInteger)connectorPriority {
     return 0;
 }
 
 
-- (NSInteger)connectorDisplayPriority
-{
+- (NSInteger)connectorDisplayPriority {
     return self.connectorPriority;
 }
 
-- (SocialConnectorOperation *)operationWithParent:(SocialConnectorOperation *)operation
-{
+- (SocialConnectorOperation *)operationWithParent:(SocialConnectorOperation *)operation {
     SocialConnectorOperation *op = [[SocialConnectorOperation alloc] initWithHandler:self parent:operation];
     return op;
 }
 
-- (SObject *)operationWithObject:(SObject *)object
-{
+- (SObject *)operationWithObject:(SObject *)object {
     SocialConnectorOperation *op = [self operationWithParent:object.operation];
     return op.object;
 }
 
 - (SObject *)operationWithObject:(SObject *)params
-                      completion:(SObjectCompletionBlock)completion
-{
+                      completion:(SObjectCompletionBlock)completion {
     SObject *operationObject = [self operationWithObject:params];
     SocialConnectorOperation *op = operationObject.operation;
 
     op.completionHandler = completion;
     __block SocialConnectorOperation *weakOp = op;
-    op.completion = ^(SObject *result)
-    {
+    op.completion = ^(SObject *result) {
         [weakOp complete:result];
     };
     return operationObject;
@@ -168,11 +149,10 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
 
 - (SObject *)operationWithObject:(SObject *)params
                       completion:(SObjectCompletionBlock)completion
-                       processor:(void (^)(SocialConnectorOperation *op))processor
-{
+                       processor:(void (^)(SocialConnectorOperation *op))processor {
     if (params.state == SObjectStateUnsupported) {
         if (completion) {
-                    completion([SObject successful]);
+            completion([SObject successful]);
         }
         return [SObject successful];
     }
@@ -184,18 +164,15 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
 }
 
 
-- (ISSAuthorisationInfo *)authorizatioInfo
-{
+- (ISSAuthorisationInfo *)authorizatioInfo {
     return nil;
 }
 
-- (BOOL)isLoggedIn
-{
+- (BOOL)isLoggedIn {
     return NO;
 }
 
-- (BOOL)isSupported:(SEL)pSelector
-{
+- (BOOL)isSupported:(SEL)pSelector {
     if ([self respondsToSelector:pSelector]) {
         SObject *result =
                 [self performSelector:pSelector withObject:[SObject objectWithState:SObjectStateUnsupported] withObject:nil];
@@ -206,11 +183,10 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
     }
 }
 
-- (BOOL)meetsSpecifications:(NSArray *)specs
-{
+- (BOOL)meetsSpecifications:(NSArray *)specs {
     for (NSString *spec in specs) {
 
-        if(![self meetsSpecification:spec]) {
+        if (![self meetsSpecification:spec]) {
             return NO;
         }
 
@@ -218,8 +194,7 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
     return YES;
 }
 
-- (BOOL)meetsSpecification:(NSString *)spec
-{
+- (BOOL)meetsSpecification:(NSString *)spec {
     if ([self.supportedSpecifications containsObject:spec]) {
         return YES;
     }

@@ -12,8 +12,7 @@
 - (void)nextStep:(NSUInteger)index
            error:(NSError *)errorOrNil
        operation:(ISArrayAsyncEachBlock)operation
-     comletition:(ISArrayAsyncEachCompletitionBlock)completition
-{
+     comletition:(ISArrayAsyncEachCompletitionBlock)completition {
     if (errorOrNil) {
         if (completition) completition(errorOrNil);
         return;
@@ -49,8 +48,7 @@
     }
 }
 
-- (void)asyncEach:(ISArrayAsyncEachBlock)operation comletition:(ISArrayAsyncEachCompletitionBlock)completition
-{
+- (void)asyncEach:(ISArrayAsyncEachBlock)operation comletition:(ISArrayAsyncEachCompletitionBlock)completition {
     if (self.count == 0) {
         completition(nil);
         return;
@@ -61,8 +59,7 @@
 
 - (void)asyncEach:(ISArrayAsyncEachBlock)operation
       comletition:(ISArrayAsyncEachCompletitionBlock)completion
-        concurent:(NSInteger)concurrent
-{
+        concurent:(NSInteger)concurrent {
     if (self.count == 0) {
         completion(nil);
         return;
@@ -88,8 +85,7 @@
     __weak NSOperationQueue *weakQueue = queue;
 
     __block RACDisposable *disposable;
-    disposable = [RACObserve(queue, operationCount) subscribeNext:^(id x)
-    {
+    disposable = [RACObserve(queue, operationCount) subscribeNext:^(id x) {
         if (weakQueue.operationCount == 0) {
             completion(nil);
             [disposable dispose];
@@ -101,8 +97,7 @@
 
 @implementation NSSet (ISAsyncBlocks)
 
-- (void)asyncEach:(ISArrayAsyncEachBlock)operation comletition:(ISArrayAsyncEachCompletitionBlock)completition
-{
+- (void)asyncEach:(ISArrayAsyncEachBlock)operation comletition:(ISArrayAsyncEachCompletitionBlock)completition {
     [[self allObjects] asyncEach:operation comletition:completition];
 }
 

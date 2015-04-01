@@ -1,11 +1,10 @@
-
 #import "Odnoklassniki.h"
 
 @interface Odnoklassniki ()
-@property (nonatomic, strong, readwrite) OKSession *session;
-@property (nonatomic, copy, readwrite) NSString *appId;
-@property (nonatomic, copy, readwrite) NSString *appSecret;
-@property (nonatomic, copy, readwrite) NSString *appKey;
+@property(nonatomic, strong, readwrite) OKSession *session;
+@property(nonatomic, copy, readwrite) NSString *appId;
+@property(nonatomic, copy, readwrite) NSString *appSecret;
+@property(nonatomic, copy, readwrite) NSString *appKey;
 @end
 
 @implementation Odnoklassniki
@@ -20,16 +19,16 @@
 - (id)initWithAppId:(NSString *)appId
           appSecret:(NSString *)appSecret
              appKey:(NSString *)appKey
-           delegate:(id<OKSessionDelegate>)delegate {
+           delegate:(id <OKSessionDelegate>)delegate {
 
-	self = [super init];
-	if (self) {
-		self.appId = appId;
-		self.appSecret = appSecret;
-		self.appKey = appKey;
-		self.delegate = delegate;
-	}
-	return self;
+    self = [super init];
+    if (self) {
+        self.appId = appId;
+        self.appSecret = appSecret;
+        self.appKey = appKey;
+        self.delegate = delegate;
+    }
+    return self;
 }
 
 - (void)dealloc {
@@ -59,7 +58,7 @@
 */
 - (void)refreshToken {
     self.session.delegate = self.delegate;
-	[self.session refreshAuthToken];
+    [self.session refreshAuthToken];
 }
 
 /**
@@ -67,44 +66,44 @@
 * and calls OKSessionDelegate's method okDidLogout
 */
 - (void)logout {
-	[self.session close];
-	[OKSession setActiveSession:nil];
-	self.session = nil;
+    [self.session close];
+    [OKSession setActiveSession:nil];
+    self.session = nil;
 
     NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
     for (NSHTTPCookie *cookie in cookies) {
         if (NSNotFound != [cookie.domain rangeOfString:@"odnoklassniki.ru"].location) {
             [[NSHTTPCookieStorage sharedHTTPCookieStorage]
-                                  deleteCookie:cookie];
+                    deleteCookie:cookie];
         }
     }
 
 
-	if ([self.delegate respondsToSelector:@selector(okDidLogout)]) {
+    if ([self.delegate respondsToSelector:@selector(okDidLogout)]) {
         [self.delegate okDidLogout];
     }
 }
 
 /**
- * @return boolean - whether this object has an non-expired session token
- */
+* @return boolean - whether this object has an non-expired session token
+*/
 - (BOOL)isSessionValid {
-	if (!self.session) {
-		BOOL activeSessionOpened = [OKSession openActiveSessionWithPermissions:nil appId:self.appId appSecret:self.appSecret];
+    if (!self.session) {
+        BOOL activeSessionOpened = [OKSession openActiveSessionWithPermissions:nil appId:self.appId appSecret:self.appSecret];
         if (activeSessionOpened) {
             self.session = [OKSession activeSession];
             self.session.appKey = self.appKey;
         }
-	}
-	return self.session.accessToken != nil;
+    }
+    return self.session.accessToken != nil;
 }
 
 /**
- * Make a request to Odnoklassniki's REST API with the given method name and parameters.
- * @param methodName REST server API method (list of methods http://dev.odnoklassniki.ru/wiki/display/ok/Odnoklassniki+Rest+API).
- * @param params Key-value pairs of parameters to the request.
- * @param delegate Callback interface for notifying the calling application when the request has received responseData.
- * @return OKRequest Returns a pointer to the OKRequest object.
+* Make a request to Odnoklassniki's REST API with the given method name and parameters.
+* @param methodName REST server API method (list of methods http://dev.odnoklassniki.ru/wiki/display/ok/Odnoklassniki+Rest+API).
+* @param params Key-value pairs of parameters to the request.
+* @param delegate Callback interface for notifying the calling application when the request has received responseData.
+* @return OKRequest Returns a pointer to the OKRequest object.
 */
 + (OKRequest *)requestWithMethodName:(NSString *)methodName
                               params:(NSDictionary *)params

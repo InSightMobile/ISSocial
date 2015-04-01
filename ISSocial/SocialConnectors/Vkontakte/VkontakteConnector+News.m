@@ -11,42 +11,39 @@
 
 @implementation VkontakteConnector (News)
 
-- (SObject *)addNewsLike:(SNewsEntry *)feed completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)addNewsLike:(SNewsEntry *)feed completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:feed completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"wall.addLike"
                 parameters:@{@"post_id" : [feed objectId],
                         @"owner_id" : feed.owner.objectId}
                  operation:operation processor:^(id response) {
 
-            SNewsEntry *result = feed;
-            result.likesCount = response[@"likes"];
-            result.userLikes = @YES;
-            [result fireUpdateNotification];
-            [operation complete:result];
-        }];
+                    SNewsEntry *result = feed;
+                    result.likesCount = response[@"likes"];
+                    result.userLikes = @YES;
+                    [result fireUpdateNotification];
+                    [operation complete:result];
+                }];
     }];
 }
 
-- (SObject *)removeNewsLike:(SNewsEntry *)feed completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)removeNewsLike:(SNewsEntry *)feed completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:feed completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"wall.deleteLike"
                 parameters:@{@"post_id" : [feed objectId],
                         @"owner_id" : feed.owner.objectId}
                  operation:operation processor:^(id response) {
 
-            SNewsEntry *result = feed;
-            result.likesCount = response[@"likes"];
-            result.userLikes = @NO;
-            [result fireUpdateNotification];
-            [operation complete:result];
-        }];
+                    SNewsEntry *result = feed;
+                    result.likesCount = response[@"likes"];
+                    result.userLikes = @NO;
+                    [result fireUpdateNotification];
+                    [operation complete:result];
+                }];
     }];
 }
 
-- (SObject *)pageNews:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)pageNews:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSDictionary *parameters = @{@"photo_sizes" : @1,
@@ -65,8 +62,7 @@
     }];
 }
 
-- (SObject *)readNews:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readNews:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSDictionary *parameters = @{@"photo_sizes" : @1, @"filters" : @"post,photo", @"count" : @(self.pageSize)};
@@ -79,8 +75,7 @@
     }];
 }
 
-- (SObject *)searchNews:(SUserData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)searchNews:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSMutableDictionary *parameters =
@@ -97,8 +92,7 @@
 }
 
 
-- (void)parseNewsEntries:(id)response paging:(SObject *)paging operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
-{
+- (void)parseNewsEntries:(id)response paging:(SObject *)paging operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion {
     //NSLog(@"news response = %@", response);
 
     SObject *result = [SObject objectCollectionWithHandler:self];
@@ -159,8 +153,7 @@
     }
 }
 
-- (SNewsEntry *)parseNews:(NSDictionary *)item
-{
+- (SNewsEntry *)parseNews:(NSDictionary *)item {
     NSString *objectId;
     NSString *postId;
     NSString *ownerId;
@@ -223,8 +216,7 @@
     return entry;
 }
 
-- (SObject *)readNewsComments:(SNewsEntry *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readNewsComments:(SNewsEntry *)params completion:(SObjectCompletionBlock)completion {
     if ([params.newsType isEqualToString:@"post"]) {
         SFeedEntry *feedEntry = [SFeedEntry new];
         feedEntry.objectId = params.objectId;
@@ -238,8 +230,7 @@
     }
 }
 
-- (SObject *)addNewsComment:(SCommentData *)comment completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)addNewsComment:(SCommentData *)comment completion:(SObjectCompletionBlock)completion {
     return [self addFeedComment:comment completion:completion];
 }
 

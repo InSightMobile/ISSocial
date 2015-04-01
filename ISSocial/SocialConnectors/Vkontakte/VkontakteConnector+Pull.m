@@ -6,12 +6,9 @@
 //#import "ISSVKRequest.h"
 #import "SUserData.h"
 #import "VkontakteConnector+UserData.h"
-#import "SMessageData.h"
 #import "VkontakteConnector+Pull.h"
-#import "NSString+StripHTML.h"
 
-typedef enum _VKUpdatesCodes
-{
+typedef enum _VKUpdatesCodes {
     VKMessageAddedUpdateCode = 4,
 
 

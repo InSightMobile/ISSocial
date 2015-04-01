@@ -26,8 +26,7 @@
 @implementation VkontakteConnector (Feed)
 
 
-- (SObject *)addFeedComment:(SCommentData *)comment completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)addFeedComment:(SCommentData *)comment completion:(SObjectCompletionBlock)completion {
     NSParameterAssert(comment.author.objectId);
     NSParameterAssert(comment.message);
 
@@ -38,79 +37,75 @@
                 parameters:@{@"post_id" : [feed postId], @"text" : comment.message}
                  operation:operation processor:^(id response) {
 
-            //NSLog(@"response = %@", response);
-            SCommentData *result = [comment copyWithHandler:self];
-            result.objectId = response[@"cid"];
+                    //NSLog(@"response = %@", response);
+                    SCommentData *result = [comment copyWithHandler:self];
+                    result.objectId = response[@"cid"];
 
-            feed.commentsCount = @(feed.commentsCount.intValue + 1);
-            [feed fireUpdateNotification];
+                    feed.commentsCount = @(feed.commentsCount.intValue + 1);
+                    [feed fireUpdateNotification];
 
-            [operation complete:result];
-        }];
+                    [operation complete:result];
+                }];
     }];
 }
 
-- (SObject *)removeFeedLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)removeFeedLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:feed completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"wall.deleteLike"
                 parameters:@{@"post_id" : [feed postId]}
                  operation:operation processor:^(id response) {
 
-            SFeedEntry *result = feed;
-            result.likesCount = response[@"likes"];
-            result.userLikes = @NO;
-            [result fireUpdateNotification];
-            [operation complete:result];
-        }];
+                    SFeedEntry *result = feed;
+                    result.likesCount = response[@"likes"];
+                    result.userLikes = @NO;
+                    [result fireUpdateNotification];
+                    [operation complete:result];
+                }];
     }];
 }
 
-- (SObject *)addFeedLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)addFeedLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:feed completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"wall.addLike"
                 parameters:@{@"post_id" : [feed postId]}
                  operation:operation processor:^(id response) {
 
-            SFeedEntry *result = feed;
-            result.likesCount = response[@"likes"];
-            result.userLikes = @YES;
-            [result fireUpdateNotification];
-            [operation complete:result];
-        }];
+                    SFeedEntry *result = feed;
+                    result.likesCount = response[@"likes"];
+                    result.userLikes = @YES;
+                    [result fireUpdateNotification];
+                    [operation complete:result];
+                }];
     }];
 }
 
 
-- (SObject *)pageFeedComments:(SObject *)comments completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)pageFeedComments:(SObject *)comments completion:(SObjectCompletionBlock)completion {
     id commentObject = [(id) comments commentedObject];
 
     return [self operationWithObject:comments completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"wall.getComments" parameters:@{
-                @"post_id" : [commentObject postId],
-                @"owner_id" : [[commentObject owner] objectId],
-                @"offset" : comments.pagingData,
-                @"count" : @(self.pageSize),
-                @"sort" : @"desc"}
+                        @"post_id" : [commentObject postId],
+                        @"owner_id" : [[commentObject owner] objectId],
+                        @"offset" : comments.pagingData,
+                        @"count" : @(self.pageSize),
+                        @"sort" : @"desc"}
                  operation:operation processor:^(id response) {
 
-            NSLog(@"response = %@", response);
+                    NSLog(@"response = %@", response);
 
-            SObject *result = [self parseCommentEntries:response object:commentObject paging:comments];
-            [self updateUserData:[result.subObjects valueForKey:@"author"] operation:operation completion:^(SObject *updateResult) {
+                    SObject *result = [self parseCommentEntries:response object:commentObject paging:comments];
+                    [self updateUserData:[result.subObjects valueForKey:@"author"] operation:operation completion:^(SObject *updateResult) {
 
-                [operation complete:[self addPagingData:result to:comments]];
-            }];
-        }];
+                        [operation complete:[self addPagingData:result to:comments]];
+                    }];
+                }];
     }];
 }
 
 
-- (SObject *)readFeedComments:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readFeedComments:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion {
     SFeedEntry *feedObject = [feed copyWithHandler:self];
 
     return [self operationWithObject:feed completion:completion processor:^(SocialConnectorOperation *operation) {
@@ -132,8 +127,7 @@
     }];
 }
 
-- (SObject *)parsePagingResponce:(id)response paging:(SObject *)paging processor:(SObject *(^)(id responce))processor
-{
+- (SObject *)parsePagingResponce:(id)response paging:(SObject *)paging processor:(SObject *(^)(id responce))processor {
     SObject *result = [[SObject alloc] initWithHandler:self];
 
     int count = 0;
@@ -167,8 +161,7 @@
     return result;
 }
 
-- (SObject *)parseFeedEntries:(id)response paging:(SObject *)paging operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)parseFeedEntries:(id)response paging:(SObject *)paging operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion {
     NSMutableArray *attachments = [NSMutableArray array];
     SObject *result = [self parsePagingResponce:response paging:paging processor:^(id responce) {
         SFeedEntry *entry = [self parseFeedEntry:responce];
@@ -187,8 +180,7 @@
     return nil;
 }
 
-- (SObject *)readFeed:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readFeed:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"wall.get" parameters:@{@"photo_sizes" : @1, @"count" : @(self.pageSize)} operation:operation processor:^(id response) {
 
@@ -199,8 +191,7 @@
     }];
 }
 
-- (SObject *)pageFeed:(SObject *)feed completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)pageFeed:(SObject *)feed completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:feed completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSDictionary *const parameters = @{
@@ -211,18 +202,17 @@
         [self simpleMethod:@"wall.get" parameters:parameters
                  operation:operation processor:^(id response) {
 
-            NSLog(@"response = %@", response);
+                    NSLog(@"response = %@", response);
 
-            [self parseFeedEntries:response paging:feed operation:operation completion:^(SObject *result) {
-                [operation complete:[self addPagingData:result to:feed]];
-            }];
-        }];
+                    [self parseFeedEntries:response paging:feed operation:operation completion:^(SObject *result) {
+                        [operation complete:[self addPagingData:result to:feed]];
+                    }];
+                }];
     }];
 }
 
 
-- (NSArray *)parseAttachments:(NSArray *)attachmentsResponse
-{
+- (NSArray *)parseAttachments:(NSArray *)attachmentsResponse {
     NSMutableArray *attach = [NSMutableArray arrayWithCapacity:attachmentsResponse.count];
     for (NSDictionary *attachment in attachmentsResponse) {
 
@@ -256,8 +246,7 @@
     }
 }
 
-- (void)updateAttachments:(NSArray *)attachments operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
-{
+- (void)updateAttachments:(NSArray *)attachments operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion {
     NSMutableArray *audio = [NSMutableArray array];
     NSMutableArray *video = [NSMutableArray array];
 
@@ -311,22 +300,19 @@
     }
 }
 
-- (NSString *)processToText:(NSString *)source
-{
+- (NSString *)processToText:(NSString *)source {
     NSString *str = [source stripHtml];
     str = [str stringByReplacingOccurrencesOfRegex:@"\\[[a-z]+[0-9]+\\|([^\\]]+)\\]" withString:@"$1"];
     return str;
 }
 
-- (NSString *)processToHTML:(NSString *)source
-{
+- (NSString *)processToHTML:(NSString *)source {
     NSString *str = source;
     str = [str stringByReplacingOccurrencesOfRegex:@"\\[[a-z]+[0-9]+\\|([^\\]]+)\\]" withString:@"$1"];
     return str;
 }
 
-- (SFeedEntry *)parseFeedEntry:(NSDictionary *)entryData
-{
+- (SFeedEntry *)parseFeedEntry:(NSDictionary *)entryData {
     NSString *objectId = [entryData[@"id"] stringValue];
 
     SFeedEntry *entry = (id) [self mediaObjectForId:objectId type:@"post"];
@@ -353,8 +339,7 @@
     return entry;
 }
 
-- (SObject *)removeFeedEntry:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)removeFeedEntry:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"wall.delete" parameters:@{@"post_id" : params.objectId} operation:operation processor:^(id response) {
@@ -373,8 +358,7 @@
     }];
 }
 
-- (SObject *)parseCommentEntries:(NSArray *)response object:(SObject *)object paging:(SObject *)paging
-{
+- (SObject *)parseCommentEntries:(NSArray *)response object:(SObject *)object paging:(SObject *)paging {
     SObject *result = [self parsePagingResponce:response paging:paging processor:^(id data) {
         SCommentData *comment = [self parseCommentEntry:data];
         comment.commentedObject = object;
@@ -385,8 +369,7 @@
     return result;
 }
 
-- (SCommentData *)parseCommentEntry:(NSDictionary *)entryData
-{
+- (SCommentData *)parseCommentEntry:(NSDictionary *)entryData {
     SCommentData *entry = [[SCommentData alloc] initWithHandler:self];
 
     entry.message = [self processToText:entryData[@"text"]];
@@ -402,8 +385,7 @@
     return entry;
 }
 
-- (void)uploadAttachments:(NSArray *)attachments owner:(SUserData *)owner destination:(NSString *)destination operation:(SocialConnectorOperation *)operation completion:(void (^)(NSArray *))completion
-{
+- (void)uploadAttachments:(NSArray *)attachments owner:(SUserData *)owner destination:(NSString *)destination operation:(SocialConnectorOperation *)operation completion:(void (^)(NSArray *))completion {
     if (!attachments.count) {
         completion(nil);
         return;
@@ -487,8 +469,7 @@
     completion(uploadedObjects);
 }
 
-- (SObject *)sendInvitation:(SInvitation *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)sendInvitation:(SInvitation *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         SFeedEntry *feed = [SFeedEntry new];
@@ -500,8 +481,7 @@
     }];
 }
 
-- (SObject *)share:(SShareItem *)params completion:(SObjectCompletionBlock)completion;
-{
+- (SObject *)share:(SShareItem *)params completion:(SObjectCompletionBlock)completion; {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         if (params.text.length) {
@@ -516,7 +496,7 @@
 
             [self postToFeed:feed completion:operation.completion];
         }
-        else if(params.photo) {
+        else if (params.photo) {
 
             [self uploadPhoto:params.photo album:kWallAlbum operation:operation completion:^(SObject *result) {
 
@@ -530,69 +510,66 @@
 }
 
 
-- (SObject *)postToFeed:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)postToFeed:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        [self uploadAttachments:params.attachments owner:params.owner destination:kWallAlbum operation:operation completion:^(NSArray *attachments)
-                {
+        [self uploadAttachments:params.attachments owner:params.owner destination:kWallAlbum operation:operation completion:^(NSArray *attachments) {
 
-                    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+            NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
 
-                    if (params.message.length) {
-                        parameters[@"message"] = params.message;
-                    }
+            if (params.message.length) {
+                parameters[@"message"] = params.message;
+            }
 
-                    NSLog(@"params = %@", params);
+            NSLog(@"params = %@", params);
 
-                    NSString *ownerId = self.userId;
-                    if (params.owner) {
-                        ownerId = params.owner.objectId;
-                        parameters[@"owner_id"] = params.owner.objectId;
-                    }
+            NSString *ownerId = self.userId;
+            if (params.owner) {
+                ownerId = params.owner.objectId;
+                parameters[@"owner_id"] = params.owner.objectId;
+            }
 
-                    if (attachments.count) {
-                        NSString *attach = [[[attachments rac_sequence] map:^id(id <SMultimediaObject> obj)
-                                {
-                                    return [NSString stringWithFormat:@"%@%@_%@", obj.mediaType,obj.owner.objectId, obj.objectId];
-                                }].array componentsJoinedByString:@","];
+            if (attachments.count) {
+                NSString *attach = [[[attachments rac_sequence] map:^id(id <SMultimediaObject> obj) {
+                    return [NSString stringWithFormat:@"%@%@_%@", obj.mediaType, obj.owner.objectId, obj.objectId];
+                }].array componentsJoinedByString:@","];
 
-                        parameters[@"attachments"] = attach;
-                    }
+                parameters[@"attachments"] = attach;
+            }
 
-                    [self simpleMethod:@"wall.post" parameters:parameters operation:operation processor:^(id response){
+            [self simpleMethod:@"wall.post" parameters:parameters operation:operation processor:^(id response) {
 
-                        if ([params[kNoResultObjectKey] boolValue]) {
-                            [operation complete:[SObject successful]];
-                            return;
+                if ([params[kNoResultObjectKey] boolValue]) {
+                    [operation complete:[SObject successful]];
+                    return;
+                }
+
+                NSString *localPostId = response[@"post_id"];
+                NSString *postId = [NSString stringWithFormat:@"%@_%@", ownerId, response[@"post_id"]];
+
+                [self simpleMethod:@"wall.getById" parameters:@{@"posts" : postId} operation:operation processor:^(id response) {
+                    SFeedEntry *feedEntry = nil;
+
+                    for (id entry in response) {
+                        if ([entry isKindOfClass:[NSDictionary class]]) {
+                            feedEntry = [self parseFeedEntry:entry];
+                            break;
                         }
+                    }
+                    if (feedEntry) {
+                        [operation complete:feedEntry];
+                    }
+                    else if (localPostId.length) {
+                        [operation complete:[SObject successful]];
+                    }
+                    else {
+                        [operation completeWithFailure];
+                    }
 
-                        NSString *localPostId = response[@"post_id"];
-                        NSString *postId = [NSString stringWithFormat:@"%@_%@", ownerId, response[@"post_id"]];
-
-                        [self simpleMethod:@"wall.getById" parameters:@{@"posts" : postId} operation:operation processor:^(id response){
-                            SFeedEntry *feedEntry = nil;
-
-                            for (id entry in response) {
-                                if ([entry isKindOfClass:[NSDictionary class]]) {
-                                    feedEntry = [self parseFeedEntry:entry];
-                                    break;
-                                }
-                            }
-                            if (feedEntry) {
-                                [operation complete:feedEntry];
-                            }
-                            else if (localPostId.length) {
-                                [operation complete:[SObject successful]];
-                            }
-                            else {
-                                [operation completeWithFailure];
-                            }
-
-                        }];
-
-                    }];
                 }];
+
+            }];
+        }];
     }];
 }
 

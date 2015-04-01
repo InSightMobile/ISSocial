@@ -9,13 +9,11 @@
 #import "SUserData.h"
 
 
-@implementation InstagramConnector
-{
+@implementation InstagramConnector {
 
 }
 
-+ (InstagramConnector *)instance
-{
++ (InstagramConnector *)instance {
     static InstagramConnector *_instance = nil;
 
     @synchronized (self) {
@@ -27,29 +25,24 @@
     return _instance;
 }
 
-- (NSString *)connectorCode
-{
+- (NSString *)connectorCode {
     return @"Ig";
 }
 
-- (NSString *)connectorName
-{
+- (NSString *)connectorName {
     return NSLocalizedString(@"Instagram", @"Instagram");
 }
 
-- (NSInteger)connectorPriority
-{
+- (NSInteger)connectorPriority {
     return 4;
 }
 
-- (NSInteger)connectorDisplayPriority
-{
+- (NSInteger)connectorDisplayPriority {
     return 4;
 }
 
 
-- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
     [IGSession openActiveSessionWithPermissions:@[@"comments", @"likes"] completionHandler:^(IGSession *session, IGSessionState status, NSError *error) {
         switch (status) {
             case IGSessionStateOpen: {
@@ -71,13 +64,11 @@
     return [SObject objectWithState:SObjectStateProcessing];
 }
 
-- (BOOL)isLoggedIn
-{
+- (BOOL)isLoggedIn {
     return _loggedIn;
 }
 
-- (void)simpleRequest:(NSString *)method path:(NSString *)path parameters:(NSDictionary *)parameters operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor
-{
+- (void)simpleRequest:(NSString *)method path:(NSString *)path parameters:(NSDictionary *)parameters operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
     [[IGRequest requestWithMethod:method path:path parameters:parameters] startWithCompletionHandler:^(IGRequestOperation *connection, id response, NSError *error) {
         if (error) {
             NSLog(@"error = %@", error);
@@ -90,15 +81,13 @@
 }
 
 
-- (SUserData *)dataForUserId:(NSString *)userId
-{
+- (SUserData *)dataForUserId:(NSString *)userId {
     SUserData *data = [[SUserData alloc] initWithHandler:self];
     data.objectId = userId;
     return data;
 }
 
-- (BOOL)handleOpenURL:(NSURL *)url
-{
+- (BOOL)handleOpenURL:(NSURL *)url {
     return [[IGSession activeSession] handleURL:url];
 }
 

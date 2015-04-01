@@ -30,8 +30,7 @@ static const int kMaxRetries = 3;
 
 @implementation VkontakteConnector
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
 
@@ -48,27 +47,23 @@ static const int kMaxRetries = 3;
 }
 
 
-+ (NSString *)connectorCode
-{
++ (NSString *)connectorCode {
     return ISSocialConnectorIdVkontakte;
 }
 
 
-- (void)simpleMethod:(NSString *)method operation:(SocialConnectorOperation *)operation processor:(void (^)(id response))processor
-{
+- (void)simpleMethod:(NSString *)method operation:(SocialConnectorOperation *)operation processor:(void (^)(id response))processor {
     [self simpleMethod:method parameters:nil operation:operation processor:processor];
 }
 
 
 #pragma mark Session management
 
-- (SObject *)closeSessionAndClearCredentials:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)closeSessionAndClearCredentials:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self closeSession:params completion:completion];
 }
 
-- (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
     self.accessToken = nil;
     self.currentUserData = nil;
     [VKSdk forceLogout];
@@ -78,8 +73,7 @@ static const int kMaxRetries = 3;
 }
 
 
-- (SObject *) openSession:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         NSArray *permissions = self.permissions;
         if (!permissions) {
@@ -97,13 +91,11 @@ static const int kMaxRetries = 3;
     }];
 }
 
-- (BOOL)isLoggedIn
-{
+- (BOOL)isLoggedIn {
     return _loggedIn;
 }
 
-- (ISSAuthorisationInfo *)authorizatioInfo
-{
+- (ISSAuthorisationInfo *)authorizatioInfo {
     ISSAuthorisationInfo *token = [ISSAuthorisationInfo new];
     token.handler = self;
     token.accessToken = self.accessToken.accessToken;
@@ -111,13 +103,11 @@ static const int kMaxRetries = 3;
     return token;
 }
 
-- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
+- (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation {
     return [VKSdk processOpenURL:url fromApplication:sourceApplication];
 }
 
-- (void)handleDidBecomeActive
-{
+- (void)handleDidBecomeActive {
     [self iss_performBlock:^(id sender) {
         if (![VKSdk isLoggedIn]) {
             [self.autorizationOperation completeWithFailure];
@@ -127,8 +117,7 @@ static const int kMaxRetries = 3;
 }
 
 
-- (void)setupSettings:(NSDictionary *)settings
-{
+- (void)setupSettings:(NSDictionary *)settings {
     [super setupSettings:settings];
     if (settings[@"AppID"]) {
         self.clientId = settings[@"AppID"];
@@ -143,16 +132,14 @@ static const int kMaxRetries = 3;
 - (void)simpleMethod:(NSString *)method
           parameters:(NSDictionary *)parameters
            operation:(SocialConnectorOperation *)operation
-           processor:(void (^)(id))processor
-{
+           processor:(void (^)(id))processor {
 
     VKRequest *request = [VKRequest requestWithMethod:method andParameters:parameters andHttpMethod:@"GET"];
 
     [self executeRequest:request operation:operation processor:processor retries:0];
 }
 
-- (void)executeRequest:(VKRequest *)request operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor retries:(NSInteger)retries
-{
+- (void)executeRequest:(VKRequest *)request operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor retries:(NSInteger)retries {
     NSLog(@"request = %@", request);
 
     [request executeWithResultBlock:^(VKResponse *response) {
@@ -193,15 +180,13 @@ static const int kMaxRetries = 3;
     [operation addSubOperation:request.executionOperation];
 }
 
-- (void)reauthorizeWithOperation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
-{
+- (void)reauthorizeWithOperation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion {
     SObject *op = [self operationWithObject:operation.object completion:completion];
     self.autorizationOperation = op.operation;
     [VKSdk authorize:self.permissions revokeAccess:NO forceOAuth:NO inApp:NO display:VK_DISPLAY_IOS];
 }
 
-- (NSError *)processVKError:(NSError *)error
-{
+- (NSError *)processVKError:(NSError *)error {
     int code = ISSocialErrorUnknown;
     if (error.code == 214) {
         code = ISSocialErrorOperationNotAllowedByTarget;
@@ -213,18 +198,15 @@ static const int kMaxRetries = 3;
     return socialError;
 }
 
-- (void)vkSdkNeedCaptchaEnter:(VKError *)captchaError
-{
+- (void)vkSdkNeedCaptchaEnter:(VKError *)captchaError {
 
 }
 
-- (void)vkSdkTokenHasExpired:(VKAccessToken *)expiredToken
-{
+- (void)vkSdkTokenHasExpired:(VKAccessToken *)expiredToken {
 
 }
 
-- (void)vkSdkUserDeniedAccess:(VKError *)authorizationError
-{
+- (void)vkSdkUserDeniedAccess:(VKError *)authorizationError {
     if (self.presentedController) {
         [[ISSPresentingViewController presentingController] dismissController:self.presentedController];
         self.presentedController = nil;
@@ -249,14 +231,12 @@ static const int kMaxRetries = 3;
 
 }
 
-- (void)vkSdkShouldPresentViewController:(UIViewController *)controller
-{
+- (void)vkSdkShouldPresentViewController:(UIViewController *)controller {
     self.presentedController = controller;
     [[ISSPresentingViewController presentingController] presentController:controller];
 }
 
-- (void)vkSdkReceivedNewToken:(VKAccessToken *)newToken
-{
+- (void)vkSdkReceivedNewToken:(VKAccessToken *)newToken {
     if (self.presentedController) {
         [[ISSPresentingViewController presentingController] dismissController:self.presentedController];
         self.presentedController = nil;
@@ -266,8 +246,7 @@ static const int kMaxRetries = 3;
     [self completeAuthorization];
 }
 
-- (void)completeAuthorization
-{
+- (void)completeAuthorization {
     if (!self.currentUserData) {
         self.currentUserData = [self dataForUserId:self.accessToken.userId];
     }

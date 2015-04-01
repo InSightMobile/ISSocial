@@ -7,13 +7,11 @@
 
 
 @implementation NSString (TypeSafety)
-- (NSString *)stringValue
-{
+- (NSString *)stringValue {
     return [self copy];
 }
 
-- (NSURL *)URLValue
-{
+- (NSURL *)URLValue {
     return [NSURL URLWithString:self];
 }
 @end

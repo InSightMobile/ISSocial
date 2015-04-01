@@ -13,30 +13,25 @@
 
 @implementation VkontakteConnector (Link)
 
-- (SObject *)addLinkLike:(SLinkData *)link completion:(SObjectCompletionBlock)completion
-{
-    return [self operationWithObject:link completion:completion processor:^(SocialConnectorOperation *operation)
-    {
+- (SObject *)addLinkLike:(SLinkData *)link completion:(SObjectCompletionBlock)completion {
+    return [self operationWithObject:link completion:completion processor:^(SocialConnectorOperation *operation) {
         id pageId = link.objectId;
 
         //pageId = link.linkURL.absoluteString;
 
         [self simpleMethod:@"likes.add" parameters:@{@"item_id" : pageId, @"page_url" : link.linkURL.absoluteString, @"type" : @"sitepage"}
-                 operation:operation processor:^(id response)
-        {
+                 operation:operation processor:^(id response) {
 
-            SLinkData *result = link;
-            result.userLikes = @YES;
-            result.likesCount = @([response[@"likes"] intValue]);
-            [operation complete:result];
-        }];
+                    SLinkData *result = link;
+                    result.userLikes = @YES;
+                    result.likesCount = @([response[@"likes"] intValue]);
+                    [operation complete:result];
+                }];
     }];
 }
 
-- (SObject *)publishLink:(SLinkData *)link completion:(SObjectCompletionBlock)completion
-{
-    return [self operationWithObject:link completion:completion processor:^(SocialConnectorOperation *operation)
-    {
+- (SObject *)publishLink:(SLinkData *)link completion:(SObjectCompletionBlock)completion {
+    return [self operationWithObject:link completion:completion processor:^(SocialConnectorOperation *operation) {
         NSString *userId = nil;
         if (link.owner && link.owner.objectId != self.currentUserData.objectId) {
             userId = link.owner.objectId;
@@ -52,12 +47,11 @@
 
         }
 
-        if(link.message.length) {
+        if (link.message.length) {
             params[@"message"] = link.message;
         }
 
-        [self simpleMethod:@"wall.post" parameters:params operation:operation processor:^(id result)
-        {
+        [self simpleMethod:@"wall.post" parameters:params operation:operation processor:^(id result) {
             if (result[@"post_id"]) {
                 [operation complete:[SObject successful]];
             }

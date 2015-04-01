@@ -10,8 +10,7 @@
 
 @implementation NSDate (Facebook)
 
-+ (NSDate *)dateWithFacebookString:(id)data
-{
++ (NSDate *)dateWithFacebookString:(id)data {
     if ([data isKindOfClass:[NSNumber class]]) {
         return [NSDate dateWithTimeIntervalSince1970:[data doubleValue]];
     }
@@ -22,8 +21,7 @@
     return date;
 }
 
-+ (NSDate *)dateWithFacebookBirthdayString:(id)data
-{
++ (NSDate *)dateWithFacebookBirthdayString:(id)data {
     if ([data isKindOfClass:[NSNumber class]]) {
         return [NSDate dateWithTimeIntervalSince1970:[data doubleValue]];
     }
@@ -31,14 +29,13 @@
     //2010-12-01T21:35:43+0000
     [df setDateFormat:@"MM/dd/yyyy"];
     NSDate *date = [df dateFromString:data];
-    if(!date) {
+    if (!date) {
         return [self dateWithFacebookBirthdayNoYearString:data];
     }
     return date;
 }
 
-+ (NSDate *)dateWithFacebookBirthdayNoYearString:(id)data
-{
++ (NSDate *)dateWithFacebookBirthdayNoYearString:(id)data {
     if ([data isKindOfClass:[NSNumber class]]) {
         return [NSDate dateWithTimeIntervalSince1970:[data doubleValue]];
     }
@@ -49,8 +46,7 @@
     return date;
 }
 
-- (NSString *)facebookString
-{
+- (NSString *)facebookString {
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     //2010-12-01T21:35:43+0000
     [df setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];

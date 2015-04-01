@@ -1,12 +1,12 @@
 Pod::Spec.new do |s|
   s.name     = 'ISSocial'
-  s.version  = '0.1.1'
+  s.version  = '0.1.2'
   s.license  = 'MIT'
   s.summary  = 'Social networks connection library.'
-  s.source   = { :git => 'git@bitbucket.org:Infoshell/issocial.git', :branch => "develop",  :submodules => true }
+  s.source   = { :git => 'https://github.com/InSightMobile/ISSocial.git', :tag => "0.1.2" }
   s.requires_arc = true
 
-  s.ios.deployment_target = '6.0'
+  s.ios.deployment_target = '7.0'
 
   s.public_header_files = 'ISSocial/*.h'
   s.source_files = 'ISSocial/*.h'
@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
     ss.ios.frameworks = 'MobileCoreServices', 'CoreGraphics'
     ss.osx.frameworks = 'CoreServices'
 
-    ss.dependency 'ReactiveCocoa', '~> 2.3'
+    ss.dependency 'ReactiveCocoa', '~> 2.4'
     ss.dependency 'SDWebImage', '~> 3.7'
     ss.dependency 'RegexKitLite', '~> 4.0'
     ss.dependency 'AFNetworking', '~> 2.5'    
@@ -70,7 +70,6 @@ Pod::Spec.new do |s|
 
     ss.subspec 'OKSdk' do |sss|
       sss.source_files = 'ISSocial/SocialConnectors/Odnoklassniki/OKSdk/**/*.{h,m}','ISSocial/SocialConnectors/Odnoklassniki/OKSdk/*.{h,m}'
-      #ss.dependency 'SBJson', '~> 3.0'
     end
   end
 

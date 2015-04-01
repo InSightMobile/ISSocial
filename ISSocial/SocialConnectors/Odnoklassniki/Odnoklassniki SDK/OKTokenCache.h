@@ -12,10 +12,12 @@ extern NSString *const kPermissionsKey;
 
 @interface OKTokenCache : NSObject
 
-+(OKTokenCache *)sharedCache;
++ (OKTokenCache *)sharedCache;
 
--(void)cacheTokenInformation:(NSDictionary *)tokenInfo;
--(NSDictionary*)getTokenInformation;
--(void)clearToken;
+- (void)cacheTokenInformation:(NSDictionary *)tokenInfo;
+
+- (NSDictionary *)getTokenInformation;
+
+- (void)clearToken;
 
 @end

@@ -2,11 +2,9 @@
 //
 
 #import "SShareItem.h"
-#import "SPhotoData.h"
 
 
-@implementation SShareItem
-{
+@implementation SShareItem {
 
 }
 @end

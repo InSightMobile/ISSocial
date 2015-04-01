@@ -23,5 +23,4 @@
 @interface SMessageThread : SObject <SMessageThread>
 
 
-
 @end

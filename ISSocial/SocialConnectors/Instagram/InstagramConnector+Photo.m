@@ -13,8 +13,7 @@
 
 @implementation InstagramConnector (Photo)
 
-- (SObject *)readFrom:(NSString *)from params:(SObject *)params paging:(SObject *)paging pageSelector:(SEL)selector completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readFrom:(NSString *)from params:(SObject *)params paging:(SObject *)paging pageSelector:(SEL)selector completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         NSDictionary *options = nil;
         if (paging) {
@@ -40,8 +39,7 @@
     }];
 }
 
-- (SObject *)parseFeedEntries:(id)response
-{
+- (SObject *)parseFeedEntries:(id)response {
     SObject *result = [SObject objectCollectionWithHandler:self];
 
     for (NSDictionary *feed in response[@"data"]) {
@@ -55,28 +53,23 @@
     return result;
 }
 
-- (SObject *)readNews:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readNews:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self readFrom:@"users/self/feed" params:params paging:nil pageSelector:@selector(pageNews:completion:) completion:completion];
 }
 
-- (SObject *)pageNews:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)pageNews:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self readFrom:@"users/self/feed" params:params paging:params pageSelector:@selector(pageNews:completion:) completion:completion];
 }
 
-- (SObject *)readFeed:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readFeed:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self readFrom:@"users/self/media/recent" params:params paging:nil pageSelector:@selector(pageFeed:completion:) completion:completion];
 }
 
-- (SObject *)pageFeed:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)pageFeed:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self readFrom:@"users/self/media/recent" params:params paging:params pageSelector:@selector(pageFeed:completion:) completion:completion];
 }
 
-- (SObject *)readPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readPhotos:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSDictionary *options = @{@"count" : @(self.pageSize)};
@@ -104,8 +97,7 @@
     }];
 }
 
-- (SObject *)parseComment:(NSDictionary *)entry
-{
+- (SObject *)parseComment:(NSDictionary *)entry {
 
     SCommentData *comment = [[SCommentData alloc] initWithHandler:self];
     NSLog(@"entry = %@", entry);
@@ -125,35 +117,33 @@
     return comment;
 }
 
-- (SObject *)addPhotoComment:(SCommentData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)addPhotoComment:(SCommentData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleRequest:@"POST" path:[NSString stringWithFormat:@"media/%@/comments", [params.commentedObject objectId]] parameters:@{@"text" : params.message}
                   operation:operation processor:^(id response) {
 
-            id <SCommentedObject> object = params.commentedObject;
+                    id <SCommentedObject> object = params.commentedObject;
 
-            NSLog(@"response = %@", response);
+                    NSLog(@"response = %@", response);
 
-            SObject *result = [SObject objectCollectionWithHandler:self];
+                    SObject *result = [SObject objectCollectionWithHandler:self];
 
-            for (NSDictionary *feed in response) {
+                    for (NSDictionary *feed in response) {
 
-                [result addSubObject:[self parseComment:feed]];
-            }
+                        [result addSubObject:[self parseComment:feed]];
+                    }
 
-            object.commentsCount = @(object.commentsCount.intValue + 1);
-            [object fireUpdateNotification];
+                    object.commentsCount = @(object.commentsCount.intValue + 1);
+                    [object fireUpdateNotification];
 
-            [operation complete:result];
+                    [operation complete:result];
 
-        }];
+                }];
     }];
 }
 
-- (SObject *)addPhotoLike:(SPhotoData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)addPhotoLike:(SPhotoData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleRequest:@"POST" path:[NSString stringWithFormat:@"media/%@/likes", [params objectId]] parameters:nil operation:operation processor:^(id response) {
@@ -171,8 +161,7 @@
     }];
 }
 
-- (SObject *)removePhotoLike:(SPhotoData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)removePhotoLike:(SPhotoData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleRequest:@"DELETE" path:[NSString stringWithFormat:@"media/%@/likes", [params objectId]] parameters:nil operation:operation processor:^(id response) {
@@ -190,28 +179,23 @@
     }];
 }
 
-- (SObject *)addFeedLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)addFeedLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion {
     return [self addPhotoLike:(id) feed completion:completion];
 }
 
-- (SObject *)removeFeedLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)removeFeedLike:(SFeedEntry *)feed completion:(SObjectCompletionBlock)completion {
     return [self removePhotoLike:(id) feed completion:completion];
 }
 
-- (SObject *)addNewsLike:(SNewsEntry *)feed completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)addNewsLike:(SNewsEntry *)feed completion:(SObjectCompletionBlock)completion {
     return [self addPhotoLike:(id) feed completion:completion];
 }
 
-- (SObject *)removeNewsLike:(SNewsEntry *)feed completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)removeNewsLike:(SNewsEntry *)feed completion:(SObjectCompletionBlock)completion {
     return [self removePhotoLike:(id) feed completion:completion];
 }
 
-- (SObject *)readPhotoComments:(SPhotoData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readPhotoComments:(SPhotoData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSDictionary *options = @{@"count" : @(self.pageSize)};
@@ -228,8 +212,7 @@
     }];
 }
 
-- (SObject *)pagePhotoComments:(SPhotoData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)pagePhotoComments:(SPhotoData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         if (!params.pagingData) {
@@ -247,8 +230,7 @@
     }];
 }
 
-- (SObject *)parseComments:(id)response
-{
+- (SObject *)parseComments:(id)response {
     NSLog(@"response = %@", response);
 
     SObject *result = [SObject objectCollectionWithHandler:self];
@@ -265,23 +247,19 @@
     return result;
 }
 
-- (SObject *)readFeedComments:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readFeedComments:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion {
     return [self readPhotoComments:(id) params completion:completion];
 }
 
-- (SObject *)readNewsComments:(SNewsEntry *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readNewsComments:(SNewsEntry *)params completion:(SObjectCompletionBlock)completion {
     return [self readPhotoComments:(id) params completion:completion];
 }
 
-- (SObject *)addFeedComment:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)addFeedComment:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion {
     return [self addPhotoComment:(id) params completion:completion];
 }
 
-- (SFeedEntry *)parseFeed:(NSDictionary *)data
-{
+- (SFeedEntry *)parseFeed:(NSDictionary *)data {
     SFeedEntry *feed = [[SFeedEntry alloc] initWithHandler:self];
     SPhotoData *photo = [self parsePhoto:data];
 
@@ -300,8 +278,7 @@
     return feed;
 }
 
-- (SPhotoData *)parsePhoto:(NSDictionary *)data
-{
+- (SPhotoData *)parsePhoto:(NSDictionary *)data {
     SPhotoData *photo = (SPhotoData *) [self mediaObjectForId:data[@"id"] type:@"photo"];
 
     id caption = data[@"caption"];
@@ -338,20 +315,18 @@
     return photo;
 }
 
-- (void)addImage:(NSDictionary *)img toImages:(MultiImage *)images qulity:(float)quality
-{
-    if([img isKindOfClass:[NSDictionary class]]) {
+- (void)addImage:(NSDictionary *)img toImages:(MultiImage *)images qulity:(float)quality {
+    if ([img isKindOfClass:[NSDictionary class]]) {
         [images addImageURL:img[@"url"]
                    forWitdh:[img[@"width"] intValue]
                      height:[img[@"height"] intValue]];
     }
-    else if([img isKindOfClass:[NSString class]]) {
-        [images addImageURL:[(NSString *)img URLValue] quality:quality];
+    else if ([img isKindOfClass:[NSString class]]) {
+        [images addImageURL:[(NSString *) img URLValue] quality:quality];
     }
 }
 
-- (SUserData *)parseUser:(NSDictionary *)userData
-{
+- (SUserData *)parseUser:(NSDictionary *)userData {
     SUserData *user = [[SUserData alloc] initWithHandler:self];
 
     MultiImage *image = [MultiImage new];

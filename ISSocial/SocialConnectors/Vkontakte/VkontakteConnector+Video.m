@@ -16,8 +16,7 @@
 
 @implementation VkontakteConnector (Video)
 
-- (SVideoData *)parseVideoResponse:(NSDictionary *)info
-{
+- (SVideoData *)parseVideoResponse:(NSDictionary *)info {
     NSLog(@"info = %@", info);
 
     SUserData *owner = [self dataForUserId:[info[@"owner_id"] stringValue]];
@@ -52,6 +51,7 @@
 
     return video;
 }
+
 #if 0
 - (SObject *)addVideo:(SVideoData *)params completion:(SObjectCompletionBlock)completion
 {
@@ -96,8 +96,7 @@
 }
 #endif
 
-- (SObject *)readVideo:(SObject *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readVideo:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"video.get" parameters:@{@"uid" : self.userId, @"photo_sizes" : @1, @"extended" : @1} operation:operation processor:^(id response) {
@@ -109,8 +108,7 @@
     }];
 }
 
-- (SObject *)parseVideosResponce:(id)response
-{
+- (SObject *)parseVideosResponce:(id)response {
     SObject *result = [SObject objectCollectionWithHandler:self];
 
     NSLog(@"response = %@", response);
@@ -125,65 +123,61 @@
     return result;
 }
 
-- (SObject *)addVideoComment:(SCommentData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)addVideoComment:(SCommentData *)params completion:(SObjectCompletionBlock)completion {
     NSLog(@"params = %@", params);
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
         [self simpleMethod:@"video.createComment" parameters:@{
-                @"vid" : [(SVideoData *) params.commentedObject videoId],
-                @"owner_id" : [(SVideoData *) params.commentedObject author].objectId,
-                @"message" : params.message}
+                        @"vid" : [(SVideoData *) params.commentedObject videoId],
+                        @"owner_id" : [(SVideoData *) params.commentedObject author].objectId,
+                        @"message" : params.message}
                  operation:operation processor:^(id response) {
 
-            NSLog(@"response = %@", response);
+                    NSLog(@"response = %@", response);
 
-            SVideoData *video = (SVideoData *) params.commentedObject;
+                    SVideoData *video = (SVideoData *) params.commentedObject;
 
-            SCommentData *comment = [params copyWithHandler:self];
-            comment.objectId = [response stringValue];
-            video.commentsCount = @(video.commentsCount.intValue + 1);
-            [video fireUpdateNotification];
+                    SCommentData *comment = [params copyWithHandler:self];
+                    comment.objectId = [response stringValue];
+                    video.commentsCount = @(video.commentsCount.intValue + 1);
+                    [video fireUpdateNotification];
 
-            [operation complete:comment];
-        }];
+                    [operation complete:comment];
+                }];
     }];
 }
 
-- (SObject *)readVideoLikes:(SVideoData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readVideoLikes:(SVideoData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self readLikes:params operation:operation type:@"video" itemId:params.videoId owner:params.author];
     }];
 }
 
-- (void)readLikes:(SVideoData *)params operation:(SocialConnectorOperation *)operation type:(NSString *)type itemId:(NSString *)itemId owner:(SUserData *)owner
-{
+- (void)readLikes:(SVideoData *)params operation:(SocialConnectorOperation *)operation type:(NSString *)type itemId:(NSString *)itemId owner:(SUserData *)owner {
     [self simpleMethod:@"likes.getList" parameters:@{@"item_id" : itemId, @"type" : type, @"owner_id" : owner.objectId}
              operation:operation processor:^(id response) {
 
-        NSLog(@"response = %@", response);
+                NSLog(@"response = %@", response);
 
-        SVideoData *result = params;
+                SVideoData *result = params;
 
-        result.canAddLike = @YES;
-        result.likesCount = @([response[@"count"] intValue]);
+                result.canAddLike = @YES;
+                result.likesCount = @([response[@"count"] intValue]);
 
-        result.userLikes = @YES;
+                result.userLikes = @YES;
 
-        [self simpleMethod:@"likes.isLiked" parameters:@{@"item_id" : itemId, @"type" : type, @"owner_id" : owner.objectId}
-                 operation:operation processor:^(id response) {
+                [self simpleMethod:@"likes.isLiked" parameters:@{@"item_id" : itemId, @"type" : type, @"owner_id" : owner.objectId}
+                         operation:operation processor:^(id response) {
 
-            result.userLikes = @([response intValue]);
+                            result.userLikes = @([response intValue]);
 
-            [result fireUpdateNotification];
-            [operation complete:result];
-        }];
-    }];
+                            [result fireUpdateNotification];
+                            [operation complete:result];
+                        }];
+            }];
 }
 
-- (SObject *)addVideoLike:(SVideoData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)addVideoLike:(SVideoData *)params completion:(SObjectCompletionBlock)completion {
     NSLog(@"params = %@", params);
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -191,8 +185,7 @@
     }];
 }
 
-- (SObject *)removeVideoLike:(SVideoData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)removeVideoLike:(SVideoData *)params completion:(SObjectCompletionBlock)completion {
     NSLog(@"params = %@", params);
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -200,34 +193,31 @@
     }];
 }
 
-- (void)addLike:(SVideoData *)params operation:(SocialConnectorOperation *)operation type:(NSString *)type itemId:(NSString *)itemId owner:(SUserData *)owner
-{
+- (void)addLike:(SVideoData *)params operation:(SocialConnectorOperation *)operation type:(NSString *)type itemId:(NSString *)itemId owner:(SUserData *)owner {
     [self simpleMethod:@"likes.add" parameters:@{@"item_id" : itemId, @"type" : type, @"owner_id" : owner.objectId}
              operation:operation processor:^(id response) {
 
-        SVideoData *result = params;
-        result.userLikes = @YES;
-        result.likesCount = @([response[@"likes"] intValue]);
-        [result fireUpdateNotification];
-        [operation complete:result];
-    }];
+                SVideoData *result = params;
+                result.userLikes = @YES;
+                result.likesCount = @([response[@"likes"] intValue]);
+                [result fireUpdateNotification];
+                [operation complete:result];
+            }];
 }
 
 
-- (void)removeLike:(SVideoData *)params operation:(SocialConnectorOperation *)operation type:(NSString *)type itemId:(NSString *)itemId owner:(SUserData *)owner
-{
+- (void)removeLike:(SVideoData *)params operation:(SocialConnectorOperation *)operation type:(NSString *)type itemId:(NSString *)itemId owner:(SUserData *)owner {
     [self simpleMethod:@"likes.delete" parameters:@{@"item_id" : itemId, @"type" : type, @"owner_id" : owner.objectId}
              operation:operation processor:^(id response) {
-        SVideoData *result = params;
-        result.userLikes = @NO;
-        result.likesCount = @([response[@"likes"] intValue]);
-        [result fireUpdateNotification];
-        [operation complete:result];
-    }];
+                SVideoData *result = params;
+                result.userLikes = @NO;
+                result.likesCount = @([response[@"likes"] intValue]);
+                [result fireUpdateNotification];
+                [operation complete:result];
+            }];
 }
 
-- (SObject *)readVideoComments:(SVideoData *)params completion:(SObjectCompletionBlock)completion
-{
+- (SObject *)readVideoComments:(SVideoData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         [self simpleMethod:@"video.getComments" parameters:@{@"vid" : params.videoId, @"owner_id" : params.author.objectId} operation:operation processor:^(NSArray *response) {

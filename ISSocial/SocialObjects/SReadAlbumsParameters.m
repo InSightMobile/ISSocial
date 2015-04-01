@@ -4,8 +4,7 @@
 #import "SReadAlbumsParameters.h"
 
 
-@implementation SReadAlbumsParameters
-{
+@implementation SReadAlbumsParameters {
 
 }
 @end

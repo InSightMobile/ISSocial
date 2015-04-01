@@ -6,8 +6,7 @@
 #import "SMediaObject.h"
 
 
-@implementation SMediaObject
-{
+@implementation SMediaObject {
 
 }
 @end

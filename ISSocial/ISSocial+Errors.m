@@ -10,17 +10,15 @@
 @implementation ISSocial (Errors)
 
 
-
-+ (NSError *)errorWithCode:(NSInteger)code sourseError:(NSError *)sourecError userInfo:(NSDictionary *)userInfo
-{
++ (NSError *)errorWithCode:(NSInteger)code sourseError:(NSError *)sourecError userInfo:(NSDictionary *)userInfo {
     NSMutableDictionary *info = [NSMutableDictionary new];
 
-    if(sourecError) {
+    if (sourecError) {
         info[NSUnderlyingErrorKey] = sourecError;
     }
 
     NSString *description = nil;
-    if(sourecError) {
+    if (sourecError) {
         description = sourecError.localizedDescription;
     }
     switch (code) {
@@ -33,7 +31,7 @@
             break;
 
     }
-    if(description) {
+    if (description) {
         info[NSLocalizedDescriptionKey] = description;
     }
 
@@ -44,9 +42,8 @@
     return [NSError errorWithDomain:ISSocialErrorDomain code:code userInfo:info];
 }
 
-+ (NSError *)errorWithError:(NSError *)error
-{
-    if(![error.domain isEqualToString:ISSocialErrorDomain]) {
++ (NSError *)errorWithError:(NSError *)error {
+    if (![error.domain isEqualToString:ISSocialErrorDomain]) {
         error = [ISSocial errorWithCode:ISSocialErrorUnknown sourseError:error userInfo:nil];
     }
     return error;

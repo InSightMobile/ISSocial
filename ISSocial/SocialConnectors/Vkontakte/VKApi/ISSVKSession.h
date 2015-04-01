@@ -7,8 +7,7 @@
 @class AFHTTPClient;
 @class ISSVKSession;
 
-typedef enum
-{
+typedef enum {
     ISSVKSessionStateOpen,
     ISSVKSessionStateClosedLoginFailed,
     ISSVKSessionStateClosed

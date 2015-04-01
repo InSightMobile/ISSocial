@@ -21,15 +21,13 @@
 @property(nonatomic, strong) NSError *error;
 @end
 
-@implementation WebLoginController
-{
+@implementation WebLoginController {
     BOOL _dissmissing;
     BOOL _appeared;
     BOOL _disappeared;
 }
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _disappeared = YES;
@@ -37,8 +35,7 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
+- (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
         _disappeared = YES;
@@ -48,11 +45,10 @@
 }
 
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 
-    if(!self.webView) {
+    if (!self.webView) {
         UIWebView *webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
         webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self.view addSubview:webView];
@@ -63,25 +59,21 @@
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
 
-+ (WebLoginController *)loginController
-{
++ (WebLoginController *)loginController {
     return [[WebLoginManager instance] loadLoginController];
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [self setWebView:nil];
     [super viewDidUnload];
 }
 
-- (void)presentWithRequest:(NSURLRequest *)request
-{
+- (void)presentWithRequest:(NSURLRequest *)request {
     AsyncBlockOperation *operation =
             [AsyncBlockOperation operationWithBlock:^(AsyncBlockOperation *operation, AsyncBlockOperationCompletionBlock completionBlock) {
 
@@ -93,15 +85,13 @@
     [[WebLoginManager instance] addLoginOperation:operation];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     _appeared = NO;
     [super viewWillDisappear:animated];
 }
 
 
-- (void)viewDidDisappear:(BOOL)animated
-{
+- (void)viewDidDisappear:(BOOL)animated {
     _disappeared = YES;
     [super viewDidDisappear:animated];
 
@@ -111,15 +101,13 @@
     }           afterDelay:0.1];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     _disappeared = NO;
     [super viewWillAppear:animated];
 }
 
 
-- (void)viewDidAppear:(BOOL)animated
-{
+- (void)viewDidAppear:(BOOL)animated {
     _disappeared = NO;
     if (_dissmissing) {
         [self iss_performBlock:^(id sender) {
@@ -134,8 +122,7 @@
 }
 
 
-- (UIViewController *)topMostController
-{
+- (UIViewController *)topMostController {
     UIViewController *topController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
 
     while (topController.presentedViewController) {
@@ -147,16 +134,14 @@
     return topController;
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView
-{
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
     if ([_delegate respondsToSelector:@selector(webLogin:didFinishPageLoad:)]) {
         [self.delegate webLogin:self didFinishPageLoad:webView.request];
     }
     [self display];
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
-{
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     WebLoginLoadingTypes type;
     if ([_delegate respondsToSelector:@selector(webLogin:loadingTypeForRequest:)]) {
         type = [self.delegate webLogin:self loadingTypeForRequest:request];
@@ -175,18 +160,15 @@
     return YES;
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
-{
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
 
 }
 
-- (void)webViewDidStartLoad:(UIWebView *)webView
-{
+- (void)webViewDidStartLoad:(UIWebView *)webView {
 
 }
 
-- (void)dismiss
-{
+- (void)dismiss {
     if (self.view.superview) {
         [self.view removeFromSuperview];
         self.completionBlock(self.error);
@@ -194,15 +176,13 @@
     }
 }
 
-- (void)display
-{
+- (void)display {
     [UIView animateWithDuration:0.3 animations:^{
         self.view.alpha = 1;
     }];
 }
 
-- (void)presentWithSuperview:(UIView *)superview
-{
+- (void)presentWithSuperview:(UIView *)superview {
     CGRect frame = superview.bounds;
     frame.origin.y = 20;
     frame.size.height -= 20;
@@ -212,15 +192,13 @@
     self.view.alpha = 0;
 }
 
-- (void)present
-{
+- (void)present {
     if (!self.view.superview) {
         [self presentWithSuperview:[[self topMostController] view]];
     }
 }
 
-- (IBAction)cancel:(id)sender
-{
+- (IBAction)cancel:(id)sender {
     [self dismiss];
     if ([_delegate respondsToSelector:@selector(webLoginDidCanceled:)]) {
         [self.delegate webLoginDidCanceled:self];

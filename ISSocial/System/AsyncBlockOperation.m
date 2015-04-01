@@ -22,8 +22,7 @@
 
 @implementation AsyncBlockOperation
 
-- (void)processingComplete:(NSError *)errorOrNil
-{
+- (void)processingComplete:(NSError *)errorOrNil {
     if (self.operationCompletionBlock)
         self.operationCompletionBlock(errorOrNil);
 
@@ -37,8 +36,7 @@
     [self didChangeValueForKey:@"isFinished"];
 }
 
-- (void)start
-{
+- (void)start {
     [self willChangeValueForKey:@"isExecuting"];
     _isExecuting = YES;
     [self didChangeValueForKey:@"isExecuting"];
@@ -65,13 +63,11 @@
     }];
 }
 
-+ (AsyncBlockOperation *)operationWithBlock:(AsyncBlockOperationBlock)block
-{
++ (AsyncBlockOperation *)operationWithBlock:(AsyncBlockOperationBlock)block {
     return [self operationWithBlock:block comletion:nil];
 }
 
-+ (AsyncBlockOperation *)operationWithBlock:(AsyncBlockOperationBlock)block comletion:(AsyncBlockOperationCompletionBlock)completion;
-{
++ (AsyncBlockOperation *)operationWithBlock:(AsyncBlockOperationBlock)block comletion:(AsyncBlockOperationCompletionBlock)completion; {
     AsyncBlockOperation *op = [AsyncBlockOperation new];
     op.block = block;
     //[op addBlock:block];
@@ -79,16 +75,14 @@
     return op;
 }
 
-- (void)addBlock:(AsyncBlockOperationBlock)pFunction
-{
+- (void)addBlock:(AsyncBlockOperationBlock)pFunction {
     if (!_blocks) {
         _blocks = [NSMutableArray arrayWithCapacity:1];
     }
     [_blocks addObject:[pFunction copy]];
 }
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
 

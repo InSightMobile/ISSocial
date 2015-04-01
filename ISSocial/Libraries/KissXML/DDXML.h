@@ -1,25 +1,24 @@
 /**
- * Welcome to KissXML.
- * 
- * The project page has documentation if you have questions.
- * https://github.com/robbiehanson/KissXML
- * 
- * If you're new to the project you may wish to read the "Getting Started" wiki.
- * https://github.com/robbiehanson/KissXML/wiki/GettingStarted
- * 
- * KissXML provides a drop-in replacement for Apple's NSXML class cluster.
- * The goal is to get the exact same behavior as the NSXML classes.
- * 
- * For API Reference, see Apple's excellent documentation,
- * either via Xcode's Mac OS X documentation, or via the web:
- * 
- * https://github.com/robbiehanson/KissXML/wiki/Reference
+* Welcome to KissXML.
+*
+* The project page has documentation if you have questions.
+* https://github.com/robbiehanson/KissXML
+*
+* If you're new to the project you may wish to read the "Getting Started" wiki.
+* https://github.com/robbiehanson/KissXML/wiki/GettingStarted
+*
+* KissXML provides a drop-in replacement for Apple's NSXML class cluster.
+* The goal is to get the exact same behavior as the NSXML classes.
+*
+* For API Reference, see Apple's excellent documentation,
+* either via Xcode's Mac OS X documentation, or via the web:
+*
+* https://github.com/robbiehanson/KissXML/wiki/Reference
 **/
 
 #import "DDXMLNode.h"
 #import "DDXMLElement.h"
 #import "DDXMLDocument.h"
-
 
 
 #if TARGET_OS_IPHONE  // Disabled by default
@@ -31,66 +30,66 @@
 // This way, on Mac OS X it uses NSXML, and on iOS it uses KissXML.
 
 #ifndef NSXMLNode
-  #define NSXMLNode DDXMLNode
+#define NSXMLNode DDXMLNode
 #endif
 #ifndef NSXMLElement
-  #define NSXMLElement DDXMLElement
+#define NSXMLElement DDXMLElement
 #endif
 #ifndef NSXMLDocument
-  #define NSXMLDocument DDXMLDocument
+#define NSXMLDocument DDXMLDocument
 #endif
 
 #ifndef NSXMLInvalidKind
-  #define NSXMLInvalidKind DDXMLInvalidKind
+#define NSXMLInvalidKind DDXMLInvalidKind
 #endif
 #ifndef NSXMLDocumentKind
-  #define NSXMLDocumentKind DDXMLDocumentKind
+#define NSXMLDocumentKind DDXMLDocumentKind
 #endif
 #ifndef NSXMLElementKind
-  #define NSXMLElementKind DDXMLElementKind
+#define NSXMLElementKind DDXMLElementKind
 #endif
 #ifndef NSXMLAttributeKind
-  #define NSXMLAttributeKind DDXMLAttributeKind
+#define NSXMLAttributeKind DDXMLAttributeKind
 #endif
 #ifndef NSXMLNamespaceKind
-  #define NSXMLNamespaceKind DDXMLNamespaceKind
+#define NSXMLNamespaceKind DDXMLNamespaceKind
 #endif
 #ifndef NSXMLProcessingInstructionKind
-  #define NSXMLProcessingInstructionKind DDXMLProcessingInstructionKind
+#define NSXMLProcessingInstructionKind DDXMLProcessingInstructionKind
 #endif
 #ifndef NSXMLCommentKind
-  #define NSXMLCommentKind DDXMLCommentKind
+#define NSXMLCommentKind DDXMLCommentKind
 #endif
 #ifndef NSXMLTextKind
-  #define NSXMLTextKind DDXMLTextKind
+#define NSXMLTextKind DDXMLTextKind
 #endif
 #ifndef NSXMLDTDKind
-  #define NSXMLDTDKind DDXMLDTDKind
+#define NSXMLDTDKind DDXMLDTDKind
 #endif
 #ifndef NSXMLEntityDeclarationKind
-  #define NSXMLEntityDeclarationKind DDXMLEntityDeclarationKind
+#define NSXMLEntityDeclarationKind DDXMLEntityDeclarationKind
 #endif
 #ifndef NSXMLAttributeDeclarationKind
-  #define NSXMLAttributeDeclarationKind DDXMLAttributeDeclarationKind
+#define NSXMLAttributeDeclarationKind DDXMLAttributeDeclarationKind
 #endif
 #ifndef NSXMLElementDeclarationKind
-  #define NSXMLElementDeclarationKind DDXMLElementDeclarationKind
+#define NSXMLElementDeclarationKind DDXMLElementDeclarationKind
 #endif
 #ifndef NSXMLNotationDeclarationKind
-  #define NSXMLNotationDeclarationKind DDXMLNotationDeclarationKind
+#define NSXMLNotationDeclarationKind DDXMLNotationDeclarationKind
 #endif
 
 #ifndef NSXMLNodeOptionsNone
-  #define NSXMLNodeOptionsNone DDXMLNodeOptionsNone
+#define NSXMLNodeOptionsNone DDXMLNodeOptionsNone
 #endif
 #ifndef NSXMLNodeExpandEmptyElement
-  #define NSXMLNodeExpandEmptyElement DDXMLNodeExpandEmptyElement
+#define NSXMLNodeExpandEmptyElement DDXMLNodeExpandEmptyElement
 #endif
 #ifndef NSXMLNodeCompactEmptyElement
-  #define NSXMLNodeCompactEmptyElement DDXMLNodeCompactEmptyElement
+#define NSXMLNodeCompactEmptyElement DDXMLNodeCompactEmptyElement
 #endif
 #ifndef NSXMLNodePrettyPrint
-  #define NSXMLNodePrettyPrint DDXMLNodePrettyPrint
+#define NSXMLNodePrettyPrint DDXMLNodePrettyPrint
 #endif
 
 #endif // #if TARGET_OS_IPHONE
@@ -190,7 +189,7 @@
 // The debugging macro adds a significant amount of overhead, and should NOT be enabled on production builds.
 
 #if DEBUG
-  #define DDXML_DEBUG_MEMORY_ISSUES 0
+#define DDXML_DEBUG_MEMORY_ISSUES 0
 #else
   #define DDXML_DEBUG_MEMORY_ISSUES 0 // Don't change me!
 #endif
