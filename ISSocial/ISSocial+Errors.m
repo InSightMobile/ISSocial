@@ -10,7 +10,7 @@
 @implementation ISSocial (Errors)
 
 
-+ (NSError *)errorWithCode:(NSInteger)code sourseError:(NSError *)sourecError userInfo:(NSDictionary *)userInfo {
++ (NSError *)errorWithCode:(ISSocailErrorCodes)code sourseError:(NSError *)sourecError userInfo:(NSDictionary *)userInfo {
     NSMutableDictionary *info = [NSMutableDictionary new];
 
     if (sourecError) {

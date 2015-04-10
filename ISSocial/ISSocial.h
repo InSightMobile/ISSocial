@@ -24,11 +24,11 @@ extern NSString *const ISSocialConnectorIdOdnoklassniki;
 
 + (ISSocial *)defaultInstance;
 
+- (void)configure;
+
 @property(nonatomic, strong, readonly) CompositeConnector *rootConnectors;
 
 + (BOOL)hasConnectorNamed:(NSString *)name;
-
-@property(nonatomic, strong) NSMutableDictionary *connectorsByCode;
 
 - (void)tryLoginWithCompletion:(void (^)())completion;
 
@@ -37,7 +37,6 @@ extern NSString *const ISSocialConnectorIdOdnoklassniki;
 - (void)logoutWithCompletion:(void (^)())completion;
 
 - (void)logoutConnector:(SocialConnector *)connector completion:(void (^)())completion;
-
 
 - (void)loginWithConnectorName:(NSString *)connectorName completion:(void (^)(SocialConnector *connector, NSError *error))completion;
 
@@ -53,9 +52,16 @@ extern NSString *const ISSocialConnectorIdOdnoklassniki;
 
 - (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation;
 
-- (void)configure;
-
 - (void)handleDidBecomeActive;
 
 - (void)closeAllSessionsAndClearCredentials:(void (^)(NSError *))pFunction;
+@end
+
+@class RACSignal;
+
+@interface ISSocial(RAC)
+
+- (RACSignal*)openConnectorNamed:(NSString *)connectorName;
+- (RACSignal*)closeAllSessionsAndClearCredentials;
+
 @end

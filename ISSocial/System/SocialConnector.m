@@ -1,5 +1,5 @@
 //
-//  SocialConnector.m
+//  ISSocialConnector.m
 //  socials
 //
 //  Created by Ярослав on 19.12.12.

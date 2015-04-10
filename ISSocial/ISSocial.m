@@ -3,12 +3,14 @@
 
 
 
+#import <ReactiveCocoa.h>
 #import "ISSocial.h"
 #import "ISSocialLoginManager.h"
 #import "NSArray+ISSAsyncBlocks.h"
+#import "ISSocial+Errors.h"
 
 
- NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated";
+NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated";
 
  NSString *const ISSocialConnectorIdFacebook = @"Facebook";
  NSString *const ISSocialConnectorIdVkontakte = @"Vkontakte";
@@ -20,6 +22,8 @@
 @property(nonatomic, strong) ISSocialLoginManager *loginManager;
 @property(nonatomic, strong, readwrite) CompositeConnector *rootConnectors;
 @property(nonatomic, strong) CompositeConnector *currentConnectors;
+@property(nonatomic) BOOL isConfigured;
+@property(nonatomic, strong) NSMutableDictionary *connectorsByCode;
 @end
 
 @implementation ISSocial {
@@ -108,6 +112,9 @@
 }
 
 - (void)loginWithConnectorName:(NSString *)connectorName completion:(void (^)(SocialConnector *connector, NSError *error))completion {
+
+    [self configure];
+
     SocialConnector *connector = [self connectorNamed:connectorName];
 
     [self.rootConnectors addConnector:connector asActive:YES];
@@ -209,6 +216,12 @@
 }
 
 - (void)configure {
+
+    if(self.isConfigured) {
+        return;
+    }
+    self.isConfigured = YES;
+
     [self loadConnectors];
     NSString *path = [[NSBundle mainBundle] pathForResource:@"ISSocial" ofType:@"plist"];
     if (path) {
@@ -243,6 +256,43 @@
     }         comletition:^(NSError *errorOrNil) {
         completion(errorOrNil);
     }];
+}
+
+- (RACSignal *)openConnectorNamed:(NSString *)connectorName {
+
+    RACSubject *subject = [RACReplaySubject replaySubjectWithCapacity:1];
+
+    [self loginWithConnectorName:connectorName completion:^(SocialConnector *connector, NSError *error) {
+        if(error) {
+            [subject sendError:error];
+        }
+        else if(connector) {
+            [subject sendNext:connector];
+            [subject sendCompleted];
+        }
+        else {
+            [subject sendError:[ISSocial errorWithCode:ISSocialErrorUnknown sourseError:nil  userInfo:nil]];
+        }
+    }];
+
+    return subject;
+}
+
+- (RACSignal*)closeAllSessionsAndClearCredentials {
+
+    RACSubject *subject = [RACReplaySubject replaySubjectWithCapacity:1];
+
+    [self closeAllSessionsAndClearCredentials:^(NSError *error) {
+        if(error) {
+            [subject sendError:error];
+        }
+        else {
+            [subject sendNext:nil];
+            [subject sendCompleted];
+        }
+    }];
+
+    return subject;
 }
 
 @end

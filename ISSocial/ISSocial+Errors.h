@@ -8,7 +8,7 @@
 
 static NSString *const ISSocialErrorDomain = @"ISSocial";
 
-typedef enum {
+typedef NS_ENUM(NSInteger,ISSocailErrorCodes) {
 
     ISSocialErrorUnknown,
     ISSocialErrorNetwork,
@@ -18,12 +18,12 @@ typedef enum {
     ISSocialErrorSystemLoginAbsent,
     ISSocialErrorAuthorizationFailed,
     ISSocialErrorUserCanceled
-} ISSocailErrorCodes;
+} ;
 
 @interface ISSocial (Errors)
 
 
-+ (NSError *)errorWithCode:(NSInteger)code sourseError:(NSError *)sourecError userInfo:(NSDictionary *)userInfo;
++ (NSError *)errorWithCode:(ISSocailErrorCodes)code sourseError:(NSError *)sourecError userInfo:(NSDictionary *)userInfo;
 
 + (NSError *)errorWithError:(NSError *)error;
 @end
