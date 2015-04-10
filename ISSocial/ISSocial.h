@@ -11,13 +11,13 @@
 @class CompositeConnector;
 
 
-static NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated";
+extern NSString *const ISSocialLoggedInUpdatedNotification;
 
-static NSString *const ISSocialConnectorIdFacebook = @"Facebook";
-static NSString *const ISSocialConnectorIdVkontakte = @"Vkontakte";
-static NSString *const ISSocialConnectorIdGooglePlus = @"GooglePlus";
-static NSString *const ISSocialConnectorIdTwitter = @"Twitter";
-static NSString *const ISSocialConnectorIdOdnoklassniki = @"Odnoklassniki";
+extern NSString *const ISSocialConnectorIdFacebook;
+extern NSString *const ISSocialConnectorIdVkontakte;
+extern NSString *const ISSocialConnectorIdGooglePlus;
+extern NSString *const ISSocialConnectorIdTwitter;
+extern NSString *const ISSocialConnectorIdOdnoklassniki;
 
 @interface ISSocial : NSObject
 - (void)loadConnectors;

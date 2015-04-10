@@ -8,6 +8,14 @@
 #import "NSArray+ISSAsyncBlocks.h"
 
 
+ NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated";
+
+ NSString *const ISSocialConnectorIdFacebook = @"Facebook";
+ NSString *const ISSocialConnectorIdVkontakte = @"Vkontakte";
+ NSString *const ISSocialConnectorIdGooglePlus = @"GooglePlus";
+ NSString *const ISSocialConnectorIdTwitter = @"Twitter";
+ NSString *const ISSocialConnectorIdOdnoklassniki = @"Odnoklassniki";
+
 @interface ISSocial ()
 @property(nonatomic, strong) ISSocialLoginManager *loginManager;
 @property(nonatomic, strong, readwrite) CompositeConnector *rootConnectors;
