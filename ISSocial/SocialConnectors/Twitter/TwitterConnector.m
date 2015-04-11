@@ -14,6 +14,7 @@
 #import "WebLoginController.h"
 #import "NSString+ValueConvertion.h"
 #import "NSObject+PerformBlockInBackground.h"
+#import "SShareItem.h"
 
 
 @interface TwitterConnector () <UIActionSheetDelegate, WebLoginControllerDelegate>
@@ -397,6 +398,23 @@
 
     }];
 }
+
+- (SObject *)share:(SShareItem *)params completion:(SObjectCompletionBlock)completion {
+    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+        if (params.text.length) {
+            [self.twitterAPI postStatusUpdate:params.text inReplyToStatusID:nil latitude:nil longitude:nil placeID:nil displayCoordinates:nil trimUser:nil successBlock:^(NSDictionary *status) {
+                NSLog(@"status = %@", status);
+                [operation complete:[SObject successful]];
+            }                      errorBlock:^(NSError *error) {
+                [operation completeWithError:error];
+            }];
+        }
+        else {
+            [operation completeWithFailure];
+        }
+    }];
+}
+
 
 
 #pragma mark - UIActionSheetDelegate
