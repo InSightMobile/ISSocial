@@ -1,78 +1,82 @@
 //
 // 
 
-
-
 #import "FacebookConnector+Link.h"
 #import "SLinkData.h"
 #import "SUserData.h"
 #import "SPhotoData.h"
-#import "FBDialogs.h"
-#import "FBWebDialogs.h"
-
+#import "FBSDKShareKit.h"
 
 @implementation FacebookConnector (Link)
 
 - (SObject *)publishLinkWithDialog:(SLinkData *)link completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:link completion:completion processor:^(SocialConnectorOperation *operation) {
+
+        FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
+
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
 
         if (link.linkURL.absoluteString.length) {
-            params[@"link"] = link.linkURL.absoluteString;
+            content.contentURL = link.linkURL;
         }
         else {
             [operation completeWithFailure];
             return;
         }
 
-
         if (link.message.length) {
-            params[@"message"] = link.message;
-        }
-
-        if (link.name.length) {
-            params[@"name"] = link.name;
-        }
-
-        if (link.title.length) {
-            params[@"caption"] = link.title;
+            content.contentDescription = link.message;
         }
 
         if (link.desc.length) {
-            params[@"description"] = link.desc;
+            content.contentDescription = link.desc;
+        }
+
+        if (link.name.length) {
+            content.contentTitle = link.name;
+        }
+
+        if (link.title.length) {
+            content.contentTitle = link.title;
         }
 
         if (link.photo.photoURL) {
-            params[@"picture"] = [link.photo.photoURL absoluteString];
+            content.imageURL = link.photo.photoURL;
         }
 
-        NSString *userId = @"me";
-        if (link.owner) {
-            userId = link.owner.objectId;
-            params[@"to"] = userId;
-        }
+//        NSString *userId = @"me";
+//        if (link.owner) {
+//            userId = link.owner.objectId;
+//            params[@"to"] = userId;
+//        }
 
-        [FBWebDialogs presentFeedDialogModallyWithSession:nil
-                                               parameters:params
-                                                  handler:^(FBWebDialogResult result, NSURL *resultURL, NSError *error) {
+        [FBSDKShareDialog showFromViewController:nil
+                                     withContent:content
+                                        delegate:nil];
 
-                                                      NSLog(@"result = %d", resultURL);
-                                                      if (error) {
-                                                          [operation completeWithError:error];
-                                                      }
-                                                      else if (result == FBWebDialogResultDialogCompleted) {
+        [operation complete:[SObject successful]];
 
-                                                          if ([resultURL.query hasPrefix:@"post_id"]) {
-                                                              [operation complete:[SObject successful]];
-                                                          }
-                                                          else {
-                                                              [operation complete:[SObject failed]];
-                                                          }
-                                                      }
-                                                      else {
-                                                          [operation complete:[SObject failed]];
-                                                      }
-                                                  }];
+//        [FBWebDialogs presentFeedDialogModallyWithSession:nil
+//                                               parameters:params
+//                                                  handler:^(FBWebDialogResult result, NSURL *resultURL, NSError *error) {
+//
+//                                                      NSLog(@"result = %d", resultURL);
+//                                                      if (error) {
+//                                                          [operation completeWithError:error];
+//                                                      }
+//                                                      else if (result == FBWebDialogResultDialogCompleted) {
+//
+//                                                          if ([resultURL.query hasPrefix:@"post_id"]) {
+//                                                              [operation complete:[SObject successful]];
+//                                                          }
+//                                                          else {
+//                                                              [operation complete:[SObject failed]];
+//                                                          }
+//                                                      }
+//                                                      else {
+//                                                          [operation complete:[SObject failed]];
+//                                                      }
+//                                                  }];
     }];
 
     /*       [FBWebDialogs ]
@@ -166,7 +170,7 @@
                 params[@"picture"] = [link.photo.photoURL absoluteString];
             }
 
-            [self simplePost:[NSString stringWithFormat:@"%@/feed", userId] object:params operation:operation processor:^(id result) {
+            [self postWithPath:[NSString stringWithFormat:@"%@/feed", userId] parameters:params operation:operation processor:^(id result) {
                 if (result[@"id"]) {
                     [operation complete:[SObject successful]];
                 }

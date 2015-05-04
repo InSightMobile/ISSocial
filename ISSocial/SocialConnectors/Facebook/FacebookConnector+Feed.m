@@ -6,7 +6,6 @@
 
 #import "SUserData.h"
 #import "SFeedEntry.h"
-#import "Facebook.h"
 #import "FacebookConnector.h"
 #import "FacebookConnector+Feed.h"
 #import "NSDate+Facebook.h"
@@ -115,7 +114,7 @@
     return objectResult;
 }
 
-- (SObject *)pageNews:(SObject *)params completion:(SObjectCompletionBlock)completion {
+/*- (SObject *)pageNews:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSString *const query =
@@ -209,6 +208,7 @@
                 }];
     }];
 }
+*/
 
 - (SObject *)removeFeedEntry:(SFeedEntry *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
@@ -280,15 +280,8 @@
                         //params[@"link"] = [NSString stringWithFormat:@"http://facebook.com/%@",[photos[0] objectId]];
                     };
 
-                    [self simplePost:@"me/feed" object:params operation:operation processor:^(id result) {
-
-                        [[FBRequest requestForGraphPath:result[@"id"]] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-
-                            if (error) {
-                                [operation completeWithError:error];
-                                return;
-                            }
-
+                    [self postWithPath:@"me/feed" parameters:params operation:operation processor:^(id result) {
+                        [self getWithPath:result[@"id"] operation:operation processor:^(id result) {
                             [operation complete:[self parseFeed:result]];
                         }];
                     }];
@@ -296,22 +289,13 @@
                 }];
             }
             else {
-                [self simplePost:@"me/feed" object:@{@"message" : feed.message} operation:operation processor:^(id result) {
-
-                    [[FBRequest requestForGraphPath:result[@"id"]] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-
-                        if (error) {
-                            [operation completeWithError:error];
-                            return;
-                        }
-
+                [self postWithPath:@"me/feed" parameters:@{@"message" : feed.message} operation:operation processor:^(id result) {
+                    [self getWithPath:result[@"id"] operation:operation processor:^(id result) {
                         [operation complete:[self parseFeed:result]];
                     }];
                 }];
             }
-
         }];
-
     }];
 }
 
@@ -337,9 +321,9 @@
 
         [self checkAuthorizationFor:@[@"publish_actions"] operation:operation processor:^(id res) {
 
-            [self simplePost:[NSString stringWithFormat:@"%@/comments", [comment.commentedObject objectId]]
-                      object:@{@"message" : comment.message}
-                   operation:operation processor:^(id response) {
+            [self postWithPath:[NSString stringWithFormat:@"%@/comments", [comment.commentedObject objectId]]
+                    parameters:@{@"message" : comment.message}
+                     operation:operation processor:^(id response) {
 
                         NSLog(@"response = %@", response);
 
@@ -382,8 +366,8 @@
 
         [self checkAuthorizationFor:@[@"publish_actions"] operation:operation processor:^(id res) {
 
-            [self simplePost:[NSString stringWithFormat:@"%@/likes", [feed objectId]]
-                      object:nil operation:operation processor:^(id response) {
+            [self postWithPath:[NSString stringWithFormat:@"%@/likes", [feed objectId]]
+                    parameters:nil operation:operation processor:^(id response) {
 
                         NSLog(@"response = %@", response);
 
@@ -517,7 +501,7 @@
                 params[@"url"] = [photo.photoURL absoluteString];
             }
 
-            [self simplePost:[NSString stringWithFormat:@"%@/photos", userId] object:params operation:operation processor:^(id result) {
+            [self postWithPath:[NSString stringWithFormat:@"%@/photos", userId] parameters:params operation:operation processor:^(id result) {
                 [operation complete:[SObject successful]];
             }];
         }];

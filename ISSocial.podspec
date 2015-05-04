@@ -45,7 +45,9 @@ Pod::Spec.new do |s|
   s.subspec 'Facebook' do |ss|
     ss.source_files = 'ISSocial/SocialConnectors/Facebook/*.{h,m}'
     ss.dependency 'ISSocial/Core'
-    ss.dependency 'Facebook-iOS-SDK', '~> 3.0'
+    ss.dependency 'FBSDKCoreKit', '~> 4.0'
+    ss.dependency 'FBSDKLoginKit', '~> 4.0'   
+    ss.dependency 'FBSDKShareKit', '~> 4.0'       
   end
 
   s.subspec 'GooglePlus' do |ss|

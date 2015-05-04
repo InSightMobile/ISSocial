@@ -35,5 +35,7 @@ static NSString *const kAllowUserUIKey = @"allowUserUI";
 
 - (void)handleDidBecomeActive;
 
+- (void)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
+
 
 @end

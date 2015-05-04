@@ -54,6 +54,8 @@ extern NSString *const ISSocialConnectorIdOdnoklassniki;
 
 - (void)handleDidBecomeActive;
 
+- (void)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
+
 - (void)closeAllSessionsAndClearCredentials:(void (^)(NSError *))pFunction;
 @end
 

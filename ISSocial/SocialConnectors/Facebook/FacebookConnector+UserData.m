@@ -7,12 +7,13 @@
 
 #import "FacebookConnector+UserData.h"
 #import "SUserData.h"
-#import "FBRequest.h"
 #import "NSString+TypeSafety.h"
 #import "MultiImage.h"
 #import "NSDate+Facebook.h"
 
 static NSMutableDictionary *_usersById;
+
+static NSString *FBGraphBasePath = @"https://graph.facebook.com";
 
 @implementation FacebookConnector (UserData)
 
@@ -67,7 +68,7 @@ static NSMutableDictionary *_usersById;
     }];
 }
 
-- (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion {
+/*- (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
         NSString *fql =
@@ -83,7 +84,7 @@ static NSMutableDictionary *_usersById;
         }];
 
     }];
-}
+}*/
 
 - (SUserData *)dataForUserId:(NSString *)userId name:(NSString *)name {
     if (!userId) {
@@ -109,7 +110,7 @@ static NSMutableDictionary *_usersById;
     return [self dataForUserId:userId name:nil];
 }
 
-- (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion {
+/*- (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion {
     if (!usersData.count) {
         completion(nil);
         return;
@@ -125,7 +126,7 @@ static NSMutableDictionary *_usersById;
 
                 completion(users);
             }];
-}
+}*/
 
 - (SObject *)parseUsers:(NSArray *)usersData {
     SObject *users = [SObject objectCollectionWithHandler:self];

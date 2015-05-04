@@ -7,7 +7,6 @@
 
 #import "FacebookConnector+Video.h"
 #import "SVideoData.h"
-#import "FBRequest.h"
 #import "MultiImage.h"
 #import "NSDate+Facebook.h"
 #import "NSString+TypeSafety.h"
@@ -65,21 +64,7 @@
 
         NSData *data = [[NSData alloc] initWithContentsOfMappedFile:filename];
 
-        FBRequest *req = [FBRequest requestWithGraphPath:@"me/videos"
-                                              parameters:@{@"video.mov" : data, @"contentType" : @"video/quicktime"}
-                                              HTTPMethod:@"POST"];
-
-        FBRequestConnection *connection = [[FBRequestConnection alloc] initWithTimeout:60];
-        [connection addRequest:req completionHandler:^(FBRequestConnection *connection, id response, NSError *error) {
-
-            NSLog(@"response = %@", response);
-
-            [operation removeConnection:connection];
-
-            if (error) {
-                [operation completeWithError:error];
-                return;
-            }
+        [self postWithPath:@"me/videos" parameters:@{@"video.mov" : data, @"contentType" : @"video/quicktime"} operation:operation processor:^(id response) {
 
             NSString *photoId = [response[@"id"] stringValue];
 
@@ -93,10 +78,30 @@
                 [operation complete:result];
 
             }];
-
         }];
-        [connection start];
-        [operation addConnection:connection];
+//
+//
+//        FBRequest *req = [FBRequest requestWithGraphPath:@"me/videos"
+//                                              parameters:@{@"video.mov" : data, @"contentType" : @"video/quicktime"}
+//                                              HTTPMethod:@"POST"];
+//
+//        FBRequestConnection *connection = [[FBRequestConnection alloc] initWithTimeout:60];
+//        [connection addRequest:req completionHandler:^(FBRequestConnection *connection, id response, NSError *error) {
+//
+//            NSLog(@"response = %@", response);
+//
+//            [operation removeConnection:connection];
+//
+//            if (error) {
+//                [operation completeWithError:error];
+//                return;
+//            }
+//
+//
+//
+//        }];
+//        [connection start];
+//        [operation addConnection:connection];
     }];
 }
 

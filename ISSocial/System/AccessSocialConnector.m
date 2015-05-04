@@ -117,6 +117,11 @@
 
 }
 
+- (void)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+
+}
+
 
 - (SObject *)closeSessionAndClearCredentials:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self closeSession:params completion:completion];

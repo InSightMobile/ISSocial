@@ -4,7 +4,6 @@
 #import "FacebookConnector+Photos.h"
 #import "SPhotoData.h"
 #import "SPhotoAlbumData.h"
-#import "FacebookSDK.h"
 #import "NSDate+Facebook.h"
 #import "NSString+TypeSafety.h"
 #import "FacebookConnector+UserData.h"
@@ -485,39 +484,20 @@ static const int kPageSize = 20;
          completion:(SObjectCompletionBlock)completion {
 
     [self checkAuthorizationFor:@[@"publish_actions"] operation:operation processor:^(id obj) {
-
         NSMutableDictionary *params = [NSMutableDictionary new];
 
         params[@"source"] = photo.sourceImage;
         if (photo.title.length) {
             params[@"message"] = photo.title;
         }
-
-        FBRequest *req = [FBRequest requestWithGraphPath:path
-                                              parameters:params
-                                              HTTPMethod:@"POST"];
-
-        FBRequestConnection *connection = [[FBRequestConnection alloc] initWithTimeout:60];
-        [connection addRequest:req completionHandler:^(FBRequestConnection *connection, id response, NSError *error) {
-
-            [operation removeConnection:connection];
-            if (error) {
-                [operation completeWithError:error];
-                return;
-            }
-
+        [self requestWithGraphPath:path parameters:params HTTPMethod:@"POST" operation:operation processor:^(id response) {
             NSString *photoId = response[@"id"];
-
             [self simpleMethod:photoId operation:operation processor:^(id response) {
-
                 NSLog(@"response = %@", response);
                 SObject *result = [self parsePhoto:response];
                 completion(result);
             }];
-
         }];
-        [connection start];
-        [operation addConnection:connection];
     }];
 }
 

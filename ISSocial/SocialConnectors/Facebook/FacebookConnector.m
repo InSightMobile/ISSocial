@@ -2,7 +2,8 @@
 //
 
 #import "FacebookConnector+UserData.h"
-#import "FacebookSDK.h"
+#import "FBSDKLoginKit.h"
+#import "FBSDKCoreKit.h"
 #import "FacebookConnectorOperation.h"
 #import "SUserData.h"
 #import "ISSocial.h"
@@ -10,14 +11,19 @@
 #import "NSObject+PerformBlockInBackground.h"
 #import "ISSAuthorisationInfo.h"
 #import "SPagingData.h"
+#import "FBSDKLoginManager+Internal.h"
 
 @interface FacebookConnector ()
 @property(nonatomic) BOOL loggedIn;
-@property(nonatomic, strong) id defaultReadPermissions;
-@property(nonatomic, strong) id defaultPublishPermissions;
+@property(nonatomic, strong) NSArray * defaultReadPermissions;
+@property(nonatomic, strong) NSArray * defaultPublishPermissions;
+@property(nonatomic, strong) NSString * appID;
 @end
 
 @implementation FacebookConnector
+{
+    FBSDKLoginManager *_login;
+}
 
 
 - (id)init {
@@ -26,6 +32,7 @@
         self.supportedSpecifications = [NSSet setWithArray:@[
                 @"feedPhoto"
         ]];
+        _login = [[FBSDKLoginManager alloc] init];
     }
     return self;
 }
@@ -55,22 +62,55 @@
 
 
 - (void)simpleMethodWithURL:(NSString *)urlString operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
-    FBRequest *request = [[FBRequest alloc] initWithSession:FBSession.activeSession graphPath:nil];
-    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
-    [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        if (error) {
-            [operation completeWithError:error];
-        }
-        else {
-            processor(result);
-        }
-    }];
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
-    connection.urlRequest = urlRequest;
-    [connection start];
+
+    if ([FBSDKAccessToken currentAccessToken]) {
+        FBSDKGraphRequestConnection * connection = [[FBSDKGraphRequestConnection alloc] init];
+
+        NSURL *url = [NSURL URLWithString:urlString];
+
+//        NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:urlString parameters:nil];
+
+        [connection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+            [operation removeConnection:connection];
+            if (error) {
+                NSLog(@"Facebook error on method url: %@ error:%@", urlString, error.userInfo);
+                [self processFacebookError:error operation:operation processor:^(id o) {
+
+                }];
+            }
+            else {
+                processor(result);
+            }
+        }];
+
+        [operation addConnection:connection];
+
+        [connection start];
+    }
+    else {
+        [operation completeWithFailure];
+    }
+//
+//
+//
+//    FBRequest *request = [[FBRequest alloc] initWithSession:FBSession.activeSession graphPath:nil];
+//    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+//    [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+//        if (error) {
+//            [operation completeWithError:error];
+//        }
+//        else {
+//            processor(result);
+//        }
+//    }];
+//    NSURL *url = [NSURL URLWithString:urlString];
+//    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
+//    connection.urlRequest = urlRequest;
+//    [connection start];
 }
 
+/*
 - (void)simpleQuery:(NSString *)query operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
     FBRequest *fql = [FBRequest requestForGraphPath:@"fql"];
     fql.parameters[@"q"] = query;
@@ -90,79 +130,24 @@
             }];
     [operation addConnection:connection];
 }
+*/
 
-- (void)simpleRequest:(NSString *)method path:(NSString *)path object:(NSDictionary *)object operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
-    FBRequest *request = [[FBRequest alloc] initWithSession:[FBSession activeSession]
-                                                  graphPath:path
-                                                 parameters:object
-                                                 HTTPMethod:method];
+- (void)getWithPath:(NSString *)path operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
 
-    FBRequestConnection *connection =
-            [request startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                [operation removeConnection:connection];
-                if (error) {
-                    NSLog(@"Facebook error on method: %@ params: %@ error:%@", method, object, error.userInfo);
-                    [self processFacebookError:error operation:operation processor:^(id o) {
-                    }];
-                }
-                else {
-                    processor(result);
-                }
-            }];
-
-    [operation addConnection:connection];
+    return [self requestWithGraphPath:path parameters:nil HTTPMethod:@"GET" operation:operation processor:processor];
 }
 
-- (void)simplePost:(NSString *)method object:(NSDictionary *)object operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
-    NSMutableDictionary <FBGraphObject> *graphObject = [FBGraphObject graphObject];
+- (void)requestWithGraphPath:(NSString *)path parameters:(NSDictionary *)parameters HTTPMethod:(NSString *)method operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
 
-    [graphObject setDictionary:object];
-
-
-    FBRequestConnection *connection =
-            [[FBRequest requestForPostWithGraphPath:method graphObject:graphObject] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                [operation removeConnection:connection];
-                if (error) {
-                    NSLog(@"Facebook error on method: %@ params: %@ error: %@", method, object, error.userInfo);
-                    [self processFacebookError:error operation:operation processor:processor];
-                }
-                else {
-                    processor(result);
-                }
-            }];
-    [operation addConnection:connection];
-}
-
-- (void)simpleMethod:(NSString *)httpMethod path:(NSString *)path params:(NSDictionary *)params object:(NSDictionary *)object operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
-    if (!object) {
-        FBRequestConnection *connection =
-                [[[FBRequest alloc] initWithSession:[FBSession activeSession]
-                                          graphPath:path
-                                         parameters:params
-                                         HTTPMethod:httpMethod]
-                        startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-
-                            [operation removeConnection:connection];
-                            if (error) {
-                                NSLog(@"Facebook error on method: %@ error:%@", path, error.userInfo);
-                                [self processFacebookError:error operation:operation processor:processor];
-                            }
-                            else {
-                                processor(result);
-                            }
-                        }];
-        [operation addConnection:connection];
-    }
-    else {
-        if (!httpMethod) {
-            httpMethod = @"POST";
-        }
-        FBRequestConnection *connection =
-                [[FBRequest requestWithGraphPath:path parameters:object HTTPMethod:httpMethod] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+    if ([FBSDKAccessToken currentAccessToken]) {
+        FBSDKGraphRequestConnection * connection;
+        connection = [[[FBSDKGraphRequest alloc] initWithGraphPath:path parameters:parameters HTTPMethod:method]
+                startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
                     [operation removeConnection:connection];
                     if (error) {
-                        NSLog(@"Facebook error on method: %@ params: %@ error:%@", path, object, error.userInfo);
-                        [self processFacebookError:error operation:operation processor:processor];
+                        NSLog(@"Facebook error on method: %@ params: %@ error:%@", method, parameters, error.userInfo);
+                        [self processFacebookError:error operation:operation processor:^(id o) {
+                        }];
                     }
                     else {
                         processor(result);
@@ -170,13 +155,132 @@
                 }];
         [operation addConnection:connection];
     }
+    else {
+        [operation completeWithFailure];
+    }
+}
+
+- (void)simpleRequest:(NSString *)method path:(NSString *)path object:(NSDictionary *)object operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
+
+    if ([FBSDKAccessToken currentAccessToken]) {
+        FBSDKGraphRequestConnection * connection;
+        connection = [[[FBSDKGraphRequest alloc] initWithGraphPath:path parameters:object HTTPMethod:method]
+                    startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+                        [operation removeConnection:connection];
+                        if (error) {
+                            NSLog(@"Facebook error on method: %@ params: %@ error:%@", method, object, error.userInfo);
+                            [self processFacebookError:error operation:operation processor:^(id o) {
+                            }];
+                        }
+                        else {
+                            processor(result);
+                        }
+                    }];
+        [operation addConnection:connection];
+    }
+    else {
+        [operation completeWithFailure];
+    }
+    
+    
+//    FBRequest *request = [[FBRequest alloc] initWithSession:[FBSession activeSession]
+//                                                  graphPath:path
+//                                                 parameters:object
+//                                                 HTTPMethod:method];
+//
+//    FBRequestConnection *connection =
+//            [request startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+//                [operation removeConnection:connection];
+//                if (error) {
+//                    NSLog(@"Facebook error on method: %@ params: %@ error:%@", method, object, error.userInfo);
+//                    [self processFacebookError:error operation:operation processor:^(id o) {
+//                    }];
+//                }
+//                else {
+//                    processor(result);
+//                }
+//            }];
+//
+//    [operation addConnection:connection];
+}
+
+- (void)postWithPath:(NSString *)method parameters:(NSDictionary *)object operation:(SocialConnectorOperation *)operation processor:(void (^)(id response))processor {
+
+    [self simpleRequest:@"POST" path:method object:object operation:operation processor:processor];
+
+//    NSMutableDictionary <FBGraphObject> *graphObject = [FBGraphObject graphObject];
+//
+//    [graphObject setDictionary:object];
+//
+//
+//    FBRequestConnection *connection =
+//            [[FBRequest requestForPostWithGraphPath:method graphObject:graphObject] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+//                [operation removeConnection:connection];
+//                if (error) {
+//                    NSLog(@"Facebook error on method: %@ params: %@ error: %@", method, object, error.userInfo);
+//                    [self processFacebookError:error operation:operation processor:processor];
+//                }
+//                else {
+//                    processor(result);
+//                }
+//            }];
+//    [operation addConnection:connection];
+}
+
+- (void)simpleMethod:(NSString *)httpMethod path:(NSString *)path params:(NSDictionary *)params object:(NSDictionary *)object operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
+    if (!object) {
+        [self simpleRequest:httpMethod path:path object:params operation:operation processor:processor];
+    }
+    else {
+        if (!httpMethod) {
+            httpMethod = @"POST";
+        }
+        [self simpleRequest:httpMethod path:path object:object operation:operation processor:processor];
+    }
+
+//    if (!object) {
+//        FBRequestConnection *connection =
+//                [[[FBRequest alloc] initWithSession:[FBSession activeSession]
+//                                          graphPath:path
+//                                         parameters:params
+//                                         HTTPMethod:httpMethod]
+//                        startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+//
+//                            [operation removeConnection:connection];
+//                            if (error) {
+//                                NSLog(@"Facebook error on method: %@ error:%@", path, error.userInfo);
+//                                [self processFacebookError:error operation:operation processor:processor];
+//                            }
+//                            else {
+//                                processor(result);
+//                            }
+//                        }];
+//        [operation addConnection:connection];
+//    }
+//    else {
+//        if (!httpMethod) {
+//            httpMethod = @"POST";
+//        }
+//        FBRequestConnection *connection =
+//                [[FBRequest requestWithGraphPath:path parameters:object HTTPMethod:httpMethod] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+//                    [operation removeConnection:connection];
+//                    if (error) {
+//                        NSLog(@"Facebook error on method: %@ params: %@ error:%@", path, object, error.userInfo);
+//                        [self processFacebookError:error operation:operation processor:processor];
+//                    }
+//                    else {
+//                        processor(result);
+//                    }
+//                }];
+//        [operation addConnection:connection];
+//    }
 }
 
 - (void)processFacebookError:(NSError *)error operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
 
-    NSDictionary *errorData = error.userInfo[FBErrorParsedJSONResponseKey];
+    //NSDictionary *errorData = error.userInfo[FBSDKGraphRequestErrorParsedJSONResponseKey];
 
-    int facebookCode = [errorData[@"body"][@"error"][@"code"] intValue];
+    NSInteger facebookCode = [error.userInfo[FBSDKGraphRequestErrorGraphErrorCode] integerValue];//  [errorData[@"body"][@"error"][@"code"] intValue];
 
     int code = ISSocialErrorUnknown;
     if (facebookCode == 240) {
@@ -187,8 +291,8 @@
     }
 
     if (code == ISSocialErrorUnknown) {
-        if (error.code == FBErrorHTTPError) {
-            [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorNetwork sourseError:error.userInfo[FBErrorInnerErrorKey] userInfo:nil]];
+        if (error.code == FBSDKNetworkErrorCode) {
+            [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorNetwork sourseError:error.userInfo[NSUnderlyingErrorKey] userInfo:nil]];
             return;
         }
     }
@@ -209,10 +313,12 @@
 }
 
 - (void)authorizeWithPublishPermissions:(NSArray *)permissions completion:(SObjectCompletionBlock)completion {
+    FBSDKAccessToken *const token = [FBSDKAccessToken currentAccessToken];
+    NSLog(@"permissions = %@", token.permissions);
+
     bool ok = YES;
     for (NSString *permission in permissions) {
-        NSLog(@"permissions = %@", [[FBSession activeSession] permissions]);
-        if (![[[FBSession activeSession] permissions] containsObject:permission]) {
+        if (![token.permissions containsObject:permission]) {
             ok = NO;
             break;
         }
@@ -222,36 +328,55 @@
     }
     else {
 
-        if ([[FBSession activeSession] isOpen] || [FBSession openActiveSessionWithAllowLoginUI:NO]) {
-            [[FBSession activeSession] requestNewPublishPermissions:permissions defaultAudience:FBSessionDefaultAudienceFriends completionHandler:^(FBSession *session, NSError *error) {
 
-                if (!error) {
-                    [self iss_performBlock:^(id sender) {
-                        [SObject successful:completion];
-                    }           afterDelay:0.1];
-                }
-                else {
-                    [SObject failed:completion];
-                }
+        [_login logInWithPublishPermissions:permissions handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+
+            if (error) {
+                completion([SObject error:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:error userInfo:nil]]);
+            } else if (result.isCancelled) {
+                completion([SObject error:[ISSocial errorWithCode:ISSocialErrorUserCanceled sourseError:error userInfo:nil]]);
+            } else {
+                [SObject successful:completion];
             }
-            ];
-        }
-        else {
-            [self openSession:nil completion:^(SObject *result) {
-                if (self.isLoggedIn) {
-                    [self authorizeWithPublishPermissions:permissions completion:completion];
-                }
-                else {
-                    completion([SObject failed]);
-                }
-            }];
-        }
+
+        }];
+
+
+//        if ([[FBSession activeSession] isOpen] || [FBSession openActiveSessionWithAllowLoginUI:NO]) {
+//            [[FBSession activeSession] requestNewPublishPermissions:permissions defaultAudience:FBSessionDefaultAudienceFriends completionHandler:^(FBSession *session, NSError *error) {
+//
+//                if (!error) {
+//                    [self iss_performBlock:^(id sender) {
+//                        [SObject successful:completion];
+//                    }           afterDelay:0.1];
+//                }
+//                else {
+//                    [SObject failed:completion];
+//                }
+//            }
+//            ];
+//        }
+//        else {
+//            [self openSession:nil completion:^(SObject *result) {
+//                if (self.isLoggedIn) {
+//                    [self authorizeWithPublishPermissions:permissions completion:completion];
+//                }
+//                else {
+//                    completion([SObject failed]);
+//                }
+//            }];
+//        }
 
     }
 }
 
 - (void)handleDidBecomeActive {
-    [[FBSession activeSession] handleDidBecomeActive];
+    //[[FBSession activeSession] handleDidBecomeActive];
+}
+
+- (void)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    //[[FBSession activeSession] handleDidBecomeActive];
+    [[FBSDKApplicationDelegate sharedInstance] application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:launchOptions];
 }
 
 
@@ -259,7 +384,8 @@
     [super setupSettings:settings];
 
     if (settings[@"AppID"]) {
-        [FBSettings setDefaultAppID:settings[@"AppID"]];
+        //[FBSettings setDefaultAppID:settings[@"AppID"]];
+        self.appID = settings[@"AppID"];
     }
     if (settings[@"ReadPermissions"]) {
         self.defaultReadPermissions = settings[@"ReadPermissions"];
@@ -271,14 +397,16 @@
 
 - (SObject *)closeSessionAndClearCredentials:(SObject *)params completion:(SObjectCompletionBlock)completion {
     self.currentUserData = nil;
-    [FBSession.activeSession closeAndClearTokenInformation];
+    [_login logOut];
+    //[FBSession.activeSession closeAndClearTokenInformation];
     _loggedIn = NO;
     completion([SObject successful]);
     return [SObject successful];
 }
 
 - (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
-    [FBSession.activeSession close];
+    //[FBSession.activeSession close];
+    [_login logOut];
     _loggedIn = NO;
     completion([SObject successful]);
     return [SObject successful];
@@ -297,57 +425,85 @@
             allowLoginUI = [params[kAllowUserUIKey] boolValue];
         }
 
-        BOOL loggedIn = [[FBSession activeSession] isOpen] || [FBSession openActiveSessionWithAllowLoginUI:NO];
+        _login.loginBehavior = FBSDKLoginBehaviorSystemAccount;
 
-        if (loggedIn) {
-            [self processLoggedInSession:[FBSession activeSession] completion:completion];
-            return;
+        [FBSDKProfile enableUpdatesOnAccessTokenChange:YES];
+        FBSDKAccessToken *const token = [FBSDKAccessToken currentAccessToken];
+
+        bool ok = YES;
+        for (NSString *permission in permissions) {
+            if (![token.permissions containsObject:permission]) {
+                ok = NO;
+                break;
+            }
+        }
+        if (ok) {
+            [self processLoggedInWithCompletion:operation.completion];
+        }
+        else {
+            [_login logInWithReadPermissions:permissions handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+                if (error) {
+                    [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:error userInfo:nil]];
+                }
+                else if (result.isCancelled) {
+                    [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorUserCanceled sourseError:error userInfo:nil]];
+                }
+                else {
+                    [self processLoggedInWithCompletion:operation.completion];
+                }
+            }];
         }
 
-
-        loggedIn =
-                [FBSession openActiveSessionWithReadPermissions:permissions allowLoginUI:allowLoginUI completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
-
-                    switch (state) {
-                        case FBSessionStateOpen:
-                        case FBSessionStateOpenTokenExtended: {
-
-                            [self processLoggedInSession:session completion:completion];
-                        }
-                            break;
-                        case FBSessionStateClosed:
-                            [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:error userInfo:nil]];
-                            break;
-                        case FBSessionStateClosedLoginFailed:
-                            if ([error.userInfo[FBErrorLoginFailedReason] isEqualToString:FBErrorLoginFailedReasonSystemDisallowedWithoutErrorValue]) {
-                                [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorSystemLoginDisallowed sourseError:error userInfo:nil]];
-                            }
-                            else if ([error.userInfo[FBErrorLoginFailedReason] isEqualToString:FBErrorLoginFailedReasonUserCancelledSystemValue]) {
-                                [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorSystemLoginDisallowed sourseError:error userInfo:nil]];
-                            }
-                            else if ([error.userInfo[FBErrorLoginFailedReason] isEqualToString:FBErrorLoginFailedReasonUserCancelledValue]) {
-                                [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorUserCanceled sourseError:error userInfo:nil]];
-                            }
-
-                            else {
-                                [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:error userInfo:nil]];
-                            }
-                            break;
-                        default:
-                            [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:error userInfo:nil]];
-                            break;
-                    }
-                }];
-
-        if (!loggedIn && !allowLoginUI) {
-            [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:nil userInfo:nil]];
-        }
+//
+//        BOOL loggedIn = [[FBSession activeSession] isOpen] || [FBSession openActiveSessionWithAllowLoginUI:NO];
+//
+//        if (loggedIn) {
+//            [self processLoggedInSession:[FBSession activeSession] completion:completion];
+//            return;
+//        }
+//
+//
+//        loggedIn =
+//                [FBSession openActiveSessionWithReadPermissions:permissions allowLoginUI:allowLoginUI completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
+//
+//                    switch (state) {
+//                        case FBSessionStateOpen:
+//                        case FBSessionStateOpenTokenExtended: {
+//
+//                            [self processLoggedInSession:session completion:completion];
+//                        }
+//                            break;
+//                        case FBSessionStateClosed:
+//                            [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:error userInfo:nil]];
+//                            break;
+//                        case FBSessionStateClosedLoginFailed:
+//                            if ([error.userInfo[FBErrorLoginFailedReason] isEqualToString:FBErrorLoginFailedReasonSystemDisallowedWithoutErrorValue]) {
+//                                [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorSystemLoginDisallowed sourseError:error userInfo:nil]];
+//                            }
+//                            else if ([error.userInfo[FBErrorLoginFailedReason] isEqualToString:FBErrorLoginFailedReasonUserCancelledSystemValue]) {
+//                                [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorSystemLoginDisallowed sourseError:error userInfo:nil]];
+//                            }
+//                            else if ([error.userInfo[FBErrorLoginFailedReason] isEqualToString:FBErrorLoginFailedReasonUserCancelledValue]) {
+//                                [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorUserCanceled sourseError:error userInfo:nil]];
+//                            }
+//
+//                            else {
+//                                [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:error userInfo:nil]];
+//                            }
+//                            break;
+//                        default:
+//                            [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:error userInfo:nil]];
+//                            break;
+//                    }
+//                }];
+//
+//        if (!loggedIn && !allowLoginUI) {
+//            [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:nil userInfo:nil]];
+//        }
     }];
-
-
 }
 
-- (void)processLoggedInSession:(FBSession *)session completion:(SObjectCompletionBlock)completion {
+- (void)processLoggedInWithCompletion:(SObjectCompletionBlock)completion {
     [self readUserData:[SUserData new] completion:^(SObject *result) {
         [self iss_performBlock:^(id sender) {
             [SObject successful:completion];
@@ -356,6 +512,17 @@
         self.loggedIn = YES;
     }];
 }
+
+
+//- (void)processLoggedInSession:(FBSession *)session completion:(SObjectCompletionBlock)completion {
+//    [self readUserData:[SUserData new] completion:^(SObject *result) {
+//        [self iss_performBlock:^(id sender) {
+//            [SObject successful:completion];
+//        }           afterDelay:0.1];
+//
+//        self.loggedIn = YES;
+//    }];
+//}
 
 
 - (SocialConnectorOperation *)operationWithParent:(SocialConnectorOperation *)operation {
@@ -367,14 +534,14 @@
 }
 
 - (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    return [[FBSession activeSession] handleOpenURL:url];
+    return [[FBSDKApplicationDelegate sharedInstance] application:[UIApplication sharedApplication] openURL:url sourceApplication:sourceApplication annotation:annotation];
 }
 
 - (ISSAuthorisationInfo *)authorizatioInfo {
     ISSAuthorisationInfo *token = [ISSAuthorisationInfo new];
     token.handler = self;
-    token.accessToken = [FBSession activeSession].accessTokenData.accessToken;
-    token.userId = self.currentUserData.objectId;
+    token.accessToken = [FBSDKAccessToken currentAccessToken].tokenString;//   [FBSession activeSession].accessTokenData.accessToken;
+    token.userId = [FBSDKAccessToken currentAccessToken].userID;// self.currentUserData.objectId;
     return token;
 }
 

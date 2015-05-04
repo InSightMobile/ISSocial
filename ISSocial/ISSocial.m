@@ -245,6 +245,13 @@ NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated
     }
 }
 
+- (void)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [self loadConnectors];
+    for (AccessSocialConnector *connector in self.rootConnectors.availableConnectors) {
+        [connector handleDidFinishLaunchingWithOptions:launchOptions];
+    }
+}
+
 - (void)closeAllSessionsAndClearCredentials:(void (^)(NSError *))completion {
     NSArray *connectors = self.rootConnectors.availableConnectors.allObjects;
 
