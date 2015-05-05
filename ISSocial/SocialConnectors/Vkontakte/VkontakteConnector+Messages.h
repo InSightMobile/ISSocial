@@ -8,4 +8,5 @@
 
 @interface VkontakteConnector (Messages)
 
+
 @end

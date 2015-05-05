@@ -13,6 +13,7 @@
 #import "VkontakteConnector+Feed.h"
 #import "SUserData.h"
 #import "SPagingData.h"
+#import "VkontakteConnector+Video.h"
 
 
 static const int kPageSize = 20;
@@ -109,7 +110,7 @@ static const int kPageSize = 20;
                     NSLog(@"response = %@", response);
 
                     SObject *result = [self parsePhotoCommentEntries:response object:params paging:nil];
-                    [self updateUserData:[result.subObjects valueForKey:@"author"] operation:operation completion:^(SObject *updateResult) {
+                    [self updateUserData:[result.subObjects valueForKey:@"author"] fields:nil operation:operation completion:^(SObject *updateResult) {
                         [operation complete:[self addPagingData:result to:params]];
                     }];
                 }];
@@ -129,7 +130,7 @@ static const int kPageSize = 20;
             NSLog(@"response = %@", response);
 
             SObject *result = [self parsePhotoCommentEntries:response object:params paging:nil];
-            [self updateUserData:[result.subObjects valueForKey:@"author"] operation:operation completion:^(SObject *updateResult) {
+            [self updateUserData:[result.subObjects valueForKey:@"author"] fields:nil operation:operation completion:^(SObject *updateResult) {
 
                 if (result.totalCount) {
                     params.commentsCount = result.totalCount;

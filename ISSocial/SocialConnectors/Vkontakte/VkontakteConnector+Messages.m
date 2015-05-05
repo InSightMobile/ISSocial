@@ -12,6 +12,7 @@
 #import "SMessageThread.h"
 #import "NSString+StripHTML.h"
 #import "SPhotoData.h"
+#import "VkontakteConnector+Pull.h"
 
 @implementation VkontakteConnector (Messages)
 
@@ -134,7 +135,7 @@
         [self simpleMethod:@"messages.getHistory" parameters:@{@"uid" : userId, @"offset" : params.pagingData} operation:operation processor:^(id response) {
 
             SObject *result = [self parseMessages:response paging:params];
-            [self updateUserData:[result.subObjects valueForKey:@"messageCompanion"] operation:operation completion:^(SObject *updateResult) {
+            [self updateUserData:[result.subObjects valueForKey:@"messageCompanion"] fields:nil operation:operation completion:^(SObject *updateResult) {
                 [operation complete:[self addPagingData:result to:params]];
             }];
 
@@ -151,7 +152,7 @@
 
             SObject *result = [self parseMessages:response paging:nil];
             [(SUserData *) result setObjectId:userId];
-            [self updateUserData:[result.subObjects valueForKey:@"messageCompanion"] operation:operation completion:^(SObject *updateResult) {
+            [self updateUserData:[result.subObjects valueForKey:@"messageCompanion"] fields:nil operation:operation completion:^(SObject *updateResult) {
                 [operation complete:result];
             }];
 
@@ -205,7 +206,7 @@
                     [threads addSubObject:messageThread];
                 }
             }
-            [self updateUserData:[result.subObjects valueForKey:@"messageCompanion"] operation:operation completion:^(SObject *updateResult) {
+            [self updateUserData:[result.subObjects valueForKey:@"messageCompanion"] fields:nil operation:operation completion:^(SObject *updateResult) {
                 [operation complete:threads];
             }];
         }];
@@ -228,7 +229,7 @@
                 }
             }
 
-            [self updateUserData:[result.subObjects valueForKey:kNewMessagesNotification] operation:operation completion:^(SObject *updateResult) {
+            [self updateUserData:[result.subObjects valueForKey:kNewMessagesNotification] fields:nil operation:operation completion:^(SObject *updateResult) {
                 [operation complete:result];
             }];
         }];

@@ -24,4 +24,7 @@ static NSString *const kNoResultObjectKey = @"NoResultObject";
 - (SCommentData *)parseCommentEntries:(NSArray *)response object:(SObject *)object paging:(SObject *)paging;
 
 - (void)uploadAttachments:(NSArray *)attachments owner:(SUserData *)owner destination:(NSString *)destination operation:(SocialConnectorOperation *)operation completion:(void (^)(NSArray *))completion;
+
+- (SCommentData *)parseCommentEntry:(NSDictionary *)entryData;
+
 @end

@@ -14,6 +14,8 @@
 #import "ISSAuthorisationInfo.h"
 #import "NSObject+PerformBlockInBackground.h"
 #import "ISSPresentingViewController.h"
+#import "SCommentData.h"
+#import "VkontakteConnector+Pull.h"
 
 
 static const int kMaxRetries = 3;
@@ -125,12 +127,12 @@ static const int kMaxRetries = 3;
 
 - (void)setupSettings:(NSDictionary *)settings {
     [super setupSettings:settings];
-    if (settings[@"AppID"]) {
-        self.clientId = settings[@"AppID"];
+    if (settings[ISSAppIDKey]) {
+        self.clientId = settings[ISSAppIDKey];
         [VKSdk initializeWithDelegate:self andAppId:self.clientId];
     }
-    if (settings[@"Permissions"]) {
-        self.permissions = settings[@"Permissions"];
+    if (settings[ISSPermissionsKey]) {
+        self.permissions = settings[ISSPermissionsKey];
     }
 }
 
@@ -252,12 +254,21 @@ static const int kMaxRetries = 3;
     [self completeAuthorization];
 }
 
-- (void)completeAuthorization {
+- (void)updateCurrentUser {
     if (!self.currentUserData) {
         self.currentUserData = [self dataForUserId:self.accessToken.userId];
     }
+}
 
-    [self updateUserData:@[self.currentUserData] operation:self.autorizationOperation completion:^(SObject *result) {
+- (void)completeAuthorization {
+    [self updateCurrentUser];
+
+    NSMutableArray *fields = [self.profileFields mutableCopy];
+    if([self.permissions containsObject:@"email"]) {
+        [fields addObject:@"email"];
+    }
+
+    [self updateUserData:@[self.currentUserData] fields:fields operation:self.autorizationOperation completion:^(SObject *result) {
         if (result.isSuccessful && result.subObjects.count == 1) {
             self.currentUserData = result.subObjects[0];
         }

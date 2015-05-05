@@ -47,8 +47,8 @@
 - (void)setupSettings:(NSDictionary *)settings {
     [super setupSettings:settings];
 
-    self.clientID = settings[@"ClientID"];
-    self.permissions = settings[@"Permissions"];
+    self.clientID = settings[ISSClientIDKey];
+    self.permissions = settings[ISSPermissionsKey];
 }
 
 - (void)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions

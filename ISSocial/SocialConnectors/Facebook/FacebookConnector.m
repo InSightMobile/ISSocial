@@ -382,15 +382,15 @@
 - (void)setupSettings:(NSDictionary *)settings {
     [super setupSettings:settings];
 
-    if (settings[@"AppID"]) {
+    if (settings[ISSAppIDKey]) {
         //[FBSettings setDefaultAppID:settings[@"AppID"]];
-        self.appID = settings[@"AppID"];
+        self.appID = settings[ISSAppIDKey];
     }
-    if (settings[@"ReadPermissions"]) {
-        self.defaultReadPermissions = settings[@"ReadPermissions"];
+    if (settings[ISSReadPermissionsKey]) {
+        self.defaultReadPermissions = settings[ISSReadPermissionsKey];
     }
-    if (settings[@"PublishPermissions"]) {
-        self.defaultPublishPermissions = settings[@"PublishPermissions"];
+    if (settings[ISSPublishPermissionsKey]) {
+        self.defaultPublishPermissions = settings[ISSPublishPermissionsKey];
     }
 }
 

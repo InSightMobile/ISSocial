@@ -10,6 +10,8 @@
 #import "VKSdk.h"
 
 @class AFHTTPClient;
+@class SCommentData;
+
 
 @interface VkontakteConnector : AccessSocialConnector <VKSdkDelegate>
 
@@ -23,6 +25,7 @@
 
 - (NSError *)processVKError:(NSError *)error;
 
+
 @property(nonatomic, copy) NSString *userId;
 
 @property(nonatomic, strong) SObject *pullOperation;
@@ -31,23 +34,6 @@
 
 @property(nonatomic, strong) NSMutableDictionary *countryCodesById;
 
-- (SObject *)operationWithObject:(SObject *)object;
-
-- (void)startPull;
-
-- (void)addPullReceiver:(SObject *)reseiverOperation forArea:(NSString *)area;
-
-- (SObject *)parseUserData:(NSDictionary *)userInfo;
-
-- (SCommentData *)parseCommentEntry:(NSDictionary *)entryData;
-
-- (SVideoData *)parseVideoResponse:(NSDictionary *)info;
-
-- (void)readLikes:(SVideoData *)params operation:(SocialConnectorOperation *)operation type:(NSString *)type itemId:(NSString *)itemId owner:(SUserData *)owner;
-
-- (void)addLike:(SVideoData *)params operation:(SocialConnectorOperation *)operation type:(NSString *)type itemId:(NSString *)itemId owner:(SUserData *)owner;
-
-- (void)removeLike:(SVideoData *)params operation:(SocialConnectorOperation *)operation type:(NSString *)type itemId:(NSString *)itemId owner:(SUserData *)owner;
 
 
 @end

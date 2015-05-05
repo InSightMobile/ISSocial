@@ -5,6 +5,7 @@
 //
 
 
+#import <ISSocial/SObject.h>
 #import "VkontakteConnector+UserData.h"
 #import "SUserData.h"
 #import "MultiImage.h"
@@ -13,24 +14,28 @@
 
 @implementation VkontakteConnector (UserData)
 
-- (NSString *)profileFields {
-    return @"first_name,last_name,photo_50,photo_100,photo_200_orig,photo_200,photo_400_orig,photo_max,photo_max_orig,photo_id,bdate,city,country,sex,screen_name";
+- (NSArray *)profileFields {
+    return @[@"first_name",@"last_name",@"photo_50",@"photo_100",@"photo_200_orig",@"photo_200",@"photo_400_orig",@"photo_max",@"photo_max_orig",@"photo_id",@"bdate",@"city",@"country",@"sex",@"screen_name"];
 }
 
-- (NSString *)userFields {
-    return @"uid,first_name,last_name,bdate,photo_50,photo_100,photo_200_orig";
+- (NSArray *)userFields {
+    return @[@"uid",@"first_name",@"last_name",@"bdate",@"photo_50",@"photo_100",@"photo_200_orig"];
 }
 
 
-- (void)updateUserData:(NSArray *)usersData operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion {
+- (void)updateUserData:(NSArray *)usersData fields:(NSArray *)fields operation:(SocialConnectorOperation *)operation completion:(SObjectCompletionBlock)completion
+{
     if (!usersData.count) {
         completion(nil);
         return;
     }
+
+    NSArray *userFields = fields ?: self.profileFields;
+
     NSSet *userIds = [NSSet setWithArray:[usersData valueForKey:@"objectId"]];
     [self updateCountryCodesWithOperation:operation completion:^(SObject *result) {
         [self simpleMethod:@"users.get" parameters:@{@"uids" : [userIds.allObjects componentsJoinedByString:@","],
-                        @"fields" : [self profileFields]}
+                        @"fields" : [userFields componentsJoinedByString:@","]}
                  operation:operation processor:^(id response) {
 
                     NSLog(@"response = %@", response);
@@ -217,7 +222,7 @@
         NSDictionary *const parameters = @{
                 @"uid" : userId,
                 @"photo_sizes" : @1,
-                @"fields" : self.userFields
+                @"fields" : [self.userFields componentsJoinedByString:@","]
         };
 
         [self simpleMethod:@"friends.get" parameters:parameters
@@ -283,7 +288,7 @@
                         [result addSubObject:userData];
                     }
 
-                    [self updateUserData:result.subObjects operation:operation completion:^(SObject *result) {
+                    [self updateUserData:result.subObjects fields:nil operation:operation completion:^(SObject *result) {
                         [operation complete:result];
                     }];
                 }];

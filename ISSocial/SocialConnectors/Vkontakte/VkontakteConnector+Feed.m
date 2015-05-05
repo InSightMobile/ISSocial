@@ -96,7 +96,7 @@
                     NSLog(@"response = %@", response);
 
                     SObject *result = [self parseCommentEntries:response object:commentObject paging:comments];
-                    [self updateUserData:[result.subObjects valueForKey:@"author"] operation:operation completion:^(SObject *updateResult) {
+                    [self updateUserData:[result.subObjects valueForKey:@"author"] fields:nil operation:operation completion:^(SObject *updateResult) {
 
                         [operation complete:[self addPagingData:result to:comments]];
                     }];
@@ -120,7 +120,7 @@
             NSLog(@"response = %@", response);
 
             SObject *result = [self parseCommentEntries:response object:feed paging:nil];
-            [self updateUserData:[result.subObjects valueForKey:@"author"] operation:operation completion:^(SObject *updateResult) {
+            [self updateUserData:[result.subObjects valueForKey:@"author"] fields:nil operation:operation completion:^(SObject *updateResult) {
                 [operation complete:result];
             }];
         }];
@@ -172,7 +172,7 @@
     }];
     result.pagingSelector = @selector(pageFeed:completion:);
 
-    [self updateUserData:[result.subObjects valueForKey:@"author"] operation:operation completion:^(SObject *updateResult) {
+    [self updateUserData:[result.subObjects valueForKey:@"author"] fields:nil operation:operation completion:^(SObject *updateResult) {
         [self updateAttachments:attachments operation:operation completion:^(SObject *res) {
             completion(result);
         }];

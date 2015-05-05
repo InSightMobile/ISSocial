@@ -116,7 +116,7 @@
 
         result.pagingSelector = @selector(pageNews:completion:);
 
-        [self updateUserData:[result.subObjects valueForKey:@"author"] operation:operation completion:^(SObject *resa) {
+        [self updateUserData:[result.subObjects valueForKey:@"author"] fields:nil operation:operation completion:^(SObject *resa) {
             [self updateAttachments:attachements operation:operation completion:^(SObject *resu) {
                 completion(result);
             }];

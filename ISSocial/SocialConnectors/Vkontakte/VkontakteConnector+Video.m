@@ -231,7 +231,7 @@
                 [params fireUpdateNotification];
             }
 
-            [self updateUserData:[result.subObjects valueForKey:@"author"] operation:operation completion:^(SObject *updateResult) {
+            [self updateUserData:[result.subObjects valueForKey:@"author"] fields:nil operation:operation completion:^(SObject *updateResult) {
                 [operation complete:result];
             }];
         }];

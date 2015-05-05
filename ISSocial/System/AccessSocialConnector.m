@@ -9,6 +9,12 @@
 #import "AccessSocialConnector.h"
 #import "ISSocial/ISSocial.h"
 
+NSString *const kAllowUserUIKey = @"allowUserUI";
+NSString *const ISSAppIDKey = @"AppID";
+NSString *const ISSPermissionsKey = @"Permissions";
+NSString *const ISSClientIDKey = @"ClientID";
+NSString *const ISSReadPermissionsKey = @"ReadPermissions";
+NSString *const ISSPublishPermissionsKey = @"PublishPermissions";
 
 @implementation AccessSocialConnector {
 
