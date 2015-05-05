@@ -57,6 +57,8 @@ extern NSString *const ISSocialConnectorIdOdnoklassniki;
 - (void)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
 
 - (void)closeAllSessionsAndClearCredentials:(void (^)(NSError *))pFunction;
+
+- (void)enableConnector:(NSString *)connectorID;
 @end
 
 @class RACSignal;

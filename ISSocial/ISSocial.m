@@ -24,6 +24,7 @@ NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated
 @property(nonatomic, strong) CompositeConnector *currentConnectors;
 @property(nonatomic) BOOL isConfigured;
 @property(nonatomic, strong) NSMutableDictionary *connectorsByCode;
+@property(nonatomic, strong) NSMutableSet *initiallyEnabledConnectors;
 @end
 
 @implementation ISSocial {
@@ -33,7 +34,7 @@ NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated
 - (id)init {
     self = [super init];
     if (self) {
-
+        self.initiallyEnabledConnectors = [NSMutableSet new];
     }
 
     return self;
@@ -44,6 +45,10 @@ NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated
         return;
     }
     self.rootConnectors = [[CompositeConnector alloc] initWithRestorationId:@"root"];
+    for(NSString *connectorID in self.initiallyEnabledConnectors) {
+        [self.rootConnectors addConnector:[self connectorNamed:connectorID]];
+    }
+
     self.currentConnectors =
             [[CompositeConnector alloc] initWithConnectorSpecifications:nil superConnector:self.rootConnectors
                                                           restorationId:nil options:
@@ -302,4 +307,11 @@ NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated
     return subject;
 }
 
+- (void)enableConnector:(NSString *)connectorID
+{
+    [self.initiallyEnabledConnectors addObject:connectorID];
+    if (self.rootConnectors) {
+        [self.rootConnectors addConnector:[self connectorNamed:connectorID]];
+    }
+}
 @end
