@@ -59,7 +59,7 @@ typedef void (^SObjectCompletionBlock)(SObject *result);
 
 @end
 
-@interface SObject : NSObject <SObject, NSFastEnumeration>
+@interface SObject : NSObject <SObject>
 
 @property(nonatomic, readonly) NSUInteger count;
 
@@ -129,9 +129,9 @@ typedef void (^SObjectCompletionBlock)(SObject *result);
 
 - (void)addSubObjects:(NSArray *)array;
 
-- (NSString *)description;
+//- (NSString *)description;
 
-- (NSString *)debugDescription;
+//- (NSString *)debugDescription;
 
 - (void)cancelOperation;
 

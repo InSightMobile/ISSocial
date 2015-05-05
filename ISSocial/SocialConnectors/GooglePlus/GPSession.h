@@ -39,7 +39,7 @@ typedef void (^GPSessionStateHandler)(GPSession *session,
 
 - (void)didActivated;
 
-+ (void)openActiveSessionWithClientID:(NSString *)appID permissions:(NSArray *)permissions completionHandler:(GPSessionStateHandler)handler;
++ (void)openActiveSessionWithClientID:(NSString *)appID permissions:(NSArray *)permissions silent:(BOOL)silent completionHandler:(GPSessionStateHandler)handler;
 
 - (void)closeSession;
 

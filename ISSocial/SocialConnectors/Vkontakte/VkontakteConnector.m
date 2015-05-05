@@ -23,7 +23,7 @@ static const int kMaxRetries = 3;
 
 @property(nonatomic, strong) SUserData *currentUserData;
 @property(nonatomic, strong) SocialConnectorOperation *autorizationOperation;
-@property(nonatomic, strong) id clientId;
+@property(nonatomic, strong) NSString* clientId;
 @property(nonatomic, strong) VKAccessToken *accessToken;
 @property(nonatomic, strong) UIViewController *presentedController;
 @end
@@ -75,6 +75,12 @@ static const int kMaxRetries = 3;
 
 - (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
+
+        if(!self.clientId.length) {
+            [operation completeWithFailure];
+            return;
+        }
+
         NSArray *permissions = self.permissions;
         if (!permissions) {
             self.permissions = @[@"wall", @"messages", @"photos", @"friends", @"video", @"audio"];

@@ -34,6 +34,7 @@
     self = [super init];
     if (self) {
         self.handler = handler;
+        self.state = SObjectStateSuccess;
     }
     return self;
 }
@@ -282,6 +283,7 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object) {
 }
 
 
+
 - (NSString *)description {
     if (_data.count) {
         return _data.description;
@@ -292,7 +294,8 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object) {
     return @"SObject: empty";
 }
 
-- (NSString *)debugDescription {
+
+/*- (NSString *)debugDescription {
     if (_data.count) {
         return _data.debugDescription;
     }
@@ -300,8 +303,9 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object) {
         return _subObjects.debugDescription;
     }
     return @"SObject: empty";
-}
+}*/
 
+/*
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len {
     if (_data.count) {
         return [_data countByEnumeratingWithState:state objects:buffer count:len];
@@ -310,6 +314,7 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object) {
         return [_subObjects countByEnumeratingWithState:state objects:buffer count:len];
     }
 }
+*/
 
 
 - (void)cancelOperation {

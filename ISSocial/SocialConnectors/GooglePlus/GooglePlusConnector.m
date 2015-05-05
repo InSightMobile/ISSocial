@@ -51,11 +51,16 @@
     self.permissions = settings[@"Permissions"];
 }
 
+- (void)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    [self openSession:nil silent:YES completion:nil];
+}
+
+
 - (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
-
+        _currentUserData = nil;
         [[GPSession activeSession] closeSession];
-
         [operation completed];
     }];
 }
@@ -68,10 +73,10 @@
     return token;
 }
 
-- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
+- (SObject *)openSession:(SObject *)params silent:(BOOL)silent completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
-        [GPSession openActiveSessionWithClientID:self.clientID permissions:self.permissions completionHandler:^(GPSession *session, GPSessionState status, NSError *error) {
+        [GPSession openActiveSessionWithClientID:self.clientID permissions:self.permissions silent:silent completionHandler:^(GPSession *session, GPSessionState status, NSError *error) {
 
             switch (status) {
                 case GPSessionStateOpen: {
@@ -84,6 +89,8 @@
                     break;
                 case GPSessionStateClosed:
                 case GPSessionStateClosedLoginFailed: {
+                    self.loggedIn = NO;
+                    self.session = nil;
                     [SObject failed:completion];
                     [operation completeWithError:error];
                 }
@@ -94,9 +101,11 @@
             }
         }];
     }];
-
 }
 
+- (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
+    return [self openSession:params silent:NO completion:completion];
+}
 
 - (BOOL)isLoggedIn {
     return _loggedIn;
@@ -105,8 +114,7 @@
 - (void)executeQuery:(id <GTLQueryProtocol>)query operation:(SocialConnectorOperation *)operation
            processor:(void (^)(id object))handler {
     [[GPSession activeSession].plusService executeQuery:query completionHandler:^(GTLServiceTicket *ticket,
-            id object,
-            NSError *error) {
+            id object, NSError *error) {
         if (error) {
             GTMLoggerError(@"Error: %@", error);
             //peopleStatus_.text = [NSString stringWithFormat:@"Status: Error: %@", error];
@@ -118,26 +126,70 @@
     }];
 }
 
-- (SObject *)updateProfile:(SObject *)params completion:(SObjectCompletionBlock)completion {
+- (SObject *)readUserData:(SUserData *)params completion:(SObjectCompletionBlock)completion
+{
+    bool myself = NO;
+    NSString *userId = params.objectId;
+    if (userId.length == 0 || [userId isEqualToString:@"me"]) {
+        myself = YES;
+    }
+
+    if(myself) {
+        if (self.currentUserData) {
+            completion(self.currentUserData);
+            return self.currentUserData;
+        }
+        else {
+            return [self updateProfile:params completion:completion];
+        }
+    }
+    else {
+        return [self readProfile:params userID:userId completion:completion];
+    }
+}
+
+- (SObject *)readProfile:(SObject *)params userID:(NSString *)userID completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
-        GTLQueryPlus *query = [GTLQueryPlus queryForPeopleGetWithUserId:@"me"];
+        GTLQueryPlus *query = [GTLQueryPlus queryForPeopleGetWithUserId:userID];
         [self executeQuery:query operation:operation processor:^(GTLPlusPerson *person) {
 
             SUserData *user = [[SUserData alloc] initWithHandler:self];
             user.objectId = person.identifier;
             user.userName = person.displayName;
 
+            NSArray *emails = person.emails;
+            NSString *email = nil;
+            for(GTLPlusPersonEmailsItem* item in emails) {
+                if([item.type isEqualToString:@"account"]) {
+                    email = item.value;
+                }
+            }
+            if(!email) {
+                email = [(GTLPlusPersonEmailsItem *) [person.emails firstObject] value];
+            }
+            user.userEmail = email;
+
+            if([person.gender isEqualToString:@"male"]) {
+                user.userGender = @(ISSMaleUserGender);
+            }
+            else if([person.gender isEqualToString:@"female"]) {
+                user.userGender = @(ISSFemaleUserGender);
+            }
+
             NSString *userImage = person.image.url;
-            user.userPicture =
-                    [[MultiImage alloc] initWithURL:userImage.URLValue];
+            user.userPicture = [[MultiImage alloc] initWithURL:userImage.URLValue];
 
-            _currentUserData = user;
-
-            [operation complete:_currentUserData];
+            [operation complete:user];
         }];
     }];
+}
 
-
+- (SObject *)updateProfile:(SObject *)params completion:(SObjectCompletionBlock)completion {
+    return [self readProfile:params userID:@"me" completion:^(SObject *result) {
+        self->_currentUserData = (SUserData *) result;
+        NSLog(@"result = %@", result);
+        completion(result);
+    }];
 }
 
 - (SUserData *)currentUserData {

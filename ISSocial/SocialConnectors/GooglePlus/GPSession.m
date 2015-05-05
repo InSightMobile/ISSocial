@@ -51,12 +51,8 @@
         return;
     }
     self.auth = auth;
-    if (_handler)self.handler(self, GPSessionStateOpen, error);
-    self.handler = nil;
-
     self.accessToken = auth.accessToken;
     self.userID = auth.userID;
-
 
     // 1. Create a |GTLServicePlus| instance to send a request to Google+.
     GTLServicePlus *plusService = [[GTLServicePlus alloc] init];
@@ -66,6 +62,11 @@
     [plusService setAuthorizer:auth];
 
     self.plusService = plusService;
+
+    if (_handler) {
+        self.handler(self, GPSessionStateOpen, error);
+        self.handler = nil;
+    }
 }
 
 - (BOOL)handleURL:(NSURL *)url
@@ -74,12 +75,32 @@ sourceApplication:(NSString *)sourceApplication
     return [_signIn handleURL:url sourceApplication:sourceApplication annotation:annotation];
 }
 
-+ (void)openActiveSessionWithClientID:(NSString *)appID permissions:(NSArray *)permissions completionHandler:(GPSessionStateHandler)handler {
-    [[self activeSession] openSessionWithClientID:appID permissions:permissions completionHandler:handler];
++ (void)openActiveSessionWithClientID:(NSString *)appID permissions:(NSArray *)permissions silent:(BOOL)silent completionHandler:(GPSessionStateHandler)handler
+{
+    [[self activeSession] openSessionWithClientID:appID permissions:permissions silent:silent completionHandler:handler];
 }
 
-- (void)openSessionWithClientID:(NSString *)clientId permissions:(NSArray *)permissions completionHandler:(GPSessionStateHandler)handler {
-    NSArray *scopes = @[kGTLAuthScopePlusLogin, kGTLAuthScopePlusMe];
+- (void)openSessionWithClientID:(NSString *)clientId permissions:(NSArray *)permissions silent:(BOOL)silent completionHandler:(GPSessionStateHandler)handler
+{
+    NSMutableArray* scopes = [NSMutableArray new];
+
+    for(NSString* permission in permissions) {
+        if([permission isEqualToString:@"email"]) {
+            [scopes addObject:kGTLAuthScopePlusUserinfoEmail];
+        }
+        else if([permission isEqualToString:@"profile"]) {
+            [scopes addObject:kGTLAuthScopePlusUserinfoProfile];
+        }
+        else if([permission isEqualToString:@"me"]) {
+            [scopes addObject:kGTLAuthScopePlusMe];
+        }
+        else if([permission isEqualToString:@"login"]) {
+            [scopes addObject:kGTLAuthScopePlusLogin];
+        }
+    }
+    if(scopes.count == 0) {
+        [scopes addObject:kGTLAuthScopePlusLogin];
+    }
 
     GPPSignIn *signIn = [GPPSignIn sharedInstance];
     signIn.clientID = clientId;
@@ -90,7 +111,12 @@ sourceApplication:(NSString *)sourceApplication
     self.signIn = signIn;
 
     if (![signIn trySilentAuthentication]) {
-        [signIn authenticate];
+        if(!silent) {
+            [signIn authenticate];
+        }
+        else {
+            handler(self,GPSessionStateClosed,nil);
+        }
     }
 }
 
@@ -108,7 +134,7 @@ sourceApplication:(NSString *)sourceApplication
 
 
 - (void)closeSession {
-    [self.signIn signOut];
+    [self.signIn disconnect];
     self.signIn = nil;
 }
 @end

@@ -14,7 +14,6 @@
 #import "FBSDKLoginManager+Internal.h"
 
 @interface FacebookConnector ()
-@property(nonatomic) BOOL loggedIn;
 @property(nonatomic, strong) NSArray * defaultReadPermissions;
 @property(nonatomic, strong) NSArray * defaultPublishPermissions;
 @property(nonatomic, strong) NSString * appID;
@@ -398,16 +397,12 @@
 - (SObject *)closeSessionAndClearCredentials:(SObject *)params completion:(SObjectCompletionBlock)completion {
     self.currentUserData = nil;
     [_login logOut];
-    //[FBSession.activeSession closeAndClearTokenInformation];
-    _loggedIn = NO;
     completion([SObject successful]);
     return [SObject successful];
 }
 
 - (SObject *)closeSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
-    //[FBSession.activeSession close];
     [_login logOut];
-    _loggedIn = NO;
     completion([SObject successful]);
     return [SObject successful];
 }
@@ -508,8 +503,6 @@
         [self iss_performBlock:^(id sender) {
             [SObject successful:completion];
         }           afterDelay:0.1];
-
-        self.loggedIn = YES;
     }];
 }
 
@@ -530,7 +523,7 @@
 }
 
 - (BOOL)isLoggedIn {
-    return _loggedIn;
+    return [FBSDKAccessToken currentAccessToken] != nil;
 }
 
 - (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation {

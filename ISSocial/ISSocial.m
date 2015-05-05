@@ -246,7 +246,7 @@ NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated
 }
 
 - (void)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [self loadConnectors];
+    [self configure];
     for (AccessSocialConnector *connector in self.rootConnectors.availableConnectors) {
         [connector handleDidFinishLaunchingWithOptions:launchOptions];
     }
