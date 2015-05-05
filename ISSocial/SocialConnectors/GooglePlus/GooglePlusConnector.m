@@ -51,9 +51,10 @@
     self.permissions = settings[ISSPermissionsKey];
 }
 
-- (void)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+- (BOOL)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [self openSession:nil silent:YES completion:nil];
+    return NO;
 }
 
 

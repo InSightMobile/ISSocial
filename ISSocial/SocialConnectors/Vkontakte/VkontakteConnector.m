@@ -113,9 +113,10 @@ static const int kMaxRetries = 3;
     return token;
 }
 
-- (void)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+- (BOOL)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [VKSdk wakeUpSession:self.permissions];
+    return NO;
 }
 
 

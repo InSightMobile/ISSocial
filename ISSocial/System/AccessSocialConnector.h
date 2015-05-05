@@ -40,7 +40,7 @@ extern NSString *const ISSPublishPermissionsKey;
 
 - (void)handleDidBecomeActive;
 
-- (void)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
+- (BOOL)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
 
 
 @end

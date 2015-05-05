@@ -250,11 +250,15 @@ NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated
     }
 }
 
-- (void)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [self configure];
+    BOOL result = NO;
     for (AccessSocialConnector *connector in self.rootConnectors.availableConnectors) {
-        [connector handleDidFinishLaunchingWithOptions:launchOptions];
+        if([connector handleDidFinishLaunchingWithOptions:launchOptions]) {
+            result = YES;
+        }
     }
+    return result;
 }
 
 - (void)closeAllSessionsAndClearCredentials:(void (^)(NSError *))completion {

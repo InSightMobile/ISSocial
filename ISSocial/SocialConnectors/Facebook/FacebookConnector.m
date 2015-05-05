@@ -373,9 +373,9 @@
     //[[FBSession activeSession] handleDidBecomeActive];
 }
 
-- (void)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     //[[FBSession activeSession] handleDidBecomeActive];
-    [[FBSDKApplicationDelegate sharedInstance] application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:launchOptions];
+    return [[FBSDKApplicationDelegate sharedInstance] application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:launchOptions];
 }
 
 

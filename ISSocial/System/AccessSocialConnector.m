@@ -123,9 +123,9 @@ NSString *const ISSPublishPermissionsKey = @"PublishPermissions";
 
 }
 
-- (void)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+- (BOOL)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-
+    return NO;
 }
 
 
