@@ -75,6 +75,8 @@ static const int kMaxRetries = 3;
 }
 
 
+
+
 - (SObject *)openSession:(SObject *)params completion:(SObjectCompletionBlock)completion {
     return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
 
@@ -110,6 +112,12 @@ static const int kMaxRetries = 3;
     token.userId = self.accessToken.userId;
     return token;
 }
+
+- (void)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    [VKSdk wakeUpSession:self.permissions];
+}
+
 
 - (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation {
     return [VKSdk processOpenURL:url fromApplication:sourceApplication];
