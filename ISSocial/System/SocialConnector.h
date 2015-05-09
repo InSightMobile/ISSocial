@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Ярослав. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "SObject.h"
 #import "SMediaObject.h"
 #import "SocialConnectorOperation.h"
