@@ -243,7 +243,7 @@ FOUNDATION_EXPORT NSString *const kNewMessagesUnreadStatusChanged;
 
 - (SUserData *)currentUserData;
 
-- (ISSAuthorisationInfo *)authorizatioInfo;
+- (ISSAuthorisationInfo *)authorizationInfo;
 
 @property(readonly, nonatomic) BOOL isLoggedIn;
 

@@ -66,7 +66,7 @@
     }];
 }
 
-- (ISSAuthorisationInfo *)authorizatioInfo {
+- (ISSAuthorisationInfo *)authorizationInfo {
     ISSAuthorisationInfo *token = [ISSAuthorisationInfo new];
     token.handler = self;
     token.accessToken = [GPSession activeSession].idToken;

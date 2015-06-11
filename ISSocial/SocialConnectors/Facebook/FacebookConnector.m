@@ -530,7 +530,7 @@
     return [[FBSDKApplicationDelegate sharedInstance] application:[UIApplication sharedApplication] openURL:url sourceApplication:sourceApplication annotation:annotation];
 }
 
-- (ISSAuthorisationInfo *)authorizatioInfo {
+- (ISSAuthorisationInfo *)authorizationInfo {
     ISSAuthorisationInfo *token = [ISSAuthorisationInfo new];
     token.handler = self;
     token.accessToken = [FBSDKAccessToken currentAccessToken].tokenString;//   [FBSession activeSession].accessTokenData.accessToken;

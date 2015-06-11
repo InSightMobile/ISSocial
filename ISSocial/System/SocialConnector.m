@@ -164,7 +164,7 @@ NSString *const kNewMessagesUnreadStatusChanged = @"kNewMessagesUnreadStatusChan
 }
 
 
-- (ISSAuthorisationInfo *)authorizatioInfo {
+- (ISSAuthorisationInfo *)authorizationInfo {
     return nil;
 }
 
