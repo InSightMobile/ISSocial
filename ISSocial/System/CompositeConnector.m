@@ -121,7 +121,6 @@
 
     [self setAvailableConnectors:aviableConnectors
                 activeConnectors:[self restoreActiveStates:activeConnectors aviableConnectors:aviableConnectors]];
-
 }
 
 - (void)addConnector:(SocialConnector *)connector {
@@ -247,7 +246,10 @@
 
             NSMutableSet *availableConnectors = [NSMutableSet setWithCapacity:available.count];
             for (NSString *code in available) {
-                [availableConnectors addObject:[[ISSocial defaultInstance] connectorNamed:code]];
+                AccessSocialConnector *connector = [[ISSocial defaultInstance] connectorNamed:code];
+                if (connector) {
+                    [availableConnectors addObject:connector];
+                }
             }
             return availableConnectors;
         }

@@ -36,7 +36,12 @@
 
 - (void)didDisconnectWithError:(NSError *)error {
 
-
+    if (error) {
+        NSLog(@"error = %@", error);
+        if (_handler)self.handler(self, GPSessionStateClosed, error);
+        self.handler = nil;
+        return;
+    }
 }
 
 - (NSString *)idToken {
@@ -103,6 +108,8 @@ sourceApplication:(NSString *)sourceApplication
     }
 
     GPPSignIn *signIn = [GPPSignIn sharedInstance];
+
+    [signIn setKeychainName:@"googlePlusAuth"];
     signIn.clientID = clientId;
     signIn.shouldFetchGoogleUserID = YES;
     signIn.scopes = scopes;

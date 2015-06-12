@@ -27,7 +27,7 @@ static NSString *FBGraphBasePath = @"https://graph.facebook.com";
             myself = YES;
         }
 
-        NSString *fields = @"picture,first_name,last_name,birthday,email,gender,location";
+        NSString *fields = @"picture,first_name,last_name,name,birthday,email,gender,location";
 
         [self simpleMethod:userId params:@{@"fields" : fields} operation:operation processor:^(id response) {
 
@@ -149,6 +149,7 @@ static NSString *FBGraphBasePath = @"https://graph.facebook.com";
 
     data.firstName = userData[@"first_name"];
     data.lastName = userData[@"last_name"];
+    data.userName = userData[@"name"];
 
     if ([userData[@"online_presence"] isKindOfClass:[NSString class]]) {
         data.isOnline = @(![userData[@"online_presence"] isEqualToString:@"offline"]);

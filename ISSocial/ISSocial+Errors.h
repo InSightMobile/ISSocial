@@ -6,18 +6,19 @@
 #import <Foundation/Foundation.h>
 #import "ISSocial.h"
 
-static NSString *const ISSocialErrorDomain = @"ISSocial";
+extern NSString *const ISSocialErrorDomain;
 
 typedef NS_ENUM(NSInteger,ISSocailErrorCodes) {
-
     ISSocialErrorUnknown,
     ISSocialErrorNetwork,
     ISSocialErrorOperationNotAllowedByTarget,
     ISSocialErrorOperationAlreadyDone,
     ISSocialErrorSystemLoginDisallowed,
     ISSocialErrorSystemLoginAbsent,
+    ISSocialErrorStoredLoginAbsent,
     ISSocialErrorAuthorizationFailed,
-    ISSocialErrorUserCanceled
+    ISSocialErrorUserCanceled,
+    ISSocialErrorConnectorNotFound
 } ;
 
 @interface ISSocial (Errors)

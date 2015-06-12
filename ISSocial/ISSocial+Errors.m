@@ -6,6 +6,7 @@
 #import "ISSocial.h"
 #import "ISSocial+Errors.h"
 
+NSString *const ISSocialErrorDomain;
 
 @implementation ISSocial (Errors)
 

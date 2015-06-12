@@ -16,6 +16,7 @@ extern NSString *const ISSocialLoggedInUpdatedNotification;
 extern NSString *const ISSocialConnectorIdFacebook;
 extern NSString *const ISSocialConnectorIdVkontakte;
 extern NSString *const ISSocialConnectorIdGooglePlus;
+extern NSString *const ISSocialConnectorIdGoogle;
 extern NSString *const ISSocialConnectorIdTwitter;
 extern NSString *const ISSocialConnectorIdOdnoklassniki;
 

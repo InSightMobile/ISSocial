@@ -9,16 +9,17 @@
 #import "NSArray+ISSAsyncBlocks.h"
 #import "ISSocial+Errors.h"
 
-
 NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated";
 
- NSString *const ISSocialConnectorIdFacebook = @"Facebook";
- NSString *const ISSocialConnectorIdVkontakte = @"Vkontakte";
- NSString *const ISSocialConnectorIdGooglePlus = @"GooglePlus";
- NSString *const ISSocialConnectorIdTwitter = @"Twitter";
- NSString *const ISSocialConnectorIdOdnoklassniki = @"Odnoklassniki";
+NSString *const ISSocialConnectorIdFacebook = @"Facebook";
+NSString *const ISSocialConnectorIdVkontakte = @"Vkontakte";
+NSString *const ISSocialConnectorIdGooglePlus = @"GooglePlus";
+NSString *const ISSocialConnectorIdGoogle = @"Google";
+NSString *const ISSocialConnectorIdTwitter = @"Twitter";
+NSString *const ISSocialConnectorIdOdnoklassniki = @"Odnoklassniki";
 
 @interface ISSocial ()
+
 @property(nonatomic, strong) ISSocialLoginManager *loginManager;
 @property(nonatomic, strong, readwrite) CompositeConnector *rootConnectors;
 @property(nonatomic, strong) CompositeConnector *currentConnectors;
@@ -28,7 +29,6 @@ NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated
 @end
 
 @implementation ISSocial {
-
 }
 
 - (id)init {
@@ -45,7 +45,7 @@ NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated
         return;
     }
     self.rootConnectors = [[CompositeConnector alloc] initWithRestorationId:@"root"];
-    for(NSString *connectorID in self.initiallyEnabledConnectors) {
+    for (NSString *connectorID in self.initiallyEnabledConnectors) {
         [self.rootConnectors addConnector:[self connectorNamed:connectorID]];
     }
 
@@ -121,6 +121,10 @@ NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated
     [self configure];
 
     SocialConnector *connector = [self connectorNamed:connectorName];
+    if(!connector) {
+        completion(nil, [ISSocial errorWithCode:ISSocialErrorConnectorNotFound sourseError:nil userInfo:nil]);
+        return;
+    }
 
     [self.rootConnectors addConnector:connector asActive:YES];
 
@@ -222,7 +226,7 @@ NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated
 
 - (void)configure {
 
-    if(self.isConfigured) {
+    if (self.isConfigured) {
         return;
     }
     self.isConfigured = YES;
@@ -254,7 +258,7 @@ NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated
     [self configure];
     BOOL result = NO;
     for (AccessSocialConnector *connector in self.rootConnectors.availableConnectors) {
-        if([connector handleDidFinishLaunchingWithOptions:launchOptions]) {
+        if ([connector handleDidFinishLaunchingWithOptions:launchOptions]) {
             result = YES;
         }
     }
@@ -279,27 +283,27 @@ NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated
     RACSubject *subject = [RACReplaySubject replaySubjectWithCapacity:1];
 
     [self loginWithConnectorName:connectorName completion:^(SocialConnector *connector, NSError *error) {
-        if(error) {
+        if (error) {
             [subject sendError:error];
         }
-        else if(connector) {
+        else if (connector) {
             [subject sendNext:connector];
             [subject sendCompleted];
         }
         else {
-            [subject sendError:[ISSocial errorWithCode:ISSocialErrorUnknown sourseError:nil  userInfo:nil]];
+            [subject sendError:[ISSocial errorWithCode:ISSocialErrorUnknown sourseError:nil userInfo:nil]];
         }
     }];
 
     return subject;
 }
 
-- (RACSignal*)closeAllSessionsAndClearCredentials {
+- (RACSignal *)closeAllSessionsAndClearCredentials {
 
     RACSubject *subject = [RACReplaySubject replaySubjectWithCapacity:1];
 
     [self closeAllSessionsAndClearCredentials:^(NSError *error) {
-        if(error) {
+        if (error) {
             [subject sendError:error];
         }
         else {
@@ -311,8 +315,7 @@ NSString *const ISSocialLoggedInUpdatedNotification = @"ISSocialLoggendInUpdated
     return subject;
 }
 
-- (void)enableConnector:(NSString *)connectorID
-{
+- (void)enableConnector:(NSString *)connectorID {
     [self.initiallyEnabledConnectors addObject:connectorID];
     if (self.rootConnectors) {
         [self.rootConnectors addConnector:[self connectorNamed:connectorID]];

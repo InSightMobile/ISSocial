@@ -70,7 +70,7 @@
     ISSAuthorisationInfo *token = [ISSAuthorisationInfo new];
     token.handler = self;
     token.accessToken = [GPSession activeSession].idToken;
-    token.userId = [GPSession activeSession].userID;
+    token.userId = _currentUserData.objectId ?: [GPSession activeSession].userID;
     return token;
 }
 
