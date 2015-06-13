@@ -81,15 +81,18 @@
     if (error) {
         NSLog(@"error = %@", error);
         if([error.domain isEqualToString:kGIDSignInErrorDomain]) {
-            if (error.code == kGIDSignInErrorCodeCanceled) {
-                error = [ISSocial errorWithCode:ISSocialErrorUserCanceled sourseError:error userInfo:nil];
+            NSInteger code = error.code;
+            NSDictionary *userInfo = [error userInfo];
+            if (code == kGIDSignInErrorCodeCanceled || code == kGIDSignInErrorCodeUnknown) {
+                error = [ISSocial errorWithCode:ISSocialErrorUserCanceled sourceError:error userInfo:nil];
             }
-            else if (error.code == kGIDSignInErrorCodeHasNoAuthInKeychain) {
-                error = [ISSocial errorWithCode:ISSocialErrorStoredLoginAbsent sourseError:error userInfo:nil];
+            else if (code == kGIDSignInErrorCodeHasNoAuthInKeychain) {
+                error = [ISSocial errorWithCode:ISSocialErrorStoredLoginAbsent sourceError:error userInfo:nil];
             }
-            else if (error.code == kGIDSignInErrorCodeKeychain) {
+            else if (code == kGIDSignInErrorCodeKeychain) {
                 [signIn signOut];
                 [signIn signIn];
+                return;
             }
         }
 
@@ -184,120 +187,6 @@
     return _currentUserData;
 }
 
-
-//- (void)executeQuery:(id <GTLQueryProtocol>)query operation:(SocialConnectorOperation *)operation
-//           processor:(void (^)(id object))handler {
-//    [[GPSession activeSession].plusService executeQuery:query completionHandler:^(GTLServiceTicket *ticket,
-//            id object, NSError *error) {
-//        if (error) {
-//            GTMLoggerError(@"Error: %@", error);
-//            //peopleStatus_.text = [NSString stringWithFormat:@"Status: Error: %@", error];
-//            [operation completeWithError:error];
-//        }
-//        else {
-//
-//            handler(object);
-//        }
-//    }];
-//}
-
-//- (SObject *)readUserData:(SUserData *)params completion:(SObjectCompletionBlock)completion {
-//    bool myself = NO;
-//    NSString *userId = params.objectId;
-//    if (userId.length == 0 || [userId isEqualToString:@"me"]) {
-//        myself = YES;
-//    }
-//
-//    if (myself) {
-//        if (self.currentUserData) {
-//            completion(self.currentUserData);
-//            return self.currentUserData;
-//        }
-//        else {
-//            return [self updateProfile:params completion:completion];
-//        }
-//    }
-//    else {
-//        return [self readProfile:params userID:userId completion:completion];
-//    }
-//}
-//
-//- (SObject *)readProfile:(SObject *)params userID:(NSString *)userID completion:(SObjectCompletionBlock)completion {
-//    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
-//        GTLQueryPlus *query = [GTLQueryPlus queryForPeopleGetWithUserId:userID];
-//        [self executeQuery:query operation:operation processor:^(GTLPlusPerson *person) {
-//
-//            SUserData *user = [[SUserData alloc] initWithHandler:self];
-//            user.objectId = person.identifier;
-//            user.userName = person.displayName;
-//
-//            NSArray *emails = person.emails;
-//            NSString *email = nil;
-//            for (GTLPlusPersonEmailsItem *item in emails) {
-//                if ([item.type isEqualToString:@"account"]) {
-//                    email = item.value;
-//                }
-//            }
-//            if (!email) {
-//                email = [(GTLPlusPersonEmailsItem * ) [
-//                person.emails
-//                firstObject] value];
-//            }
-//            user.userEmail = email;
-//
-//            if ([person.gender isEqualToString:@"male"]) {
-//                user.userGender = @(ISSMaleUserGender);
-//            }
-//            else if ([person.gender isEqualToString:@"female"]) {
-//                user.userGender = @(ISSFemaleUserGender);
-//            }
-//
-//            NSString *userImage = person.image.url;
-//            user.userPicture = [[MultiImage alloc] initWithURL:userImage.URLValue];
-//
-//            [operation complete:user];
-//        }];
-//    }];
-//}
-//
-//- (SObject *)updateProfile:(SObject *)params completion:(SObjectCompletionBlock)completion {
-//    return [self readProfile:params userID:@"me" completion:^(SObject *result) {
-//        self->_currentUserData = (SUserData *) result;
-//        NSLog(@"result = %@", result);
-//        completion(result);
-//    }];
-//}
-//
-//- (SUserData *)currentUserData {
-//    return _currentUserData;
-//}
-//
-//- (SObject *)readUserFriends:(SUserData *)params completion:(SObjectCompletionBlock)completion {
-//    return [self operationWithObject:params completion:completion processor:^(SocialConnectorOperation *operation) {
-//        GTLQueryPlus *query =
-//                [GTLQueryPlus queryForPeopleListWithUserId:@"me"
-//                                                collection:kGTLPlusCollectionVisible];
-//
-//        [self executeQuery:query operation:operation processor:^(GTLPlusPeopleFeed *peopleFeed) {
-//
-//            SObject *result = [SObject objectCollectionWithHandler:self];
-//
-//            for (GTLPlusPerson *person in peopleFeed.items) {
-//                SUserData *user = [[SUserData alloc] initWithHandler:self];
-//                user.objectId = person.identifier;
-//                user.userName = person.displayName;
-//
-//                NSString *userImage = person.image.url;
-//                user.userPicture = [[MultiImage alloc] initWithURL:userImage.URLValue];
-//
-//                [result addSubObject:user];
-//            }
-//
-//            [operation complete:result];
-//        }];
-//    }];
-//}
-
 - (BOOL)handleOpenURL:(NSURL *)url fromApplication:(NSString *)sourceApplication annotation:(id)annotation {
     return [[GIDSignIn sharedInstance] handleURL:url
                                sourceApplication:sourceApplication
@@ -311,7 +200,7 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             if (self.signInOperation) {
                 [self.signInOperation completeWithError:[ISSocial errorWithCode:ISSocialErrorUserCanceled
-                                                                    sourseError:nil
+                                                                    sourceError:nil
                                                                        userInfo:nil]];
                 self.signInOperation = nil;
             }

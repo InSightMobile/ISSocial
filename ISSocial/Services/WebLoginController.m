@@ -204,7 +204,7 @@
         [self.delegate webLoginDidCanceled:self];
     }
     else {
-        [self.operation completeWithError:[ISSocial errorWithCode:ISSocialErrorUserCanceled sourseError:nil userInfo:nil]];
+        [self.operation completeWithError:[ISSocial errorWithCode:ISSocialErrorUserCanceled sourceError:nil userInfo:nil]];
     }
 }
 @end

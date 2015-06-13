@@ -8,7 +8,7 @@
 @class SocialConnector;
 
 
-@interface ISSAuthorisationInfo : NSObject <NSCoding>
+@interface ISSAuthorisationInfo : NSObject <NSSecureCoding>
 @property(nonatomic, copy) NSString *accessToken;
 @property(nonatomic, copy) NSString *accessTokenSecret;
 @property(nonatomic, copy) NSString *userId;

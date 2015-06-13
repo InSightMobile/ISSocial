@@ -122,7 +122,7 @@ NSString *const ISSocialConnectorIdOdnoklassniki = @"Odnoklassniki";
 
     SocialConnector *connector = [self connectorNamed:connectorName];
     if(!connector) {
-        completion(nil, [ISSocial errorWithCode:ISSocialErrorConnectorNotFound sourseError:nil userInfo:nil]);
+        completion(nil, [ISSocial errorWithCode:ISSocialErrorConnectorNotFound sourceError:nil userInfo:nil]);
         return;
     }
 
@@ -183,7 +183,12 @@ NSString *const ISSocialConnectorIdOdnoklassniki = @"Odnoklassniki";
             return nil;
         }
 
-        _connectorsByCode[connectorName] = (id) [[connectorClass alloc] init];
+        id connector = (id) [[connectorClass alloc] init];
+
+        if(![connector isKindOfClass:[SocialConnector class]]) {
+            return nil;
+        }
+        _connectorsByCode[connectorName] = connector;
     }
     return _connectorsByCode[connectorName];
 }
@@ -291,7 +296,7 @@ NSString *const ISSocialConnectorIdOdnoklassniki = @"Odnoklassniki";
             [subject sendCompleted];
         }
         else {
-            [subject sendError:[ISSocial errorWithCode:ISSocialErrorUnknown sourseError:nil userInfo:nil]];
+            [subject sendError:[ISSocial errorWithCode:ISSocialErrorUnknown sourceError:nil userInfo:nil]];
         }
     }];
 

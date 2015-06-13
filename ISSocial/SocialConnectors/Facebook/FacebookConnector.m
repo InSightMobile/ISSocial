@@ -291,13 +291,13 @@
 
     if (code == ISSocialErrorUnknown) {
         if (error.code == FBSDKNetworkErrorCode) {
-            [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorNetwork sourseError:error.userInfo[NSUnderlyingErrorKey] userInfo:nil]];
+            [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorNetwork sourceError:error.userInfo[NSUnderlyingErrorKey] userInfo:nil]];
             return;
         }
     }
 
     NSError *socialError =
-            [ISSocial errorWithCode:code sourseError:error userInfo:nil];
+            [ISSocial errorWithCode:code sourceError:error userInfo:nil];
 
     [operation completeWithError:socialError];
 }
@@ -331,9 +331,9 @@
         [_login logInWithPublishPermissions:permissions handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
 
             if (error) {
-                completion([SObject error:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:error userInfo:nil]]);
+                completion([SObject error:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourceError:error userInfo:nil]]);
             } else if (result.isCancelled) {
-                completion([SObject error:[ISSocial errorWithCode:ISSocialErrorUserCanceled sourseError:error userInfo:nil]]);
+                completion([SObject error:[ISSocial errorWithCode:ISSocialErrorUserCanceled sourceError:error userInfo:nil]]);
             } else {
                 [SObject successful:completion];
             }
@@ -438,10 +438,10 @@
         else {
             [_login logInWithReadPermissions:permissions handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                 if (error) {
-                    [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourseError:error userInfo:nil]];
+                    [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourceError:error userInfo:nil]];
                 }
                 else if (result.isCancelled) {
-                    [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorUserCanceled sourseError:error userInfo:nil]];
+                    [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorUserCanceled sourceError:error userInfo:nil]];
                 }
                 else {
                     [self processLoggedInWithCompletion:operation.completion];

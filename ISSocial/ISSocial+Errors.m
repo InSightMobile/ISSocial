@@ -6,31 +6,33 @@
 #import "ISSocial.h"
 #import "ISSocial+Errors.h"
 
-NSString *const ISSocialErrorDomain;
+NSString *const ISSocialErrorDomain = @"ISSocialErrorDomain";
 
 @implementation ISSocial (Errors)
 
 
-+ (NSError *)errorWithCode:(ISSocailErrorCodes)code sourseError:(NSError *)sourecError userInfo:(NSDictionary *)userInfo {
++ (NSError *)errorWithCode:(ISSocailErrorCodes)code sourceError:(NSError *)sourceError userInfo:(NSDictionary *)userInfo {
     NSMutableDictionary *info = [NSMutableDictionary new];
 
-    if (sourecError) {
-        info[NSUnderlyingErrorKey] = sourecError;
+    if (sourceError) {
+        info[NSUnderlyingErrorKey] = sourceError;
     }
 
     NSString *description = nil;
-    if (sourecError) {
-        description = sourecError.localizedDescription;
+    if (sourceError) {
+        description = sourceError.localizedDescription;
     }
     switch (code) {
         case ISSocialErrorSystemLoginDisallowed:
         case ISSocialErrorAuthorizationFailed:
+        case ISSocialErrorStoredLoginAbsent:
             description = @"Authorization failed";
             break;
         case ISSocialErrorUserCanceled:
             description = nil;
             break;
-
+        default:
+            break;
     }
     if (description) {
         info[NSLocalizedDescriptionKey] = description;
@@ -45,7 +47,7 @@ NSString *const ISSocialErrorDomain;
 
 + (NSError *)errorWithError:(NSError *)error {
     if (![error.domain isEqualToString:ISSocialErrorDomain]) {
-        error = [ISSocial errorWithCode:ISSocialErrorUnknown sourseError:error userInfo:nil];
+        error = [ISSocial errorWithCode:ISSocialErrorUnknown sourceError:error userInfo:nil];
     }
     return error;
 }

@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger,ISSocailErrorCodes) {
 @interface ISSocial (Errors)
 
 
-+ (NSError *)errorWithCode:(ISSocailErrorCodes)code sourseError:(NSError *)sourecError userInfo:(NSDictionary *)userInfo;
++ (NSError *)errorWithCode:(ISSocailErrorCodes)code sourceError:(NSError *)sourceError userInfo:(NSDictionary *)userInfo;
 
 + (NSError *)errorWithError:(NSError *)error;
 @end
