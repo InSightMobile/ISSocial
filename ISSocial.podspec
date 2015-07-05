@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
     ss.dependency 'ReactiveCocoa', '~> 2.4'
     ss.dependency 'SDWebImage', '~> 3.7'
     ss.dependency 'RegexKitLite', '~> 4.0'
-    ss.dependency 'AFNetworking', '~> 2.5'    
+    ss.dependency 'AFNetworking/Reachability', '~> 2.5'    
 
     ss.default_subspecs = 'Categories', 'Services', 'SocialObjects', 'System' 
 
