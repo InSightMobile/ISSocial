@@ -18,7 +18,8 @@ typedef NS_ENUM(NSInteger,ISSocailErrorCodes) {
     ISSocialErrorStoredLoginAbsent,
     ISSocialErrorAuthorizationFailed,
     ISSocialErrorUserCanceled,
-    ISSocialErrorConnectorNotFound
+    ISSocialErrorConnectorNotFound,
+    ISSocialErrorAuthorizationRestorationFailed,
 } ;
 
 @interface ISSocial (Errors)

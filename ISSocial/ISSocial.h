@@ -20,12 +20,25 @@ extern NSString *const ISSocialConnectorIdGoogle;
 extern NSString *const ISSocialConnectorIdTwitter;
 extern NSString *const ISSocialConnectorIdOdnoklassniki;
 
+@protocol ISSocialUIDelegate<NSObject>
+@optional
+
+- (void)socialConnectorWillDispatch:(SocialConnector *)connector error:(NSError *)error;
+
+- (void)socialConnector:(SocialConnector *)connector presentViewController:(UIViewController *)viewController;
+
+- (void)socialConnector:(SocialConnector *)connector dismissViewController:(UIViewController *)viewController;
+
+@end
+
 @interface ISSocial : NSObject
 - (void)loadConnectors;
 
 + (ISSocial *)defaultInstance;
 
 - (void)configure;
+
+@property(nonatomic, weak) id<ISSocialUIDelegate> uiDelegate;
 
 @property(nonatomic, strong, readonly) CompositeConnector *rootConnectors;
 

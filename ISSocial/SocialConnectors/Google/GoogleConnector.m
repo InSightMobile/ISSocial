@@ -12,7 +12,7 @@
 #import "GIDProfileData.h"
 #import "MultiImage.h"
 
-@interface GoogleConnector () <GIDSignInDelegate>
+@interface GoogleConnector () <GIDSignInDelegate, GIDSignInUIDelegate>
 
 @property(nonatomic, strong) GIDSignIn *signIn;
 @property(nonatomic, copy) SObjectCompletionBlock openSession;
@@ -54,12 +54,14 @@
     }
     _signIn = [GIDSignIn sharedInstance];
     self.signIn.delegate = self;
-    self.signIn.allowsSignInWithWebView = NO;
+    self.signIn.uiDelegate = self;
+    self.signIn.allowsSignInWithBrowser = NO;
+    self.signIn.allowsSignInWithWebView = YES;
     return _signIn;
 }
 
 - (BOOL)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [self openSession:nil silent:YES completion:nil];
+    //[self openSession:nil silent:YES completion:nil];
     return NO;
 }
 
@@ -76,23 +78,58 @@
     return _authorizationInfo;
 }
 
+- (void)signInWillDispatch:(GIDSignIn *)signIn error:(NSError *)error {
+
+    id <ISSocialUIDelegate> o = [ISSocial defaultInstance].uiDelegate;
+    if ([o respondsToSelector:@selector(socialConnectorWillDispatch:error:)]) {
+        [o socialConnectorWillDispatch:self error:error];
+    }
+}
+
+
+- (void)signIn:(GIDSignIn *)signIn presentViewController:(UIViewController *)viewController {
+
+    id <ISSocialUIDelegate> o = [ISSocial defaultInstance].uiDelegate;
+    if ([o respondsToSelector:@selector(socialConnector:presentViewController:)]) {
+        [o socialConnector:self presentViewController:viewController];
+    }
+    else {
+        UIViewController *root = [UIApplication sharedApplication].delegate.window.rootViewController;
+        [root presentViewController:viewController animated:YES completion:^{
+
+        }];
+    }
+}
+
+- (void)signIn:(GIDSignIn *)signIn dismissViewController:(UIViewController *)viewController {
+
+    id <ISSocialUIDelegate> o = [ISSocial defaultInstance].uiDelegate;
+    if ([o respondsToSelector:@selector(socialConnector:dismissViewController:)]) {
+        [o socialConnector:self dismissViewController:viewController];
+    }
+    else {
+        [viewController dismissViewControllerAnimated:YES completion:^{
+
+        }];
+    }
+}
+
+
 - (void)signIn:(GIDSignIn *)signIn didSignInForUser:(GIDGoogleUser *)user withError:(NSError *)error {
 
     if (error) {
         NSLog(@"error = %@", error);
-        if([error.domain isEqualToString:kGIDSignInErrorDomain]) {
+        if ([error.domain isEqualToString:kGIDSignInErrorDomain]) {
             NSInteger code = error.code;
             NSDictionary *userInfo = [error userInfo];
-            if (code == kGIDSignInErrorCodeCanceled || code == kGIDSignInErrorCodeUnknown) {
+            if (code == kGIDSignInErrorCodeCanceled) {
                 error = [ISSocial errorWithCode:ISSocialErrorUserCanceled sourceError:error userInfo:nil];
             }
             else if (code == kGIDSignInErrorCodeHasNoAuthInKeychain) {
                 error = [ISSocial errorWithCode:ISSocialErrorStoredLoginAbsent sourceError:error userInfo:nil];
             }
             else if (code == kGIDSignInErrorCodeKeychain) {
-                [signIn signOut];
-                [signIn signIn];
-                return;
+                error = [ISSocial errorWithCode:ISSocialErrorAuthorizationRestorationFailed sourceError:error userInfo:nil];
             }
         }
 
