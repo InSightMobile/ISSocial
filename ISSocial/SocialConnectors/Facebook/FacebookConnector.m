@@ -14,13 +14,12 @@
 #import "FBSDKLoginManager+Internal.h"
 
 @interface FacebookConnector ()
-@property(nonatomic, strong) NSArray * defaultReadPermissions;
-@property(nonatomic, strong) NSArray * defaultPublishPermissions;
-@property(nonatomic, strong) NSString * appID;
+@property(nonatomic, strong) NSArray *defaultReadPermissions;
+@property(nonatomic, strong) NSArray *defaultPublishPermissions;
+@property(nonatomic, strong) NSString *appID;
 @end
 
-@implementation FacebookConnector
-{
+@implementation FacebookConnector {
     FBSDKLoginManager *_login;
 }
 
@@ -63,7 +62,7 @@
 - (void)simpleMethodWithURL:(NSString *)urlString operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
 
     if ([FBSDKAccessToken currentAccessToken]) {
-        FBSDKGraphRequestConnection * connection = [[FBSDKGraphRequestConnection alloc] init];
+        FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
 
         NSURL *url = [NSURL URLWithString:urlString];
 
@@ -139,7 +138,7 @@
 - (void)requestWithGraphPath:(NSString *)path parameters:(NSDictionary *)parameters HTTPMethod:(NSString *)method operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
 
     if ([FBSDKAccessToken currentAccessToken]) {
-        FBSDKGraphRequestConnection * connection;
+        FBSDKGraphRequestConnection *connection;
         connection = [[[FBSDKGraphRequest alloc] initWithGraphPath:path parameters:parameters HTTPMethod:method]
                 startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
                     [operation removeConnection:connection];
@@ -162,26 +161,26 @@
 - (void)simpleRequest:(NSString *)method path:(NSString *)path object:(NSDictionary *)object operation:(SocialConnectorOperation *)operation processor:(void (^)(id))processor {
 
     if ([FBSDKAccessToken currentAccessToken]) {
-        FBSDKGraphRequestConnection * connection;
+        FBSDKGraphRequestConnection *connection;
         connection = [[[FBSDKGraphRequest alloc] initWithGraphPath:path parameters:object HTTPMethod:method]
-                    startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-                        [operation removeConnection:connection];
-                        if (error) {
-                            NSLog(@"Facebook error on method: %@ params: %@ error:%@", method, object, error.userInfo);
-                            [self processFacebookError:error operation:operation processor:^(id o) {
-                            }];
-                        }
-                        else {
-                            processor(result);
-                        }
-                    }];
+                startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+                    [operation removeConnection:connection];
+                    if (error) {
+                        NSLog(@"Facebook error on method: %@ params: %@ error:%@", method, object, error.userInfo);
+                        [self processFacebookError:error operation:operation processor:^(id o) {
+                        }];
+                    }
+                    else {
+                        processor(result);
+                    }
+                }];
         [operation addConnection:connection];
     }
     else {
         [operation completeWithFailure];
     }
-    
-    
+
+
 //    FBRequest *request = [[FBRequest alloc] initWithSession:[FBSession activeSession]
 //                                                  graphPath:path
 //                                                 parameters:object
@@ -420,7 +419,12 @@
             allowLoginUI = [params[kAllowUserUIKey] boolValue];
         }
 
-        _login.loginBehavior = FBSDKLoginBehaviorSystemAccount;
+        if (![UIApplication.sharedApplication canOpenURL:[NSURL URLWithString:@"fb://"]]) {
+            _login.loginBehavior = FBSDKLoginBehaviorWeb;
+        }
+        else {
+            _login.loginBehavior = FBSDKLoginBehaviorSystemAccount;
+        }
 
         [FBSDKProfile enableUpdatesOnAccessTokenChange:YES];
         FBSDKAccessToken *const token = [FBSDKAccessToken currentAccessToken];
