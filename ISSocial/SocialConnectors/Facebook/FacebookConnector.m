@@ -1,6 +1,7 @@
 //
 //
 
+#import <Social/Social.h>
 #import "FacebookConnector+UserData.h"
 #import "FBSDKLoginKit.h"
 #import "FBSDKCoreKit.h"
@@ -419,11 +420,15 @@
             allowLoginUI = [params[kAllowUserUIKey] boolValue];
         }
 
-        if (![UIApplication.sharedApplication canOpenURL:[NSURL URLWithString:@"fb://"]]) {
+        if([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
+            _login.loginBehavior = FBSDKLoginBehaviorSystemAccount;
+        }
+        else if (![UIApplication.sharedApplication canOpenURL:[NSURL URLWithString:@"fb://"]]) {
+
             _login.loginBehavior = FBSDKLoginBehaviorWeb;
         }
         else {
-            _login.loginBehavior = FBSDKLoginBehaviorSystemAccount;
+            _login.loginBehavior = FBSDKLoginBehaviorNative;
         }
 
         [FBSDKProfile enableUpdatesOnAccessTokenChange:YES];
