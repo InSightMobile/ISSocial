@@ -420,16 +420,18 @@
             allowLoginUI = [params[kAllowUserUIKey] boolValue];
         }
 
-        if([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
-            _login.loginBehavior = FBSDKLoginBehaviorSystemAccount;
-        }
-        else if (![UIApplication.sharedApplication canOpenURL:[NSURL URLWithString:@"fb://"]]) {
-
-            _login.loginBehavior = FBSDKLoginBehaviorWeb;
-        }
-        else {
-            _login.loginBehavior = FBSDKLoginBehaviorNative;
-        }
+//        if([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
+//            _login.loginBehavior = FBSDKLoginBehaviorSystemAccount;
+//        }
+//        else if (![UIApplication.sharedApplication canOpenURL:[NSURL URLWithString:@"fb://"]]) {
+//
+//            _login.loginBehavior = FBSDKLoginBehaviorWeb;
+//        }
+//        else {
+//            _login.loginBehavior = FBSDKLoginBehaviorNative;
+//        }
+        
+        _login.loginBehavior = FBSDKLoginBehaviorSystemAccount;
 
         [FBSDKProfile enableUpdatesOnAccessTokenChange:YES];
         FBSDKAccessToken *const token = [FBSDKAccessToken currentAccessToken];
