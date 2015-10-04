@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'ISSocial'
-  s.version  = '0.1.3'
+  s.version  = '0.1.4'
   s.license  = 'MIT'
   s.summary  = 'Social networks connection library.'
   s.source   = { :git => 'https://github.com/InSightMobile/ISSocial.git', :tag => "0.1.2" }
