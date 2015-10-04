@@ -25,10 +25,7 @@ extern NSString *const ISSocialConnectorIdOdnoklassniki;
 
 - (void)socialConnectorWillDispatch:(SocialConnector *)connector error:(NSError *)error;
 
-- (void)socialConnector:(SocialConnector *)connector presentViewController:(UIViewController *)viewController;
-
-- (void)socialConnector:(SocialConnector *)connector dismissViewController:(UIViewController *)viewController;
-
+- (UIViewController*)controllerToDisplayUIFromForSocialConnecto:(SocialConnector *)connector;
 @end
 
 @interface ISSocial : NSObject

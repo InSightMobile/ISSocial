@@ -11,6 +11,7 @@
 #import "GIDAuthentication.h"
 #import "GIDProfileData.h"
 #import "MultiImage.h"
+#import "ISSocial.h"
 
 @interface GoogleConnector () <GIDSignInDelegate, GIDSignInUIDelegate>
 
@@ -26,6 +27,7 @@
 @implementation GoogleConnector {
     SUserData *_currentUserData;
     ISSAuthorisationInfo *_authorizationInfo;
+    UIViewController *_lastDisplayController;
 }
 
 + (GoogleConnector *)instance {
@@ -53,15 +55,12 @@
         return _signIn;
     }
     _signIn = [GIDSignIn sharedInstance];
-    self.signIn.delegate = self;
-    self.signIn.uiDelegate = self;
-    self.signIn.allowsSignInWithBrowser = NO;
-    self.signIn.allowsSignInWithWebView = YES;
+    _signIn.delegate = self;
+    _signIn.uiDelegate = self;
     return _signIn;
 }
 
 - (BOOL)handleDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    //[self openSession:nil silent:YES completion:nil];
     return NO;
 }
 
@@ -79,44 +78,38 @@
 }
 
 - (void)signInWillDispatch:(GIDSignIn *)signIn error:(NSError *)error {
-
     id <ISSocialUIDelegate> o = [ISSocial defaultInstance].uiDelegate;
     if ([o respondsToSelector:@selector(socialConnectorWillDispatch:error:)]) {
         [o socialConnectorWillDispatch:self error:error];
     }
 }
 
+- (UIViewController *)displayController {
+    UIViewController *controller = nil;
+    id <ISSocialUIDelegate> o = [ISSocial defaultInstance].uiDelegate;
+    if ([o respondsToSelector:@selector(controllerToDisplayUIFromForSocialConnecto:)]) {
+        controller = [o controllerToDisplayUIFromForSocialConnecto:self];
+    }
+    if (!controller) {
+        controller = [UIApplication sharedApplication].delegate.window.rootViewController;
+    }
+    _lastDisplayController = controller;
+    return controller;
+}
 
 - (void)signIn:(GIDSignIn *)signIn presentViewController:(UIViewController *)viewController {
-
-    id <ISSocialUIDelegate> o = [ISSocial defaultInstance].uiDelegate;
-    if ([o respondsToSelector:@selector(socialConnector:presentViewController:)]) {
-        [o socialConnector:self presentViewController:viewController];
-    }
-    else {
-        UIViewController *root = [UIApplication sharedApplication].delegate.window.rootViewController;
-        [root presentViewController:viewController animated:YES completion:^{
-
-        }];
-    }
+    UIViewController *root = [self displayController];
+    [root presentViewController:viewController animated:YES completion:^{
+    }];
 }
 
 - (void)signIn:(GIDSignIn *)signIn dismissViewController:(UIViewController *)viewController {
-
-    id <ISSocialUIDelegate> o = [ISSocial defaultInstance].uiDelegate;
-    if ([o respondsToSelector:@selector(socialConnector:dismissViewController:)]) {
-        [o socialConnector:self dismissViewController:viewController];
-    }
-    else {
-        [viewController dismissViewControllerAnimated:YES completion:^{
-
-        }];
-    }
+    [_lastDisplayController dismissViewControllerAnimated:YES completion:^{
+    }];
 }
 
 
 - (void)signIn:(GIDSignIn *)signIn didSignInForUser:(GIDGoogleUser *)user withError:(NSError *)error {
-
     if (error) {
         NSLog(@"error = %@", error);
         if ([error.domain isEqualToString:kGIDSignInErrorDomain]) {

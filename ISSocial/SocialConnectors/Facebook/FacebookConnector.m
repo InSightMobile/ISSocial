@@ -326,9 +326,7 @@
         [SObject successful:completion];
     }
     else {
-
-
-        [_login logInWithPublishPermissions:permissions handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+        [_login logInWithPublishPermissions:permissions fromViewController:[self displayController] handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
 
             if (error) {
                 completion([SObject error:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourceError:error userInfo:nil]]);
@@ -367,6 +365,15 @@
 //        }
 
     }
+}
+
+- (UIViewController *)displayController {
+    UIViewController* controller = nil;
+    id <ISSocialUIDelegate> o = [ISSocial defaultInstance].uiDelegate;
+    if ([o respondsToSelector:@selector(controllerToDisplayUIFromForSocialConnecto:)]) {
+            controller = [o controllerToDisplayUIFromForSocialConnecto:self];
+        }
+    return controller;
 }
 
 - (void)handleDidBecomeActive {
@@ -447,7 +454,7 @@
             [self processLoggedInWithCompletion:operation.completion];
         }
         else {
-            [_login logInWithReadPermissions:permissions handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+            [_login logInWithReadPermissions:permissions fromViewController:[self displayController] handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                 if (error) {
                     [operation completeWithError:[ISSocial errorWithCode:ISSocialErrorAuthorizationFailed sourceError:error userInfo:nil]];
                 }
