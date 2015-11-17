@@ -3,7 +3,7 @@
 
 
 
-#import <ReactiveCocoa.h>
+#import <ReactiveCocoa/ReactiveCocoa.h>
 #import "ISSocial.h"
 #import "ISSocialLoginManager.h"
 #import "NSArray+ISSAsyncBlocks.h"

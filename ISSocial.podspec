@@ -76,14 +76,14 @@ Pod::Spec.new do |s|
   s.subspec 'Twitter' do |ss|
     ss.source_files = 'ISSocial/SocialConnectors/Twitter/*.{h,m}'
     ss.dependency 'ISSocial/Core'
-    ss.dependency 'STTwitter', '~> 0.1'
+    ss.dependency 'STTwitter', '0.2.0'
     
   end
 
   s.subspec 'Vkontakte' do |ss|
     ss.source_files = 'ISSocial/SocialConnectors/Vkontakte/*.{h,m}'
     ss.dependency 'ISSocial/Core'
-    ss.dependency 'VK-ios-sdk', '~> 1.0'
+    ss.dependency 'VK-ios-sdk', '~> 1.1.0'
   end
   
 end
