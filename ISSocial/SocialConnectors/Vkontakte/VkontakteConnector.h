@@ -7,11 +7,11 @@
 //
 
 #import "AccessSocialConnector.h"
-#import "VKSdk.h"
 
-@class AFHTTPClient;
 
-@interface VkontakteConnector : AccessSocialConnector <VKSdkDelegate>
+@class AFHTTPClient,VKRequest;
+
+@interface VkontakteConnector : AccessSocialConnector 
 
 + (VkontakteConnector *)instance;
 

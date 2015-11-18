@@ -1,7 +1,7 @@
 //
 //
 
-
+#import "VKSdk.h"
 #import "VkontakteConnector.h"
 #import "VkontakteConnector+Photos.h"
 #import "SPhotoData.h"
@@ -13,6 +13,7 @@
 #import "VkontakteConnector+Feed.h"
 #import "SUserData.h"
 #import "SPagingData.h"
+
 
 
 static const int kPageSize = 20;

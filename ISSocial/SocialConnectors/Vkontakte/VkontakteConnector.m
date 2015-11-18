@@ -5,7 +5,7 @@
 //  Created by Ярослав on 19.12.12.
 //  Copyright (c) 2012 Ярослав. All rights reserved.
 //
-
+#import <VK-ios-sdk/VKSdk.h>
 #import "VkontakteConnector+News.h"
 //#import "ISSVKSession.h"
 #import "VkontakteConnector+UserData.h"
@@ -18,7 +18,7 @@
 
 static const int kMaxRetries = 3;
 
-@interface VkontakteConnector ()
+@interface VkontakteConnector ()<VKSdkDelegate>
 @property(nonatomic) BOOL loggedIn;
 
 @property(nonatomic, strong) SUserData *currentUserData;
