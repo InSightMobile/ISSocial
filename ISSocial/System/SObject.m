@@ -240,7 +240,7 @@ void dynamicSetterIMP(SObject *self, SEL _cmd, id object) {
             return YES;
         }
     }
-    return [super resolveClassMethod:aSEL];
+    return [super resolveInstanceMethod:aSEL];
 }
 
 - (id)valueForKey:(NSString *)key {
