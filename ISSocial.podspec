@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'ISSocial'
-  s.version  = '0.1.6'
+  s.version  = '0.2.0'
   s.license  = 'MIT'
   s.summary  = 'Social networks connection library.'
   s.source   = { :git => 'https://github.com/InSightMobile/ISSocial.git', :tag => "0.1.2" }
@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
     ss.dependency 'ReactiveCocoa', '~> 2.4'
     ss.dependency 'SDWebImage', '~> 3.7'
     ss.dependency 'RegexKitLite', '~> 4.0'
-    ss.dependency 'AFNetworking/Reachability', '~> 2.5'    
+    ss.dependency 'AFNetworking/Reachability', '~> 3.0'    
 
     ss.default_subspecs = 'Categories', 'Services', 'SocialObjects', 'System' 
 
