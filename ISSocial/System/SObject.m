@@ -195,7 +195,7 @@
     }
 }
 
-id dynamicGetterIMP(SObject *self, SEL _cmd) {
+static id dynamicGetterIMP(SObject *self, SEL _cmd) {
 
     NSString *name = NSStringFromSelector(_cmd);
 
