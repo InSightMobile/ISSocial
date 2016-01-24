@@ -190,10 +190,13 @@ static NSString *FBGraphBasePath = @"https://graph.facebook.com";
         locationID = userData[@"location"][@"id"];
 
         if (locationName.length > 0) {
-
-            NSArray *parts = [locationName componentsSeparatedByString:@", "];
-            data.cityName = parts[0];
-            data.countryName = parts[1];
+            NSArray *locationParts = [locationName componentsSeparatedByString:@", "];
+            if(locationParts.count > 0) {
+                data.cityName = locationParts[0];
+            }
+            if(locationParts.count > 1) {
+                data.countryName = locationParts[1];
+            }
         }
 
     }
