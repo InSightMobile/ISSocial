@@ -59,7 +59,7 @@ Pod::Spec.new do |s|
   s.subspec 'Google' do |ss|
     ss.source_files = 'ISSocial/SocialConnectors/Google/*.{h,m}'
     ss.dependency 'ISSocial/Core'
-    ss.dependency 'Google/SignIn', '~> 1.0'
+    ss.dependency 'GoogleSignIn', '~> 2.0'
   end
 
   s.subspec 'Instagram' do |ss|
