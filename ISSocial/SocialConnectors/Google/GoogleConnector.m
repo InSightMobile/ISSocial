@@ -57,6 +57,7 @@
     _signIn = [GIDSignIn sharedInstance];
     _signIn.delegate = self;
     _signIn.uiDelegate = self;
+    _signIn.clientID = self.clientID;
     return _signIn;
 }
 
