@@ -148,6 +148,8 @@
     _currentUserData.objectId = user.userID;
     _currentUserData.userName = user.profile.name;
     _currentUserData.userEmail = user.profile.email;
+    _currentUserData.firstName = user.profile.givenName;
+    _currentUserData.lastName = user.profile.familyName;
 
     self.loggedIn = YES;
     if (user.profile.hasImage) {

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'ISSocial'
-  s.version  = '0.3.0'
+  s.version  = '0.3.1'
   s.license  = 'MIT'
   s.summary  = 'Social networks connection library.'
   s.source   = { :git => 'https://github.com/InSightMobile/ISSocial.git', :tag => "0.1.2" }
@@ -59,7 +59,7 @@ Pod::Spec.new do |s|
   s.subspec 'Google' do |ss|
     ss.source_files = 'ISSocial/SocialConnectors/Google/*.{h,m}'
     ss.dependency 'ISSocial/Core'
-    ss.dependency 'GoogleSignIn', '~> 2.0'
+    ss.dependency 'GoogleSignIn', '~> 3.0'
   end
 
   s.subspec 'Instagram' do |ss|
