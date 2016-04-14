@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'ISSocial'
-  s.version  = '0.3.1'
+  s.version  = '0.3.2'
   s.license  = 'MIT'
   s.summary  = 'Social networks connection library.'
   s.source   = { :git => 'https://github.com/InSightMobile/ISSocial.git', :tag => "0.1.2" }
@@ -45,9 +45,9 @@ Pod::Spec.new do |s|
   s.subspec 'Facebook' do |ss|
     ss.source_files = 'ISSocial/SocialConnectors/Facebook/*.{h,m}'
     ss.dependency 'ISSocial/Core'
-    ss.dependency 'FBSDKCoreKit', '~> 4.10.0'
-    ss.dependency 'FBSDKLoginKit', '~> 4.10.0'   
-    ss.dependency 'FBSDKShareKit', '~> 4.10.0'       
+    ss.dependency 'FBSDKCoreKit', '~> 4.11.0'
+    ss.dependency 'FBSDKLoginKit', '~> 4.11.0'   
+    ss.dependency 'FBSDKShareKit', '~> 4.11.0'       
   end
 
   s.subspec 'GooglePlus' do |ss|
