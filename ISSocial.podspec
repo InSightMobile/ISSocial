@@ -1,9 +1,11 @@
 Pod::Spec.new do |s|
   s.name     = 'ISSocial'
-  s.version  = '0.3.2'
+  s.version  = '0.3.3'
   s.license  = 'MIT'
   s.summary  = 'Social networks connection library.'
-  s.source   = { :git => 'https://github.com/InSightMobile/ISSocial.git', :tag => "0.1.2" }
+  s.authors  =  'yarryp' 
+  s.homepage  = 'https://github.com/InSightMobile/ISSocial.git'
+  s.source   = { :git => 'https://github.com/InSightMobile/ISSocial.git', :tag => s.version }
   s.requires_arc = true
 
   s.ios.deployment_target = '7.1'
@@ -20,8 +22,6 @@ Pod::Spec.new do |s|
     ss.dependency 'SDWebImage', '~> 3.7'
     ss.dependency 'RegexKitLite', '~> 4.0'
     ss.dependency 'AFNetworking/Reachability', '~> 3.0'    
-
-    ss.default_subspecs = 'Categories', 'Services', 'SocialObjects', 'System' 
 
     ss.subspec 'Categories' do |sss|
       sss.source_files = 'ISSocial/Categories/*.{h,m}'
@@ -70,7 +70,6 @@ Pod::Spec.new do |s|
   s.subspec 'Odnoklassniki' do |ss|
     ss.source_files = 'ISSocial/SocialConnectors/Odnoklassniki/*.{h,m}'
     ss.dependency 'ISSocial/Core'
-    ss.default_subspecs = 'API','OKSdk'
 
     ss.subspec 'API' do |sss|
       sss.source_files = 'ISSocial/SocialConnectors/Odnoklassniki/ODKApi/*.{h,m}'
